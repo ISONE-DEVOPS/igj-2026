@@ -31,9 +31,9 @@ const NavRight = () => {
 
     const history = useHistory();
 
-    const { thememenu, setthememenu, user, createlockdata, notificacao, countNotification, uploadlistnotificacao } = useAuth();
+    const { thememenu, setthememenu, user, createlockdata, notificacao, countNotification, uploadlistnotificacao, useronline, permissoes } = useAuth();
 
-    const { permissoes } = useAuth();
+    const [onlineCount, setOnlineCount] = useState(0);
 
     const location = useLocation();
     const configContext = useContext(ConfigContext);
@@ -140,15 +140,20 @@ const NavRight = () => {
             let avatar = 'https://ui-avatars.com/api/?name=' + user.USERNAME;
             setAvatar(avatar)
         }
-        console.log("sssssssssssssssssssssssss", user)
         setInterval(function () {
             settime(moment().tz('Etc/GMT+1').format())
         }, 1000);
-
-
-
-
     }, [])
+
+    useEffect(() => {
+        if (taskEnable("/administracao/utilizador", permissoes, "useronline")) {
+            api.get('/glbuseronline').then(function(response) {
+                if (response.status == '200') {
+                    setOnlineCount(response.data.length)
+                }
+            }).catch(function() {})
+        }
+    }, [useronline])
 
     return (
         <>
@@ -226,6 +231,7 @@ const NavRight = () => {
                             <Dropdown>
                                 <Dropdown.Toggle as={Link} variant='link' to='#' className="displayChatbox" onClick={() => setListOpen(true)}>
                                     <i title={taskEnableTitle("/administracao/utilizador", permissoes, "useronline")} className="fas fa-users" style={{ color: '#4680FF', fontSize: 18 }} />
+                                    {onlineCount > 0 && <div className='notification-circle' style={{ backgroundColor: '#2ed8b6' }}>{onlineCount}</div>}
                                 </Dropdown.Toggle>
                             </Dropdown>
                         </ListGroup.Item>

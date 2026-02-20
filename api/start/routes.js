@@ -128,6 +128,7 @@ Route.group(() => {
   Route.resource("sgigjrelinstrutorpeca", "SgigjrelinstrutorpecaController").apiOnly();
   Route.resource("sigjprcampo", "SigjprcampoController").apiOnly();
 
+  Route.get('/despacho-desicao/referencia', 'DespachoDesicaoReferenciaController.index')
   Route.put('/sgigjrelprocessoinstrucaocontraordenacao/:id/despacho', 'SgigjprocessodespachoController.Instrucaocontraordenacao')
   Route.put('/sgigjprocessoexclusao/:id/despachofinal', 'SgigjprocessodespachoController.Despachofinal')
   Route.put('/sgigjprocessoautoexclusao/:id/despacho', 'SgigjprocessodespachoController.Autoexclusao')
@@ -220,6 +221,7 @@ Route.group(() => {
   Route.get('juntada/:id', 'Juntada.file');
 
   // Dashboard endpoints
+  Route.get('dashboard/config', 'DashboardController.config');
   Route.get('dashboard/kpis', 'DashboardController.kpis');
   Route.get('dashboard/financeiro', 'DashboardController.financeiro');
   Route.get('dashboard/receita-entidade', 'DashboardController.receitaEntidade');

@@ -59,6 +59,9 @@ class NotificacaoProcessosController extends GenericController {
 
                 if (data.ESTADO_NOTIFICACAO == "CONCLUIR") {
                     data.URL_DOC_GERADO = await this.gerarDoc(data.CORPO)
+                    if (!data.URL_DOC_GERADO) {
+                        return { status: "fail", entity: this.table, message: "Falha ao gerar documento PDF", code: "PDF_ERROR" }
+                    }
                 }
 
                 const newE = await Database
@@ -154,6 +157,9 @@ class NotificacaoProcessosController extends GenericController {
 
                     if (data.ESTADO_NOTIFICACAO == "CONCLUIR") {
                         data.URL_DOC_GERADO = await this.gerarDoc(data.CORPO)
+                        if (!data.URL_DOC_GERADO) {
+                            return { status: "fail", entity: this.table, message: "Falha ao gerar documento PDF", code: "PDF_ERROR" }
+                        }
                     }
 
                     const newE = await Database

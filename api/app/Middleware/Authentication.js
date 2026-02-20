@@ -10,23 +10,51 @@ const { promisify } = require('util');
 
 
 
+// Mapa de utilizadores conectados: { userID: Set<socketID> }
+// Usa Set para suportar múltiplas abas do mesmo utilizador
 let connectedsocket = {}
+
+// Mapa inverso: socketID -> userID (para encontrar o user no disconnect)
+let socketToUser = {}
 
 
 io.on('connection', async socketio => {
 
-  const decoded = await promisify(jwt.verify)(socketio.handshake.query.token, authConfig.secret);
+  try {
+    const decoded = await promisify(jwt.verify)(socketio.handshake.query.token, authConfig.secret);
 
-  let rooms = [decoded.id + "*_USER"];
-  rooms.push(decoded.perfil + "*_PERFIL")
-  //rooms.push(decoded.perfil+"*_ENTIDADE")
+    let rooms = [decoded.id + "*_USER"];
+    rooms.push(decoded.perfil + "*_PERFIL")
 
-  socketio.join(rooms)
+    socketio.join(rooms)
 
+    // Registar a conexão (suporta múltiplas abas)
+    if (!connectedsocket[decoded.id]) {
+      connectedsocket[decoded.id] = new Set()
+    }
+    connectedsocket[decoded.id].add(socketio.id)
+    socketToUser[socketio.id] = decoded.id
 
-  connectedsocket[decoded.id] = socketio.id
-  io.emit('standard', 'useronline')
+    io.emit('standard', 'useronline')
 
+    // Handler de desconexão
+    socketio.on('disconnect', () => {
+      const userId = socketToUser[socketio.id]
+      if (userId && connectedsocket[userId]) {
+        connectedsocket[userId].delete(socketio.id)
+        // Se não tem mais nenhuma aba aberta, remover o utilizador
+        if (connectedsocket[userId].size === 0) {
+          delete connectedsocket[userId]
+        }
+      }
+      delete socketToUser[socketio.id]
+      io.emit('standard', 'useronline')
+    })
+
+  } catch (err) {
+    // Token inválido ou expirado — desconectar o socket
+    socketio.disconnect(true)
+  }
 
 })
 
@@ -58,6 +86,7 @@ class Authentication {
       }
 
       request.userID = decoded.id;
+      request.perfilID = decoded.perfil;
       request.connectedsocket = connectedsocket
       request.io = io
 

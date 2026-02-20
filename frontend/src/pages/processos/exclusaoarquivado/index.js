@@ -914,10 +914,10 @@ const ProcessoArquivados = () => {
             `/sgigjprocessoexclusao/${INSTRUCAO_ID}/resgatar`
         );
 
-        if (response.status == "200") {
-            uploadlist() 
+        if (response.status === 200) {
+            uploadlist()
             toast.success("Processo Resgatado!", { duration: 4000 });
-            resx = true 
+            resx = true
         }
         } catch (err) {
         console.error(err.response);

@@ -18,14 +18,15 @@ export default function PecasForm ({DATA,peca,selected_relinstrucaopeca,pessoali
     }
 
     useEffect(()=>{
-        // alert(JSON.stringify(selected_relinstrucaopeca))
         setData({
-            DESTINATARIO:selected_relinstrucaopeca?.DESTINATARIO_ID,
-            PESSOA:selected_relinstrucaopeca?.PESSOA_TESTEMUNHA_ID,
-            COIMA:selected_relinstrucaopeca?.COIMA,
+            DESTINATARIO:selected_relinstrucaopeca?.DESTINATARIO_ID || "",
+            PESSOA:selected_relinstrucaopeca?.PESSOA_TESTEMUNHA_ID || "",
+            COIMA:selected_relinstrucaopeca?.COIMA || "",
             OBS: selected_relinstrucaopeca?.OBS || peca?.OBS ||"",
-            DECISAO:selected_relinstrucaopeca?.PR_DECISAO_TP_ID,
+            DECISAO:selected_relinstrucaopeca?.PR_DECISAO_TP_ID || "",
+            INFRACAO_COIMA: null,
         });
+        if(obsRef.current) obsRef.current.value = selected_relinstrucaopeca?.OBS || peca?.OBS || "";
     },[selected_relinstrucaopeca,peca])
 
     async function criarPDF() {

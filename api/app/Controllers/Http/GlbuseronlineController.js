@@ -39,9 +39,6 @@ class entity {
       const extractRequest = functionsDatabase.extractRequest(list,[])
       const data = functionsDatabase.indexconfig(request,extractRequest,['DT_REGISTO'])
 
-      console.log(" request.connectedsocket")
-      console.log( request.connectedsocket)
-
       let newarray = Object.entries(request.connectedsocket)
 
       let userconnected = []
@@ -61,10 +58,6 @@ class entity {
           .with('sgigjrelpessoaentidade.sgigjpessoa')
           .where('ESTADO', 1)
           .fetch()
-
-        console.log(result.rows.length)
-
-
 
 
         for (let index = 0; index < result.rows.length; index++) {

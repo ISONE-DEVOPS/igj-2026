@@ -2,7 +2,9 @@ import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
 import Select from 'react-select';
 
-const DashboardFilters = ({ filtrosOpcoes, filters, onFilterChange, onRefresh, loading }) => {
+const DashboardFilters = ({ filtrosOpcoes, filters, onFilterChange, onRefresh, loading, permissions }) => {
+
+    const showEntidadeFilter = permissions?.sections?.filtroEntidade !== false;
 
     const anoOptions = filtrosOpcoes?.anos
         ? [{ value: '', label: 'Todos os Anos' }, ...filtrosOpcoes.anos.map(a => ({ value: a, label: String(a) }))]
@@ -34,13 +36,13 @@ const DashboardFilters = ({ filtrosOpcoes, filters, onFilterChange, onRefresh, l
     return (
         <div className="dashboard-filters mb-4">
             <Row className="align-items-center">
-                <Col xs={12} md={3}>
+                <Col xs={12} md={showEntidadeFilter ? 3 : 5}>
                     <h4 className="dashboard-title mb-0">
                         <i className="feather icon-bar-chart-2 mr-2" style={{ color: '#C5A55A' }} />
                         Dashboard
                     </h4>
                 </Col>
-                <Col xs={6} md={3}>
+                <Col xs={6} md={showEntidadeFilter ? 3 : 5}>
                     <Select
                         value={anoOptions.find(o => o.value === (filters.ano || '')) || anoOptions[0]}
                         onChange={(opt) => onFilterChange({ ...filters, ano: opt.value })}
@@ -50,15 +52,17 @@ const DashboardFilters = ({ filtrosOpcoes, filters, onFilterChange, onRefresh, l
                         isSearchable={false}
                     />
                 </Col>
-                <Col xs={6} md={4}>
-                    <Select
-                        value={entidadeOptions.find(o => o.value === (filters.entidadeId || '')) || entidadeOptions[0]}
-                        onChange={(opt) => onFilterChange({ ...filters, entidadeId: opt.value })}
-                        options={entidadeOptions}
-                        styles={customStyles}
-                        placeholder="Entidade"
-                    />
-                </Col>
+                {showEntidadeFilter && (
+                    <Col xs={6} md={4}>
+                        <Select
+                            value={entidadeOptions.find(o => o.value === (filters.entidadeId || '')) || entidadeOptions[0]}
+                            onChange={(opt) => onFilterChange({ ...filters, entidadeId: opt.value })}
+                            options={entidadeOptions}
+                            styles={customStyles}
+                            placeholder="Entidade"
+                        />
+                    </Col>
+                )}
                 <Col xs={12} md={2} className="mt-2 mt-md-0">
                     <Button
                         variant="outline-secondary"

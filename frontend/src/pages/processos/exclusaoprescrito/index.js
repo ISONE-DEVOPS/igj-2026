@@ -1318,7 +1318,7 @@ const ProcessoPrescritos = () => {
         `/sgigjprocessoexclusao/${INSTRUCAO_ID}/resgatar`
       );
 
-      if (response.status == "200") {
+      if (response.status === 200) {
         uploadlist();
         toast.success("Processo Resgatado!", { duration: 4000 });
         resx = true;

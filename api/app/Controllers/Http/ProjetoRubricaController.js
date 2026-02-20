@@ -277,8 +277,7 @@ class ProjetoRubricaController extends GenericController {
             let PAGO_PERCENT = 0
             let SALDO_DISPONIVEL = 0
 
-            let textFilter = ""
-            // textFilter = " - " + d.getFullYear()
+            let textFilter = " - " + d.getFullYear()
 
 
             if (data["PROJETO_ID"]) {

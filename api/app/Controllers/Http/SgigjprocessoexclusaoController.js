@@ -11,6 +11,7 @@ const Env = use("Env");
 var pdf = require("html-pdf");
 const moment = require("moment");
 const ModelInterveniente = use("App/Models/Sgigjrelinterveniente");
+const DatabaseDB = use("Database");
 const GlbnotificacaoFunctions = require("./GlbnotificacaoFunctions");
 
 class entity {
@@ -155,23 +156,17 @@ class entity {
             const dataHoje = moment().format("DD/MM/YYYY HH:mm");
             const msgProcesso = `${nomeUtilizador} registrou um novo processo (Código: ${data.CODIGO}) em ${dataHoje}. Descrição: ${data.DESCR}`;
 
-            GlbnotificacaoFunctions.storeToPerfil({
-              request,
-              PERFIL_ID: "85c24ffab0137705617aa94b250866471dc2",
-              MSG: msgProcesso,
-              TITULO: "Processo Registrado",
-              PESSOA_ID: null,
-              URL: `/processos/exclusaointerdicao`,
-            });
-
-            GlbnotificacaoFunctions.storeToPerfil({
-              request,
-              PERFIL_ID: "f8382845e6dad3fb2d2e14aa45b14f0f85de",
-              MSG: msgProcesso,
-              TITULO: "Processo Registrado",
-              PESSOA_ID: null,
-              URL: `/processos/exclusaointerdicao`,
-            });
+            const allPerfis = await DatabaseDB.table("glbperfil").where("ESTADO", 1);
+            for (const perfil of allPerfis) {
+              GlbnotificacaoFunctions.storeToPerfil({
+                request,
+                PERFIL_ID: perfil.ID,
+                MSG: msgProcesso,
+                TITULO: "Processo Registrado",
+                PESSOA_ID: null,
+                URL: `/processos/exclusaointerdicao`,
+              });
+            }
           }
 
           return data;
@@ -232,23 +227,17 @@ class entity {
 
           if (newE === 1) {
             if (data.ESTADO_DEPACHO_INICIAL && data.ESTADO_DEPACHO_INICIAL == "CONCLUIR") {
-              GlbnotificacaoFunctions.storeToPerfil({
-                request: null,
-                PERFIL_ID: "85c24ffab0137705617aa94b250866471dc2", //id de Inspector Geral
-                MSG: `Foi registrado um processo com o codigo ${data.CODIGO} e com a seguinte descrisão: ${data.DESCR}`,
-                TITULO: "Processo registrado",
-                PESSOA_ID: null,
-                URL: `entidades/entidades/detalhes/${data.ENTIDADE_ID}`,
-              });
-
-              GlbnotificacaoFunctions.storeToPerfil({
-                request: null,
-                PERFIL_ID: "f8382845e6dad3fb2d2e14aa45b14f0f85de", //id de Inspector
-                MSG: `Foi registrado um processo com o codigo ${data.CODIGO} e com a seguinte descrisão: ${data.DESCR}`,
-                TITULO: "Processo registrado",
-                PESSOA_ID: null,
-                URL: `entidades/entidades/detalhes/${data.ENTIDADE_ID}`,
-              });
+              const allPerfisUpd = await DatabaseDB.table("glbperfil").where("ESTADO", 1);
+              for (const perfil of allPerfisUpd) {
+                GlbnotificacaoFunctions.storeToPerfil({
+                  request: null,
+                  PERFIL_ID: perfil.ID,
+                  MSG: `Foi registrado um processo com o codigo ${data.CODIGO} e com a seguinte descrisão: ${data.DESCR}`,
+                  TITULO: "Processo registrado",
+                  PESSOA_ID: null,
+                  URL: `entidades/entidades/detalhes/${data.ENTIDADE_ID}`,
+                });
+              }
             }
 
             return data;

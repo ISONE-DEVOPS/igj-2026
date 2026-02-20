@@ -1,8 +1,47 @@
 'use strict'
 
 let DatabaseDB = use("Database")
+const { getDashboardRole, getDashboardSections, getUserEntidadeId } = require('./dashboardPermissions')
 
 class DashboardController {
+
+    /**
+     * Resolve o filtro de entidade conforme o perfil do utilizador.
+     * - CASINO: forca o ENTIDADE_ID do utilizador (ignora param do request)
+     * - Outros: usa o param do request se enviado
+     */
+    async _resolveEntidadeFilter(request) {
+        const role = getDashboardRole(request.perfilID)
+        if (role === 'CASINO') {
+            const entidadeId = await getUserEntidadeId(request.userID)
+            return entidadeId
+        }
+        return request.input('entidade_id') || null
+    }
+
+    /**
+     * GET /dashboard/config
+     * Returns dashboard visibility config based on user profile
+     */
+    async config({ request, response }) {
+        try {
+            const role = getDashboardRole(request.perfilID)
+            const sections = getDashboardSections(role)
+            let entidadeId = null
+
+            if (role === 'CASINO') {
+                entidadeId = await getUserEntidadeId(request.userID)
+            }
+
+            return response.json({
+                role,
+                entidadeId,
+                sections
+            })
+        } catch (error) {
+            return response.status(500).json({ error: error.message })
+        }
+    }
 
     /**
      * GET /dashboard/kpis
@@ -10,83 +49,94 @@ class DashboardController {
      */
     async kpis({ request, response }) {
         try {
+            const role = getDashboardRole(request.perfilID)
+            const sections = getDashboardSections(role)
             const ano = request.input('ano')
-            const entidadeId = request.input('entidade_id')
+            const entidadeId = await this._resolveEntidadeFilter(request)
 
-            // Build WHERE conditions
             const anoFilter = ano ? ` AND ANO = ${parseInt(ano)}` : ''
             const entidadeFilter = entidadeId ? ` AND ENTIDADE_ID = '${entidadeId}'` : ''
 
-            // Receita Bruta (from impostos table)
-            const receitaBruta = await DatabaseDB.raw(
-                `SELECT COALESCE(SUM(BRUTO), 0) as total FROM impostos WHERE ESTADO = 1${anoFilter}${entidadeFilter}`
-            )
+            const result = {}
+
+            // Receita Bruta
+            if (sections.kpiReceita) {
+                const receitaBruta = await DatabaseDB.raw(
+                    `SELECT COALESCE(SUM(BRUTO), 0) as total FROM impostos WHERE ESTADO = 1${anoFilter}${entidadeFilter}`
+                )
+                result.receitaBruta = receitaBruta[0][0].total
+
+                const sparklineReceita = await DatabaseDB.raw(
+                    `SELECT ANO as ano, COALESCE(SUM(BRUTO), 0) as total FROM impostos WHERE ESTADO = 1${entidadeFilter} GROUP BY ANO ORDER BY ANO DESC LIMIT 5`
+                )
+                result.sparklines = result.sparklines || {}
+                result.sparklines.receita = sparklineReceita[0].reverse()
+            }
 
             // Impostos Arrecadados
-            const impostos = await DatabaseDB.raw(
-                `SELECT COALESCE(SUM(IMPOSTO), 0) as total FROM impostos WHERE ESTADO = 1${anoFilter}${entidadeFilter}`
-            )
+            if (sections.kpiImpostos) {
+                const impostos = await DatabaseDB.raw(
+                    `SELECT COALESCE(SUM(IMPOSTO), 0) as total FROM impostos WHERE ESTADO = 1${anoFilter}${entidadeFilter}`
+                )
+                result.impostos = impostos[0][0].total
+            }
 
-            // Processos Ativos (exclusão)
-            const processosExclusao = await DatabaseDB.raw(
-                `SELECT COUNT(*) as total FROM sgigjprocessoexclusao WHERE ESTADO = 1`
-            )
+            // Processos Ativos
+            if (sections.kpiProcessos) {
+                const processosExclusao = await DatabaseDB.raw(
+                    `SELECT COUNT(*) as total FROM sgigjprocessoexclusao WHERE ESTADO = 1`
+                )
+                const processosAutoExclusao = await DatabaseDB.raw(
+                    `SELECT COUNT(*) as total FROM sgigjprocessoautoexclusao WHERE ESTADO = 1`
+                )
+                result.processosAtivos = processosExclusao[0][0].total + processosAutoExclusao[0][0].total
 
-            // Processos Auto-exclusão
-            const processosAutoExclusao = await DatabaseDB.raw(
-                `SELECT COUNT(*) as total FROM sgigjprocessoautoexclusao WHERE ESTADO = 1`
-            )
+                const sparklineProcessos = await DatabaseDB.raw(
+                    `SELECT YEAR(DT_REGISTO) as ano, COUNT(*) as total FROM sgigjprocessoexclusao WHERE ESTADO = 1 GROUP BY YEAR(DT_REGISTO) ORDER BY ano DESC LIMIT 5`
+                )
+                result.sparklines = result.sparklines || {}
+                result.sparklines.processos = sparklineProcessos[0].reverse()
+            }
 
             // Entidades Ativas
-            const entidades = await DatabaseDB.raw(
-                `SELECT COUNT(*) as total FROM sgigjentidade WHERE ESTADO = 1`
-            )
+            if (sections.kpiEntidades) {
+                const entidades = await DatabaseDB.raw(
+                    `SELECT COUNT(*) as total FROM sgigjentidade WHERE ESTADO = 1`
+                )
+                result.entidadesAtivas = entidades[0][0].total
+            }
 
-            // Eventos Aprovados
-            const eventos = await DatabaseDB.raw(
-                `SELECT COUNT(*) as total FROM sgigjentidadeevento WHERE ESTADO = 1`
-            )
+            // Eventos
+            if (sections.kpiEventos) {
+                const eventosFilter = entidadeId ? ` AND ENTIDADE_ID = '${entidadeId}'` : ''
+                const eventos = await DatabaseDB.raw(
+                    `SELECT COUNT(*) as total FROM sgigjentidadeevento WHERE ESTADO = 1${eventosFilter}`
+                )
+                result.eventosAprovados = eventos[0][0].total
+            }
 
             // Casos Suspeitos
-            const casosSuspeitos = await DatabaseDB.raw(
-                `SELECT COUNT(*) as total FROM casosuspeito WHERE ESTADO = 1`
-            )
+            if (sections.kpiCasosSuspeitos) {
+                const casosSuspeitos = await DatabaseDB.raw(
+                    `SELECT COUNT(*) as total FROM casosuspeito WHERE ESTADO = 1`
+                )
+                result.casosSuspeitos = casosSuspeitos[0][0].total
+            }
 
-            // Sparkline data - receita bruta por ano (últimos 5 anos)
-            const sparklineReceita = await DatabaseDB.raw(
-                `SELECT ANO as ano, COALESCE(SUM(BRUTO), 0) as total FROM impostos WHERE ESTADO = 1 GROUP BY ANO ORDER BY ANO DESC LIMIT 5`
-            )
+            // Execucao Orcamental
+            if (sections.kpiOrcamento) {
+                const orcamentoTotal = await DatabaseDB.raw(
+                    `SELECT COALESCE(SUM(ORCAMENTO_INICIAL), 0) as total FROM orcamentos WHERE ESTADO = 1`
+                )
+                const despesaTotal = await DatabaseDB.raw(
+                    `SELECT COALESCE(SUM(VALOR), 0) as total FROM orcalmentodespesa WHERE ESTADO = 1`
+                )
+                const orcVal = orcamentoTotal[0][0].total || 0
+                const despVal = despesaTotal[0][0].total || 0
+                result.execucaoOrcamental = orcVal > 0 ? Math.round((despVal / orcVal) * 100 * 10) / 10 : 0
+            }
 
-            // Sparkline - processos por ano
-            const sparklineProcessos = await DatabaseDB.raw(
-                `SELECT YEAR(DT_REGISTO) as ano, COUNT(*) as total FROM sgigjprocessoexclusao WHERE ESTADO = 1 GROUP BY YEAR(DT_REGISTO) ORDER BY ano DESC LIMIT 5`
-            )
-
-            // Orçamento - execução total
-            const orcamentoTotal = await DatabaseDB.raw(
-                `SELECT COALESCE(SUM(ORCAMENTO_INICIAL), 0) as total FROM orcamentos WHERE ESTADO = 1`
-            )
-            const despesaTotal = await DatabaseDB.raw(
-                `SELECT COALESCE(SUM(VALOR), 0) as total FROM orcalmentodespesa WHERE ESTADO = 1`
-            )
-
-            const orcVal = orcamentoTotal[0][0].total || 0
-            const despVal = despesaTotal[0][0].total || 0
-            const execucaoOrcamental = orcVal > 0 ? Math.round((despVal / orcVal) * 100 * 10) / 10 : 0
-
-            return response.json({
-                receitaBruta: receitaBruta[0][0].total,
-                impostos: impostos[0][0].total,
-                processosAtivos: processosExclusao[0][0].total + processosAutoExclusao[0][0].total,
-                entidadesAtivas: entidades[0][0].total,
-                eventosAprovados: eventos[0][0].total,
-                casosSuspeitos: casosSuspeitos[0][0].total,
-                execucaoOrcamental,
-                sparklines: {
-                    receita: sparklineReceita[0].reverse(),
-                    processos: sparklineProcessos[0].reverse()
-                }
-            })
+            return response.json(result)
         } catch (error) {
             return response.status(500).json({ error: error.message })
         }
@@ -98,34 +148,34 @@ class DashboardController {
      */
     async financeiro({ request, response }) {
         try {
-            const entidadeId = request.input('entidade_id')
+            const sections = getDashboardSections(getDashboardRole(request.perfilID))
+            if (!sections.visaoFinanceira) {
+                return response.json({ restricted: true })
+            }
+
+            const entidadeId = await this._resolveEntidadeFilter(request)
             const entidadeFilter = entidadeId ? ` AND ENTIDADE_ID = '${entidadeId}'` : ''
 
-            // Receita Bruta por ano
             const receita = await DatabaseDB.raw(
                 `SELECT ANO as ano, COALESCE(SUM(BRUTO), 0) as receita_bruta, COALESCE(SUM(IMPOSTO), 0) as impostos
                  FROM impostos WHERE ESTADO = 1${entidadeFilter} GROUP BY ANO ORDER BY ANO`
             )
 
-            // Contrapartidas por ano
             const contrapartidas = await DatabaseDB.raw(
                 `SELECT ANO as ano, COALESCE(SUM(Art_48_percent + Art_49_percent), 0) as contrapartidas
                  FROM contrapartidas WHERE ESTADO = 1${entidadeFilter} GROUP BY ANO ORDER BY ANO`
             )
 
-            // Contribuições por ano
             const contribuicoes = await DatabaseDB.raw(
                 `SELECT ANO as ano, COALESCE(SUM(VALOR), 0) as contribuicoes
                  FROM contribuicoes WHERE ESTADO = 1${entidadeFilter} GROUP BY ANO ORDER BY ANO`
             )
 
-            // Prémios por ano
             const premios = await DatabaseDB.raw(
                 `SELECT ANO as ano, COALESCE(SUM(VALOR), 0) as premios
                  FROM premios WHERE ESTADO = 1 AND PREMIOS_ID IS NULL${entidadeFilter} GROUP BY ANO ORDER BY ANO`
             )
 
-            // Merge all data by year
             const anosSet = new Set()
             const receitaMap = {}
             const contraMap = {}
@@ -159,14 +209,22 @@ class DashboardController {
      */
     async receitaEntidade({ request, response }) {
         try {
+            const role = getDashboardRole(request.perfilID)
+            const sections = getDashboardSections(role)
+            if (!sections.entidadesReceita) {
+                return response.json({ restricted: true })
+            }
+
             const ano = request.input('ano')
+            const entidadeId = await this._resolveEntidadeFilter(request)
             const anoFilter = ano ? ` AND i.ANO = ${parseInt(ano)}` : ''
+            const entidadeFilter = entidadeId ? ` AND i.ENTIDADE_ID = '${entidadeId}'` : ''
 
             const result = await DatabaseDB.raw(
                 `SELECT e.DESIG as entidade, COALESCE(SUM(i.BRUTO), 0) as receita_bruta, COALESCE(SUM(i.IMPOSTO), 0) as impostos
                  FROM impostos i
                  INNER JOIN sgigjentidade e ON i.ENTIDADE_ID = e.ID
-                 WHERE i.ESTADO = 1${anoFilter}
+                 WHERE i.ESTADO = 1${anoFilter}${entidadeFilter}
                  GROUP BY e.ID, e.DESIG
                  ORDER BY receita_bruta DESC
                  LIMIT 15`
@@ -184,7 +242,11 @@ class DashboardController {
      */
     async processos({ request, response }) {
         try {
-            // Exclusão por status
+            const sections = getDashboardSections(getDashboardRole(request.perfilID))
+            if (!sections.processosExclusoes) {
+                return response.json({ restricted: true })
+            }
+
             const exclusaoStatus = await DatabaseDB.raw(
                 `SELECT
                     SUM(CASE WHEN ESTADO = 1 THEN 1 ELSE 0 END) as ativos,
@@ -195,7 +257,6 @@ class DashboardController {
                  FROM sgigjprocessoexclusao`
             )
 
-            // Auto-exclusão por status
             const autoExclusaoStatus = await DatabaseDB.raw(
                 `SELECT
                     SUM(CASE WHEN ESTADO = 1 THEN 1 ELSE 0 END) as ativos,
@@ -204,7 +265,6 @@ class DashboardController {
                  FROM sgigjprocessoautoexclusao`
             )
 
-            // Processos por mês (últimos 12 meses)
             const exclusaoPorMes = await DatabaseDB.raw(
                 `SELECT DATE_FORMAT(DT_REGISTO, '%Y-%m') as mes, COUNT(*) as total
                  FROM sgigjprocessoexclusao
@@ -238,7 +298,12 @@ class DashboardController {
      */
     async eventos({ request, response }) {
         try {
-            const entidadeId = request.input('entidade_id')
+            const sections = getDashboardSections(getDashboardRole(request.perfilID))
+            if (!sections.eventosAtividade) {
+                return response.json({ restricted: true })
+            }
+
+            const entidadeId = await this._resolveEntidadeFilter(request)
             const entidadeFilter = entidadeId ? ` AND ENTIDADE_ID = '${entidadeId}'` : ''
 
             const statusDistribution = await DatabaseDB.raw(
@@ -250,7 +315,6 @@ class DashboardController {
                  FROM sgigjentidadeevento WHERE 1=1${entidadeFilter}`
             )
 
-            // Eventos por mês
             const eventosPorMes = await DatabaseDB.raw(
                 `SELECT DATE_FORMAT(DT_REGISTO, '%Y-%m') as mes, COUNT(*) as total
                  FROM sgigjentidadeevento
@@ -259,7 +323,6 @@ class DashboardController {
                  ORDER BY mes`
             )
 
-            // Eventos por tipo
             const eventosPorTipo = await DatabaseDB.raw(
                 `SELECT t.DESIG as tipo, COUNT(*) as total
                  FROM sgigjentidadeevento e
@@ -283,36 +346,41 @@ class DashboardController {
      * GET /dashboard/entidades
      * Returns entity equipment breakdown
      */
-    async entidades({ response }) {
+    async entidades({ request, response }) {
         try {
-            // Máquinas por entidade
+            const role = getDashboardRole(request.perfilID)
+            const sections = getDashboardSections(role)
+            if (!sections.entidadesReceita) {
+                return response.json({ restricted: true })
+            }
+
+            const entidadeId = await this._resolveEntidadeFilter(request)
+            const entidadeFilter = entidadeId ? ` AND e.ID = '${entidadeId}'` : ''
+
             const maquinas = await DatabaseDB.raw(
                 `SELECT e.DESIG as entidade, COUNT(m.ID) as maquinas
                  FROM sgigjentidade e
                  LEFT JOIN sgigjentidademaquina m ON e.ID = m.ENTIDADE_ID AND m.ESTADO = 1
-                 WHERE e.ESTADO = 1
+                 WHERE e.ESTADO = 1${entidadeFilter}
                  GROUP BY e.ID, e.DESIG`
             )
 
-            // Bancas por entidade
             const bancas = await DatabaseDB.raw(
                 `SELECT e.DESIG as entidade, COUNT(b.ID) as bancas
                  FROM sgigjentidade e
                  LEFT JOIN sgigjentidadebanca b ON e.ID = b.ENTIDADE_ID AND b.ESTADO = 1
-                 WHERE e.ESTADO = 1
+                 WHERE e.ESTADO = 1${entidadeFilter}
                  GROUP BY e.ID, e.DESIG`
             )
 
-            // Equipamentos por entidade
             const equipamentos = await DatabaseDB.raw(
                 `SELECT e.DESIG as entidade, COUNT(eq.ID) as equipamentos
                  FROM sgigjentidade e
                  LEFT JOIN sgigjentidadeequipamento eq ON e.ID = eq.ENTIDADE_ID AND eq.ESTADO = 1
-                 WHERE e.ESTADO = 1
+                 WHERE e.ESTADO = 1${entidadeFilter}
                  GROUP BY e.ID, e.DESIG`
             )
 
-            // Merge data
             const entidadesMap = {}
             maquinas[0].forEach(r => {
                 entidadesMap[r.entidade] = { entidade: r.entidade, maquinas: r.maquinas, bancas: 0, equipamentos: 0 }
@@ -336,8 +404,13 @@ class DashboardController {
      * GET /dashboard/atividade
      * Returns system activity heatmap data (audit trail)
      */
-    async atividade({ response }) {
+    async atividade({ request, response }) {
         try {
+            const sections = getDashboardSections(getDashboardRole(request.perfilID))
+            if (!sections.eventosAtividade) {
+                return response.json({ restricted: true })
+            }
+
             const result = await DatabaseDB.raw(
                 `SELECT DATE_FORMAT(Created_At, '%Y-%m') as mes, Text_Modulo as modulo, COUNT(*) as total
                  FROM create_auditorias
@@ -358,14 +431,21 @@ class DashboardController {
      */
     async handpay({ request, response }) {
         try {
+            const sections = getDashboardSections(getDashboardRole(request.perfilID))
+            if (!sections.handpayCasos) {
+                return response.json({ restricted: true })
+            }
+
             const ano = request.input('ano')
+            const entidadeId = await this._resolveEntidadeFilter(request)
             const anoFilter = ano ? ` AND YEAR(h.DT_REGISTO) = ${parseInt(ano)}` : ''
+            const entidadeFilter = entidadeId ? ` AND h.ENTIDADE_ID = '${entidadeId}'` : ''
 
             const result = await DatabaseDB.raw(
                 `SELECT e.DESIG as entidade, COUNT(h.ID) as quantidade, COALESCE(SUM(h.VALOR), 0) as valor_total
                  FROM sgigjhandpay h
                  INNER JOIN sgigjentidade e ON h.ENTIDADE_ID = e.ID
-                 WHERE h.ESTADO = 1${anoFilter}
+                 WHERE h.ESTADO = 1${anoFilter}${entidadeFilter}
                  GROUP BY e.ID, e.DESIG
                  ORDER BY valor_total DESC`
             )
@@ -380,8 +460,13 @@ class DashboardController {
      * GET /dashboard/casos-suspeitos
      * Returns suspicious cases monthly evolution
      */
-    async casosSuspeitos({ response }) {
+    async casosSuspeitos({ request, response }) {
         try {
+            const sections = getDashboardSections(getDashboardRole(request.perfilID))
+            if (!sections.handpayCasos) {
+                return response.json({ restricted: true })
+            }
+
             const result = await DatabaseDB.raw(
                 `SELECT DATE_FORMAT(DT_REGISTO, '%Y-%m') as mes, COUNT(*) as total
                  FROM casosuspeito
@@ -402,10 +487,14 @@ class DashboardController {
      */
     async orcamento({ request, response }) {
         try {
+            const sections = getDashboardSections(getDashboardRole(request.perfilID))
+            if (!sections.orcamento) {
+                return response.json({ restricted: true })
+            }
+
             const ano = request.input('ano')
             const anoFilter = ano ? ` AND o.ANO = ${parseInt(ano)}` : ''
 
-            // Orçamento por rubrica/projeto
             const orcamento = await DatabaseDB.raw(
                 `SELECT p.NOME as projeto, COALESCE(SUM(o.ORCAMENTO_INICIAL), 0) as orcamento_previsto
                  FROM orcamentos o
@@ -415,7 +504,6 @@ class DashboardController {
                  ORDER BY orcamento_previsto DESC`
             )
 
-            // Despesas por rubrica/projeto
             const despesas = await DatabaseDB.raw(
                 `SELECT p.NOME as projeto, COALESCE(SUM(d.VALOR), 0) as despesa_real
                  FROM orcalmentodespesa d
@@ -426,7 +514,6 @@ class DashboardController {
                  ORDER BY despesa_real DESC`
             )
 
-            // Total execution rate
             const totalOrcamento = await DatabaseDB.raw(
                 `SELECT COALESCE(SUM(ORCAMENTO_INICIAL), 0) as total FROM orcamentos WHERE ESTADO = 1`
             )
@@ -456,19 +543,26 @@ class DashboardController {
      * GET /dashboard/filtros
      * Returns available filter options (years, entities)
      */
-    async filtros({ response }) {
+    async filtros({ request, response }) {
         try {
+            const role = getDashboardRole(request.perfilID)
+            const sections = getDashboardSections(role)
+
             const anos = await DatabaseDB.raw(
                 `SELECT DISTINCT ANO as ano FROM impostos WHERE ESTADO = 1 ORDER BY ANO`
             )
 
-            const entidades = await DatabaseDB.raw(
-                `SELECT ID as id, DESIG as nome FROM sgigjentidade WHERE ESTADO = 1 ORDER BY DESIG`
-            )
+            let entidades = []
+            if (sections.filtroEntidade) {
+                const result = await DatabaseDB.raw(
+                    `SELECT ID as id, DESIG as nome FROM sgigjentidade WHERE ESTADO = 1 ORDER BY DESIG`
+                )
+                entidades = result[0]
+            }
 
             return response.json({
                 anos: anos[0].map(r => r.ano),
-                entidades: entidades[0]
+                entidades
             })
         } catch (error) {
             return response.status(500).json({ error: error.message })

@@ -769,7 +769,7 @@ const ProcessoFinalizado = () => {
           );
         }
 
-        var filtered = response.data.filter((el) => el.colorx == "black");
+        var filtered = response.data.filter((el) => el.colorx == "black" || el.colorx == "blue" || el.colorx == "orange");
         // debugger
 
         setnewdata(filtered);
@@ -1294,7 +1294,7 @@ const ProcessoFinalizado = () => {
         `/sgigjprocessoexclusao/${INSTRUCAO_ID}/resgatar`
       );
 
-      if (response.status == "200") {
+      if (response.status === 200) {
         uploadlist();
         toast.success("Processo Resgatado!", { duration: 4000 });
         resx = true;

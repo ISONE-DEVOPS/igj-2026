@@ -536,8 +536,8 @@ const Customers = () => {
                                             <select onChange={event => { setTIPO_C(event.target.value) }} className="form-control" id="perfil" required aria-required="true">
 
                                                 <option hidden value="">Selecione</option>
-                                                <option value="APROVADO">Aprovado</option>
-                                                <option value="NAO_APROVADO">Não aprovado</option>
+                                                <option value="APROVADO">Concordância</option>
+                                                <option value="NAO_APROVADO">Discordância</option>
 
 
 
@@ -599,8 +599,8 @@ const Customers = () => {
                                             <select onChange={event => { setTIPO_C(event.target.value) }} defaultValue={itemSelected.TIPO} className="form-control" id="perfil" required aria-required="true">
 
                                                 <option hidden value="">Selecione</option>
-                                                <option value="APROVADO">Aprovado</option>
-                                                <option value="NAO_APROVADO">Não aprovado</option>
+                                                <option value="APROVADO">Concordância</option>
+                                                <option value="NAO_APROVADO">Discordância</option>
 
 
                                             </select>

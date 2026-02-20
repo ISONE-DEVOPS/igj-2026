@@ -8,6 +8,7 @@ const Model = use('App/Models/' + controller);
 const GlbnotificacaoFunctions = use('App/Controllers/Http/GlbnotificacaoFunctions');
 const functionsDatabase = require('../../functionsDatabase');
 const Sgigjrelinstrutorpeca = use('App/Models/Sgigjrelinstrutorpeca');
+const Sgigjprpecasprocessual = use('App/Models/Sgigjprpecasprocessual');
 const pdfCreater = require('../pdfCreater');
 const User = use('App/Models/Glbuser');
 const Sgigjrelpessoaentidade = use("App/Models/Sgigjrelpessoaentidade");
@@ -107,10 +108,17 @@ const store = async ({ params, request, response }) => {
         const nomeUtilizador = await functionsDatabase.userIDToNome(request.userID)
         const dataHoje = moment().format("DD/MM/YYYY HH:mm")
 
+        let nomePeca = ""
+        if (instrucaopecas?.PR_PECAS_PROCESSUAIS_ID) {
+          const pecaInfo = await Sgigjprpecasprocessual.query().where("ID", instrucaopecas.PR_PECAS_PROCESSUAIS_ID).first()
+          if (pecaInfo) nomePeca = pecaInfo.DESIG || ""
+        }
+        const pecaTexto = nomePeca ? ` - ${nomePeca}` : ""
+
         GlbnotificacaoFunctions.storeToPerfil({
           request,
           PERFIL_ID: "85c24ffab0137705617aa94b250866471dc2",//id de Inspector Geral
-          MSG: `${nomeUtilizador} adicionou uma peça ao processo (Código: ${instrucaopecas?.CODIGO}) em ${dataHoje}.`,
+          MSG: `${nomeUtilizador} adicionou uma peça ao processo (Código: ${instrucaopecas?.CODIGO}${pecaTexto}) em ${dataHoje}.`,
           TITULO: "Peça no Processo",
           PESSOA_ID: null,
           URL: `/processos/exclusaointerdicao`
@@ -119,7 +127,7 @@ const store = async ({ params, request, response }) => {
         GlbnotificacaoFunctions.storeToPerfil({
           request,
           PERFIL_ID: "f8382845e6dad3fb2d2e14aa45b14f0f85de",//id de Inspector
-          MSG: `${nomeUtilizador} adicionou uma peça ao processo (Código: ${instrucaopecas?.CODIGO}) em ${dataHoje}.`,
+          MSG: `${nomeUtilizador} adicionou uma peça ao processo (Código: ${instrucaopecas?.CODIGO}${pecaTexto}) em ${dataHoje}.`,
           TITULO: "Peça no Processo",
           PESSOA_ID: null,
           URL: `/processos/exclusaointerdicao`

@@ -187,8 +187,8 @@ const store = async ({ params, request, response }) => {
             GlbnotificacaoFunctions.storeToPerfil({
               request,
               PERFIL_ID: Env.get("PERFIL_INSPECTOR_GERAL", "85c24ffab0137705617aa94b250866471dc2"),
-              MSG: `${nomeUtilizador} atualizou o despacho final do processo (Código: ${newitem[0].CODIGO}) em ${dataHoje}. Referência: ${data.REFERENCIA || ''}.`,
-              TITULO: "Despacho Final",
+              MSG: `${nomeUtilizador} atualizou o despacho de decisão do processo (Código: ${newitem[0].CODIGO}) em ${dataHoje}. Referência: ${data.REFERENCIA || ''}.`,
+              TITULO: "Despacho de Decisão",
               PESSOA_ID: null,
               URL: `/processos/exclusaointerdicao`
             })
@@ -196,8 +196,8 @@ const store = async ({ params, request, response }) => {
             GlbnotificacaoFunctions.storeToPerfil({
               request,
               PERFIL_ID: Env.get("PERFIL_INSPECTOR", "f8382845e6dad3fb2d2e14aa45b14f0f85de"),
-              MSG: `${nomeUtilizador} atualizou o despacho final do processo (Código: ${newitem[0].CODIGO}) em ${dataHoje}. Referência: ${data.REFERENCIA || ''}.`,
-              TITULO: "Despacho Final",
+              MSG: `${nomeUtilizador} atualizou o despacho de decisão do processo (Código: ${newitem[0].CODIGO}) em ${dataHoje}. Referência: ${data.REFERENCIA || ''}.`,
+              TITULO: "Despacho de Decisão",
               PESSOA_ID: null,
               URL: `/processos/exclusaointerdicao`
             })
@@ -226,8 +226,8 @@ const store = async ({ params, request, response }) => {
           GlbnotificacaoFunctions.storeToPerfil({
             request,
             PERFIL_ID: Env.get("PERFIL_INSPECTOR_GERAL", "85c24ffab0137705617aa94b250866471dc2"),
-            MSG: `${nomeUtilizador2} registrou um despacho final no processo (Código: ${data.CODIGO}) em ${dataHoje2}. Referência: ${data.REFERENCIA || ''}.`,
-            TITULO: "Despacho Final",
+            MSG: `${nomeUtilizador2} registrou um despacho de decisão no processo (Código: ${data.CODIGO}) em ${dataHoje2}. Referência: ${data.REFERENCIA || ''}.`,
+            TITULO: "Despacho de Decisão",
             PESSOA_ID: null,
             URL: `/processos/exclusaointerdicao`
           })
@@ -235,8 +235,8 @@ const store = async ({ params, request, response }) => {
           GlbnotificacaoFunctions.storeToPerfil({
             request,
             PERFIL_ID: Env.get("PERFIL_INSPECTOR", "f8382845e6dad3fb2d2e14aa45b14f0f85de"),
-            MSG: `${nomeUtilizador2} registrou um despacho final no processo (Código: ${data.CODIGO}) em ${dataHoje2}. Referência: ${data.REFERENCIA || ''}.`,
-            TITULO: "Despacho Final",
+            MSG: `${nomeUtilizador2} registrou um despacho de decisão no processo (Código: ${data.CODIGO}) em ${dataHoje2}. Referência: ${data.REFERENCIA || ''}.`,
+            TITULO: "Despacho de Decisão",
             PESSOA_ID: null,
             URL: `/processos/exclusaointerdicao`
           })
