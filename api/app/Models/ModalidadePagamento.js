@@ -1,0 +1,24 @@
+'use strict'
+
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
+const Model = use('Model')
+
+class ModalidadePagamento extends Model {
+    static get table () {
+        return 'modalidadepagamento'
+    }
+
+    static get primaryKey () {
+        return 'ID'
+    }
+
+    criadoPor() {
+        return this.belongsTo('App/Models/Glbuser', 'CRIADO_POR', 'ID')
+    }
+
+    deletadoPor() {
+        return this.belongsTo('App/Models/Glbuser', 'DELETADO_POR', 'ID')
+    }
+}
+
+module.exports = ModalidadePagamento

@@ -1,0 +1,543 @@
+// Peças Processuais - Estilos Modernos
+// Paleta baseada no design system IGJ
+
+$primary-blue: #2B7FB9;
+$gold: #C5A55A;
+$dark-blue: #1B4965;
+$green: #2ED8B6;
+$bg-light: #F5F7FA;
+$bg-card: #FFFFFF;
+$text-primary: #2D3436;
+$text-secondary: #636E72;
+$border-light: #E9ECEF;
+$danger: #E74C3C;
+
+// ─── Tabela ───────────────────────────────────────────
+.pecas-wrapper {
+  .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .table {
+    margin-bottom: 0;
+
+    thead th {
+      background: $bg-light;
+      border-bottom: 2px solid $border-light;
+      color: $text-secondary;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 12px 16px;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 12px 16px;
+      vertical-align: middle;
+      border-color: $border-light;
+      color: $text-primary;
+      font-size: 13px;
+    }
+
+    tbody tr {
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background-color: rgba($primary-blue, 0.03);
+      }
+    }
+  }
+
+  .codigo-badge {
+    display: inline-block;
+    background: $bg-light;
+    color: $dark-blue;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  .desig-text {
+    font-weight: 500;
+    color: $text-primary;
+  }
+
+  .desc-truncated {
+    color: $text-secondary;
+    font-size: 12px;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+
+    &:hover {
+      background: $bg-light;
+    }
+
+    &.action-view i { color: $primary-blue; }
+    &.action-edit i { color: $gold; }
+    &.action-delete i { color: $danger; }
+
+    &.action-view:hover { background: rgba($primary-blue, 0.1); }
+    &.action-edit:hover { background: rgba($gold, 0.1); }
+    &.action-delete:hover { background: rgba($danger, 0.1); }
+
+    i { font-size: 15px; }
+  }
+}
+
+// ─── Modal ────────────────────────────────────────────
+.peca-modal {
+  .modal-content {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .modal-header {
+    border-bottom: 1px solid $border-light;
+    padding: 16px 24px;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, $gold, $primary-blue);
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: $text-primary;
+    }
+  }
+
+  .modal-body {
+    padding: 24px;
+  }
+
+  .modal-footer {
+    border-top: 1px solid $border-light;
+    padding: 12px 24px;
+  }
+
+  .section-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: $dark-blue;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid $bg-light;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i { font-size: 16px; color: $gold; }
+
+    .field-counter {
+      font-size: 12px;
+      font-weight: 400;
+      color: $text-secondary;
+      margin-left: auto;
+    }
+  }
+
+  .form-group.fill .floating-label {
+    font-size: 12px;
+    color: $text-secondary;
+    font-weight: 500;
+  }
+
+  // View mode
+  .view-value {
+    background: $bg-light;
+    border: 1px solid $border-light;
+    border-radius: 6px;
+    padding: 8px 12px;
+    min-height: 38px;
+    font-size: 13px;
+    color: $text-primary;
+    display: block;
+  }
+
+  .view-html {
+    background: $bg-light;
+    border: 1px solid $border-light;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: $text-primary;
+    max-height: 200px;
+    overflow-y: auto;
+
+    p { margin-bottom: 4px; }
+  }
+}
+
+// ─── Field Config Panel ───────────────────────────────
+.field-config-panel {
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: $bg-light;
+    margin-bottom: 8px;
+    border: 1.5px solid transparent;
+    transition: all 0.2s ease;
+
+    &.active {
+      background: $bg-card;
+      border-color: rgba($primary-blue, 0.3);
+      box-shadow: 0 1px 4px rgba($primary-blue, 0.08);
+    }
+  }
+
+  .field-name {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: $text-primary;
+
+    .field-row:not(.active) & {
+      color: $text-secondary;
+    }
+  }
+
+  .field-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition: all 0.25s ease;
+
+    .field-row.active & {
+      opacity: 1;
+      max-width: 200px;
+    }
+  }
+
+  .order-input {
+    width: 56px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border: 1.5px solid $border-light;
+    border-radius: 6px;
+    color: $dark-blue;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-blue;
+      box-shadow: 0 0 0 2px rgba($primary-blue, 0.15);
+    }
+  }
+
+  .order-label,
+  .obrig-label {
+    font-size: 11px;
+    color: $text-secondary;
+    white-space: nowrap;
+  }
+
+  // Toggle switch
+  .toggle-switch {
+    position: relative;
+    width: 36px;
+    min-width: 36px;
+    height: 20px;
+    cursor: pointer;
+
+    input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #CBD5E0;
+      border-radius: 10px;
+      transition: background 0.25s ease;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        width: 16px;
+        height: 16px;
+        background: white;
+        border-radius: 50%;
+        transition: transform 0.25s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    input:checked + .slider {
+      background: $primary-blue;
+
+      &::before {
+        transform: translateX(16px);
+      }
+    }
+  }
+
+  // Obrigatoriedade badge
+  .obrig-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    user-select: none;
+
+    &.active {
+      background: rgba($gold, 0.15);
+      color: darken($gold, 15%);
+    }
+
+    &.inactive {
+      background: $bg-light;
+      color: #A0AEC0;
+    }
+  }
+
+  // View mode - campos configurados
+  .field-view-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: $bg-light;
+    margin-bottom: 6px;
+
+    .field-order {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: $primary-blue;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .field-name {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 500;
+      color: $text-primary;
+    }
+
+    .obrig-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+
+      &.sim {
+        background: rgba($gold, 0.15);
+        color: darken($gold, 15%);
+      }
+
+      &.nao {
+        background: $bg-light;
+        color: #A0AEC0;
+        border: 1px solid $border-light;
+      }
+    }
+  }
+}
+
+// ─── Empty State ──────────────────────────────────────
+.pecas-empty-state {
+  text-align: center;
+  padding: 60px 20px;
+
+  i {
+    font-size: 48px;
+    color: #CBD5E0;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  p {
+    color: $text-secondary;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+}
+
+// ─── Skeleton Loading ─────────────────────────────────
+.pecas-skeleton {
+  .skeleton-row {
+    display: flex;
+    gap: 16px;
+    padding: 14px 16px;
+    border-bottom: 1px solid $border-light;
+
+    &:last-child { border-bottom: none; }
+  }
+
+  .skeleton-cell {
+    height: 14px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+
+    &.w-60 { width: 60px; }
+    &.w-180 { width: 180px; }
+    &.w-250 { width: 250px; }
+    &.w-80 { width: 80px; }
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// ─── Toolbar ──────────────────────────────────────────
+.pecas-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: $text-secondary;
+
+    select {
+      border: 1.5px solid $border-light;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 13px;
+      color: $text-primary;
+    }
+  }
+
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-add {
+    background: $gold;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: darken($gold, 8%);
+      box-shadow: 0 2px 8px rgba($gold, 0.3);
+    }
+
+    i { font-size: 14px; }
+  }
+}
+
+// ─── Pagination ───────────────────────────────────────
+.pecas-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .page-info {
+    font-size: 13px;
+    color: $text-secondary;
+
+    strong { color: $text-primary; }
+
+    input {
+      width: 64px;
+      text-align: center;
+      border: 1.5px solid $border-light;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 13px;
+      margin-left: 8px;
+    }
+  }
+
+  .pagination {
+    margin-bottom: 0;
+
+    .page-item .page-link {
+      border-radius: 6px;
+      margin: 0 2px;
+      font-size: 13px;
+      border-color: $border-light;
+      color: $text-secondary;
+
+      &:hover {
+        background: $bg-light;
+        color: $primary-blue;
+      }
+    }
+
+    .page-item.active .page-link {
+      background: $primary-blue;
+      border-color: $primary-blue;
+    }
+  }
+}

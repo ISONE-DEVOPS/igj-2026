@@ -1,0 +1,10 @@
+node_modules
+.git
+.env
+.env_local
+.env.sandbox
+.env.production
+*.sql
+*.md
+.vscode
+.editorconfig

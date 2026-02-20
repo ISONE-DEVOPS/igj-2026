@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "igj-sgigj"
+  },
+  "targets": {
+    "igj-sgigj": {
+      "hosting": {
+        "sandbox": [
+          "igj-sandbox"
+        ],
+        "production": [
+          "igj-production"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

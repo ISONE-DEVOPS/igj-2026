@@ -1,0 +1,69 @@
+# Cloud Build - Production Environment
+# Trigger: push to branch 'main' or tag 'v*'
+
+steps:
+  # Step 1: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/sgigj-api-production:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/sgigj-api-production:latest'
+      - './api'
+
+  # Step 2: Push Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/sgigj-api-production:$COMMIT_SHA'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/sgigj-api-production:latest'
+
+  # Step 3: Deploy API to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'sgigj-api-production'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/sgigj-api-production:$COMMIT_SHA'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '3333'
+      - '--memory'
+      - '1Gi'
+      - '--cpu'
+      - '2'
+      - '--min-instances'
+      - '1'
+      - '--max-instances'
+      - '20'
+      - '--add-cloudsql-instances'
+      - 'igj-sgigj:europe-west1:igj-mysql-production'
+
+  # Step 4: Deploy Frontend to Firebase Hosting (production)
+  - name: 'gcr.io/$PROJECT_ID/firebase'
+    args:
+      - 'deploy'
+      - '--only'
+      - 'hosting:production'
+      - '--project'
+      - '$PROJECT_ID'
+
+images:
+  - 'gcr.io/$PROJECT_ID/sgigj-api-production:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/sgigj-api-production:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+timeout: '1200s'

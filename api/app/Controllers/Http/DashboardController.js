@@ -1,0 +1,479 @@
+'use strict'
+
+let DatabaseDB = use("Database")
+
+class DashboardController {
+
+    /**
+     * GET /dashboard/kpis
+     * Returns key performance indicators for the dashboard
+     */
+    async kpis({ request, response }) {
+        try {
+            const ano = request.input('ano')
+            const entidadeId = request.input('entidade_id')
+
+            // Build WHERE conditions
+            const anoFilter = ano ? ` AND ANO = ${parseInt(ano)}` : ''
+            const entidadeFilter = entidadeId ? ` AND ENTIDADE_ID = '${entidadeId}'` : ''
+
+            // Receita Bruta (from impostos table)
+            const receitaBruta = await DatabaseDB.raw(
+                `SELECT COALESCE(SUM(BRUTO), 0) as total FROM impostos WHERE ESTADO = 1${anoFilter}${entidadeFilter}`
+            )
+
+            // Impostos Arrecadados
+            const impostos = await DatabaseDB.raw(
+                `SELECT COALESCE(SUM(IMPOSTO), 0) as total FROM impostos WHERE ESTADO = 1${anoFilter}${entidadeFilter}`
+            )
+
+            // Processos Ativos (exclusão)
+            const processosExclusao = await DatabaseDB.raw(
+                `SELECT COUNT(*) as total FROM sgigjprocessoexclusao WHERE ESTADO = 1`
+            )
+
+            // Processos Auto-exclusão
+            const processosAutoExclusao = await DatabaseDB.raw(
+                `SELECT COUNT(*) as total FROM sgigjprocessoautoexclusao WHERE ESTADO = 1`
+            )
+
+            // Entidades Ativas
+            const entidades = await DatabaseDB.raw(
+                `SELECT COUNT(*) as total FROM sgigjentidade WHERE ESTADO = 1`
+            )
+
+            // Eventos Aprovados
+            const eventos = await DatabaseDB.raw(
+                `SELECT COUNT(*) as total FROM sgigjentidadeevento WHERE ESTADO = 1`
+            )
+
+            // Casos Suspeitos
+            const casosSuspeitos = await DatabaseDB.raw(
+                `SELECT COUNT(*) as total FROM casosuspeito WHERE ESTADO = 1`
+            )
+
+            // Sparkline data - receita bruta por ano (últimos 5 anos)
+            const sparklineReceita = await DatabaseDB.raw(
+                `SELECT ANO as ano, COALESCE(SUM(BRUTO), 0) as total FROM impostos WHERE ESTADO = 1 GROUP BY ANO ORDER BY ANO DESC LIMIT 5`
+            )
+
+            // Sparkline - processos por ano
+            const sparklineProcessos = await DatabaseDB.raw(
+                `SELECT YEAR(DT_REGISTO) as ano, COUNT(*) as total FROM sgigjprocessoexclusao WHERE ESTADO = 1 GROUP BY YEAR(DT_REGISTO) ORDER BY ano DESC LIMIT 5`
+            )
+
+            // Orçamento - execução total
+            const orcamentoTotal = await DatabaseDB.raw(
+                `SELECT COALESCE(SUM(ORCAMENTO_INICIAL), 0) as total FROM orcamentos WHERE ESTADO = 1`
+            )
+            const despesaTotal = await DatabaseDB.raw(
+                `SELECT COALESCE(SUM(VALOR), 0) as total FROM orcalmentodespesa WHERE ESTADO = 1`
+            )
+
+            const orcVal = orcamentoTotal[0][0].total || 0
+            const despVal = despesaTotal[0][0].total || 0
+            const execucaoOrcamental = orcVal > 0 ? Math.round((despVal / orcVal) * 100 * 10) / 10 : 0
+
+            return response.json({
+                receitaBruta: receitaBruta[0][0].total,
+                impostos: impostos[0][0].total,
+                processosAtivos: processosExclusao[0][0].total + processosAutoExclusao[0][0].total,
+                entidadesAtivas: entidades[0][0].total,
+                eventosAprovados: eventos[0][0].total,
+                casosSuspeitos: casosSuspeitos[0][0].total,
+                execucaoOrcamental,
+                sparklines: {
+                    receita: sparklineReceita[0].reverse(),
+                    processos: sparklineProcessos[0].reverse()
+                }
+            })
+        } catch (error) {
+            return response.status(500).json({ error: error.message })
+        }
+    }
+
+    /**
+     * GET /dashboard/financeiro
+     * Returns financial evolution data by year
+     */
+    async financeiro({ request, response }) {
+        try {
+            const entidadeId = request.input('entidade_id')
+            const entidadeFilter = entidadeId ? ` AND ENTIDADE_ID = '${entidadeId}'` : ''
+
+            // Receita Bruta por ano
+            const receita = await DatabaseDB.raw(
+                `SELECT ANO as ano, COALESCE(SUM(BRUTO), 0) as receita_bruta, COALESCE(SUM(IMPOSTO), 0) as impostos
+                 FROM impostos WHERE ESTADO = 1${entidadeFilter} GROUP BY ANO ORDER BY ANO`
+            )
+
+            // Contrapartidas por ano
+            const contrapartidas = await DatabaseDB.raw(
+                `SELECT ANO as ano, COALESCE(SUM(Art_48_percent + Art_49_percent), 0) as contrapartidas
+                 FROM contrapartidas WHERE ESTADO = 1${entidadeFilter} GROUP BY ANO ORDER BY ANO`
+            )
+
+            // Contribuições por ano
+            const contribuicoes = await DatabaseDB.raw(
+                `SELECT ANO as ano, COALESCE(SUM(VALOR), 0) as contribuicoes
+                 FROM contribuicoes WHERE ESTADO = 1${entidadeFilter} GROUP BY ANO ORDER BY ANO`
+            )
+
+            // Prémios por ano
+            const premios = await DatabaseDB.raw(
+                `SELECT ANO as ano, COALESCE(SUM(VALOR), 0) as premios
+                 FROM premios WHERE ESTADO = 1 AND PREMIOS_ID IS NULL${entidadeFilter} GROUP BY ANO ORDER BY ANO`
+            )
+
+            // Merge all data by year
+            const anosSet = new Set()
+            const receitaMap = {}
+            const contraMap = {}
+            const contribMap = {}
+            const premiosMap = {}
+
+            receita[0].forEach(r => { anosSet.add(r.ano); receitaMap[r.ano] = r })
+            contrapartidas[0].forEach(r => { anosSet.add(r.ano); contraMap[r.ano] = r })
+            contribuicoes[0].forEach(r => { anosSet.add(r.ano); contribMap[r.ano] = r })
+            premios[0].forEach(r => { anosSet.add(r.ano); premiosMap[r.ano] = r })
+
+            const anos = Array.from(anosSet).sort()
+            const result = anos.map(ano => ({
+                ano,
+                receita_bruta: receitaMap[ano]?.receita_bruta || 0,
+                impostos: receitaMap[ano]?.impostos || 0,
+                contrapartidas: contraMap[ano]?.contrapartidas || 0,
+                contribuicoes: contribMap[ano]?.contribuicoes || 0,
+                premios: premiosMap[ano]?.premios || 0
+            }))
+
+            return response.json(result)
+        } catch (error) {
+            return response.status(500).json({ error: error.message })
+        }
+    }
+
+    /**
+     * GET /dashboard/receita-entidade
+     * Returns gross revenue per entity
+     */
+    async receitaEntidade({ request, response }) {
+        try {
+            const ano = request.input('ano')
+            const anoFilter = ano ? ` AND i.ANO = ${parseInt(ano)}` : ''
+
+            const result = await DatabaseDB.raw(
+                `SELECT e.DESIG as entidade, COALESCE(SUM(i.BRUTO), 0) as receita_bruta, COALESCE(SUM(i.IMPOSTO), 0) as impostos
+                 FROM impostos i
+                 INNER JOIN sgigjentidade e ON i.ENTIDADE_ID = e.ID
+                 WHERE i.ESTADO = 1${anoFilter}
+                 GROUP BY e.ID, e.DESIG
+                 ORDER BY receita_bruta DESC
+                 LIMIT 15`
+            )
+
+            return response.json(result[0])
+        } catch (error) {
+            return response.status(500).json({ error: error.message })
+        }
+    }
+
+    /**
+     * GET /dashboard/processos
+     * Returns process data grouped by status and month
+     */
+    async processos({ request, response }) {
+        try {
+            // Exclusão por status
+            const exclusaoStatus = await DatabaseDB.raw(
+                `SELECT
+                    SUM(CASE WHEN ESTADO = 1 THEN 1 ELSE 0 END) as ativos,
+                    SUM(CASE WHEN ESTADO = 2 THEN 1 ELSE 0 END) as finalizados,
+                    SUM(CASE WHEN ESTADO = 3 THEN 1 ELSE 0 END) as arquivados,
+                    SUM(CASE WHEN ESTADO = 4 THEN 1 ELSE 0 END) as prescritos,
+                    COUNT(*) as total
+                 FROM sgigjprocessoexclusao`
+            )
+
+            // Auto-exclusão por status
+            const autoExclusaoStatus = await DatabaseDB.raw(
+                `SELECT
+                    SUM(CASE WHEN ESTADO = 1 THEN 1 ELSE 0 END) as ativos,
+                    SUM(CASE WHEN ESTADO = 2 THEN 1 ELSE 0 END) as finalizados,
+                    COUNT(*) as total
+                 FROM sgigjprocessoautoexclusao`
+            )
+
+            // Processos por mês (últimos 12 meses)
+            const exclusaoPorMes = await DatabaseDB.raw(
+                `SELECT DATE_FORMAT(DT_REGISTO, '%Y-%m') as mes, COUNT(*) as total
+                 FROM sgigjprocessoexclusao
+                 WHERE DT_REGISTO >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+                 GROUP BY DATE_FORMAT(DT_REGISTO, '%Y-%m')
+                 ORDER BY mes`
+            )
+
+            const autoExclusaoPorMes = await DatabaseDB.raw(
+                `SELECT DATE_FORMAT(DT_REGISTO, '%Y-%m') as mes, COUNT(*) as total
+                 FROM sgigjprocessoautoexclusao
+                 WHERE DT_REGISTO >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+                 GROUP BY DATE_FORMAT(DT_REGISTO, '%Y-%m')
+                 ORDER BY mes`
+            )
+
+            return response.json({
+                exclusaoStatus: exclusaoStatus[0][0],
+                autoExclusaoStatus: autoExclusaoStatus[0][0],
+                exclusaoPorMes: exclusaoPorMes[0],
+                autoExclusaoPorMes: autoExclusaoPorMes[0]
+            })
+        } catch (error) {
+            return response.status(500).json({ error: error.message })
+        }
+    }
+
+    /**
+     * GET /dashboard/eventos
+     * Returns event distribution by status
+     */
+    async eventos({ request, response }) {
+        try {
+            const entidadeId = request.input('entidade_id')
+            const entidadeFilter = entidadeId ? ` AND ENTIDADE_ID = '${entidadeId}'` : ''
+
+            const statusDistribution = await DatabaseDB.raw(
+                `SELECT
+                    SUM(CASE WHEN ESTADO = 1 THEN 1 ELSE 0 END) as aprovados,
+                    SUM(CASE WHEN ESTADO = 0 THEN 1 ELSE 0 END) as pendentes,
+                    SUM(CASE WHEN ESTADO = 2 THEN 1 ELSE 0 END) as recusados,
+                    COUNT(*) as total
+                 FROM sgigjentidadeevento WHERE 1=1${entidadeFilter}`
+            )
+
+            // Eventos por mês
+            const eventosPorMes = await DatabaseDB.raw(
+                `SELECT DATE_FORMAT(DT_REGISTO, '%Y-%m') as mes, COUNT(*) as total
+                 FROM sgigjentidadeevento
+                 WHERE DT_REGISTO >= DATE_SUB(NOW(), INTERVAL 12 MONTH)${entidadeFilter}
+                 GROUP BY DATE_FORMAT(DT_REGISTO, '%Y-%m')
+                 ORDER BY mes`
+            )
+
+            // Eventos por tipo
+            const eventosPorTipo = await DatabaseDB.raw(
+                `SELECT t.DESIG as tipo, COUNT(*) as total
+                 FROM sgigjentidadeevento e
+                 LEFT JOIN sgigjpreventotp t ON e.PR_EVENTO_TP_ID = t.ID
+                 WHERE e.ESTADO = 1${entidadeFilter}
+                 GROUP BY t.ID, t.DESIG
+                 ORDER BY total DESC`
+            )
+
+            return response.json({
+                status: statusDistribution[0][0],
+                porMes: eventosPorMes[0],
+                porTipo: eventosPorTipo[0]
+            })
+        } catch (error) {
+            return response.status(500).json({ error: error.message })
+        }
+    }
+
+    /**
+     * GET /dashboard/entidades
+     * Returns entity equipment breakdown
+     */
+    async entidades({ response }) {
+        try {
+            // Máquinas por entidade
+            const maquinas = await DatabaseDB.raw(
+                `SELECT e.DESIG as entidade, COUNT(m.ID) as maquinas
+                 FROM sgigjentidade e
+                 LEFT JOIN sgigjentidademaquina m ON e.ID = m.ENTIDADE_ID AND m.ESTADO = 1
+                 WHERE e.ESTADO = 1
+                 GROUP BY e.ID, e.DESIG`
+            )
+
+            // Bancas por entidade
+            const bancas = await DatabaseDB.raw(
+                `SELECT e.DESIG as entidade, COUNT(b.ID) as bancas
+                 FROM sgigjentidade e
+                 LEFT JOIN sgigjentidadebanca b ON e.ID = b.ENTIDADE_ID AND b.ESTADO = 1
+                 WHERE e.ESTADO = 1
+                 GROUP BY e.ID, e.DESIG`
+            )
+
+            // Equipamentos por entidade
+            const equipamentos = await DatabaseDB.raw(
+                `SELECT e.DESIG as entidade, COUNT(eq.ID) as equipamentos
+                 FROM sgigjentidade e
+                 LEFT JOIN sgigjentidadeequipamento eq ON e.ID = eq.ENTIDADE_ID AND eq.ESTADO = 1
+                 WHERE e.ESTADO = 1
+                 GROUP BY e.ID, e.DESIG`
+            )
+
+            // Merge data
+            const entidadesMap = {}
+            maquinas[0].forEach(r => {
+                entidadesMap[r.entidade] = { entidade: r.entidade, maquinas: r.maquinas, bancas: 0, equipamentos: 0 }
+            })
+            bancas[0].forEach(r => {
+                if (entidadesMap[r.entidade]) entidadesMap[r.entidade].bancas = r.bancas
+                else entidadesMap[r.entidade] = { entidade: r.entidade, maquinas: 0, bancas: r.bancas, equipamentos: 0 }
+            })
+            equipamentos[0].forEach(r => {
+                if (entidadesMap[r.entidade]) entidadesMap[r.entidade].equipamentos = r.equipamentos
+                else entidadesMap[r.entidade] = { entidade: r.entidade, maquinas: 0, bancas: 0, equipamentos: r.equipamentos }
+            })
+
+            return response.json(Object.values(entidadesMap))
+        } catch (error) {
+            return response.status(500).json({ error: error.message })
+        }
+    }
+
+    /**
+     * GET /dashboard/atividade
+     * Returns system activity heatmap data (audit trail)
+     */
+    async atividade({ response }) {
+        try {
+            const result = await DatabaseDB.raw(
+                `SELECT DATE_FORMAT(Created_At, '%Y-%m') as mes, Text_Modulo as modulo, COUNT(*) as total
+                 FROM create_auditorias
+                 WHERE Created_At >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+                 GROUP BY DATE_FORMAT(Created_At, '%Y-%m'), Text_Modulo
+                 ORDER BY mes, modulo`
+            )
+
+            return response.json(result[0])
+        } catch (error) {
+            return response.status(500).json({ error: error.message })
+        }
+    }
+
+    /**
+     * GET /dashboard/handpay
+     * Returns handpay data per entity
+     */
+    async handpay({ request, response }) {
+        try {
+            const ano = request.input('ano')
+            const anoFilter = ano ? ` AND YEAR(h.DT_REGISTO) = ${parseInt(ano)}` : ''
+
+            const result = await DatabaseDB.raw(
+                `SELECT e.DESIG as entidade, COUNT(h.ID) as quantidade, COALESCE(SUM(h.VALOR), 0) as valor_total
+                 FROM sgigjhandpay h
+                 INNER JOIN sgigjentidade e ON h.ENTIDADE_ID = e.ID
+                 WHERE h.ESTADO = 1${anoFilter}
+                 GROUP BY e.ID, e.DESIG
+                 ORDER BY valor_total DESC`
+            )
+
+            return response.json(result[0])
+        } catch (error) {
+            return response.status(500).json({ error: error.message })
+        }
+    }
+
+    /**
+     * GET /dashboard/casos-suspeitos
+     * Returns suspicious cases monthly evolution
+     */
+    async casosSuspeitos({ response }) {
+        try {
+            const result = await DatabaseDB.raw(
+                `SELECT DATE_FORMAT(DT_REGISTO, '%Y-%m') as mes, COUNT(*) as total
+                 FROM casosuspeito
+                 WHERE ESTADO = 1
+                 GROUP BY DATE_FORMAT(DT_REGISTO, '%Y-%m')
+                 ORDER BY mes`
+            )
+
+            return response.json(result[0])
+        } catch (error) {
+            return response.status(500).json({ error: error.message })
+        }
+    }
+
+    /**
+     * GET /dashboard/orcamento
+     * Returns budget vs expenses data
+     */
+    async orcamento({ request, response }) {
+        try {
+            const ano = request.input('ano')
+            const anoFilter = ano ? ` AND o.ANO = ${parseInt(ano)}` : ''
+
+            // Orçamento por rubrica/projeto
+            const orcamento = await DatabaseDB.raw(
+                `SELECT p.NOME as projeto, COALESCE(SUM(o.ORCAMENTO_INICIAL), 0) as orcamento_previsto
+                 FROM orcamentos o
+                 LEFT JOIN projetos p ON o.PROJETO_ID = p.ID
+                 WHERE o.ESTADO = 1${anoFilter}
+                 GROUP BY p.ID, p.NOME
+                 ORDER BY orcamento_previsto DESC`
+            )
+
+            // Despesas por rubrica/projeto
+            const despesas = await DatabaseDB.raw(
+                `SELECT p.NOME as projeto, COALESCE(SUM(d.VALOR), 0) as despesa_real
+                 FROM orcalmentodespesa d
+                 LEFT JOIN orcamentos o ON d.ORCALMENTO_ID = o.ID
+                 LEFT JOIN projetos p ON o.PROJETO_ID = p.ID
+                 WHERE d.ESTADO = 1
+                 GROUP BY p.ID, p.NOME
+                 ORDER BY despesa_real DESC`
+            )
+
+            // Total execution rate
+            const totalOrcamento = await DatabaseDB.raw(
+                `SELECT COALESCE(SUM(ORCAMENTO_INICIAL), 0) as total FROM orcamentos WHERE ESTADO = 1`
+            )
+            const totalDespesa = await DatabaseDB.raw(
+                `SELECT COALESCE(SUM(VALOR), 0) as total FROM orcalmentodespesa WHERE ESTADO = 1`
+            )
+
+            const orcTotal = totalOrcamento[0][0].total || 0
+            const despTotal = totalDespesa[0][0].total || 0
+            const taxaExecucao = orcTotal > 0 ? Math.round((despTotal / orcTotal) * 100 * 10) / 10 : 0
+
+            return response.json({
+                porProjeto: {
+                    orcamento: orcamento[0],
+                    despesas: despesas[0]
+                },
+                taxaExecucao,
+                totalOrcamento: orcTotal,
+                totalDespesa: despTotal
+            })
+        } catch (error) {
+            return response.status(500).json({ error: error.message })
+        }
+    }
+
+    /**
+     * GET /dashboard/filtros
+     * Returns available filter options (years, entities)
+     */
+    async filtros({ response }) {
+        try {
+            const anos = await DatabaseDB.raw(
+                `SELECT DISTINCT ANO as ano FROM impostos WHERE ESTADO = 1 ORDER BY ANO`
+            )
+
+            const entidades = await DatabaseDB.raw(
+                `SELECT ID as id, DESIG as nome FROM sgigjentidade WHERE ESTADO = 1 ORDER BY DESIG`
+            )
+
+            return response.json({
+                anos: anos[0].map(r => r.ano),
+                entidades: entidades[0]
+            })
+        } catch (error) {
+            return response.status(500).json({ error: error.message })
+        }
+    }
+}
+
+module.exports = DashboardController

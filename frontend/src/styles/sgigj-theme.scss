@@ -1,0 +1,857 @@
+// ═══════════════════════════════════════════════════════════
+//  SGIGJ - Tema Global
+//  Modernização UI/UX de todas as telas
+//  Paleta IGJ: Dourado + Azul Institucional
+// ═══════════════════════════════════════════════════════════
+
+// ─── 1. Variáveis ─────────────────────────────────────────
+$primary-blue: #2B7FB9;
+$gold: #C5A55A;
+$gold-dark: #D4A843;
+$dark-blue: #1B4965;
+$green: #2ED8B6;
+$blue-light: #4099FF;
+$orange: #F39C12;
+
+$bg-light: #F5F7FA;
+$bg-card: #FFFFFF;
+$text-primary: #2D3436;
+$text-secondary: #636E72;
+$border-light: #E9ECEF;
+$danger: #E74C3C;
+
+$shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
+$shadow-card-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+$shadow-btn: 0 2px 8px rgba($primary-blue, 0.3);
+$shadow-modal: 0 10px 40px rgba(0, 0, 0, 0.15);
+
+$radius-card: 12px;
+$radius-btn: 8px;
+$radius-input: 6px;
+$radius-modal: 12px;
+
+$transition-fast: all 0.15s ease;
+$transition-base: all 0.2s ease;
+$transition-smooth: all 0.3s ease;
+
+
+// ─── 2. Background Global ────────────────────────────────
+.pcoded-main-container {
+  background: $bg-light;
+}
+
+.pcoded-content {
+  padding: 25px 25px 5px;
+}
+
+
+// ─── 3. Cards ─────────────────────────────────────────────
+.pcoded-inner-content .card {
+  border: none;
+  border-radius: $radius-card;
+  box-shadow: $shadow-card;
+  transition: $transition-smooth;
+  overflow: hidden;
+  animation: fadeInCard 0.35s ease-out;
+
+  .card-header {
+    background: $bg-card;
+    border-bottom: 1px solid $border-light;
+    padding: 16px 24px;
+    font-weight: 600;
+    font-size: 14px;
+    color: $text-primary;
+  }
+
+  .card-body {
+    padding: 20px 24px;
+  }
+}
+
+
+// ─── 4. Tabelas ───────────────────────────────────────────
+.card-body .table {
+  margin-bottom: 0;
+
+  thead th {
+    background: $bg-light;
+    border-bottom: 2px solid $border-light;
+    border-top: none;
+    color: $text-secondary;
+    font-size: 11.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 11px 14px;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  tbody td {
+    padding: 11px 14px;
+    vertical-align: middle;
+    border-color: $border-light;
+    color: $text-primary;
+    font-size: 13px;
+    border-left: none;
+    border-right: none;
+  }
+
+  tbody tr {
+    transition: background-color $transition-fast;
+  }
+
+  // Override striped com tom azul subtil
+  &.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba($primary-blue, 0.018);
+  }
+
+  // Hover suave
+  &.table-hover tbody tr:hover {
+    background-color: rgba($primary-blue, 0.045) !important;
+  }
+
+  // Remover borda externa para integrar com card
+  &.table-bordered {
+    border: none;
+
+    thead th {
+      border-left: none;
+      border-right: none;
+
+      &:first-child { border-left: none; }
+      &:last-child { border-right: none; }
+    }
+
+    tbody td {
+      &:first-child { border-left: none; }
+      &:last-child { border-right: none; }
+    }
+  }
+
+  // Ícones de sort
+  th span .feather {
+    color: $primary-blue;
+    opacity: 0.7;
+    font-size: 12px;
+  }
+}
+
+// Responsive table scroll
+.table-responsive {
+  border-radius: $radius-input;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #CBD5E0;
+    border-radius: 3px;
+  }
+}
+
+
+// ─── 5. Botões de Ação nas Tabelas ────────────────────────
+td {
+  a.text-primary,
+  a.text-danger,
+  a.text-warning,
+  a.text-success,
+  a.text-info {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: $radius-btn;
+    transition: $transition-base;
+    text-decoration: none !important;
+
+    i { font-size: 14px; }
+  }
+
+  a.text-primary:hover {
+    background: rgba($primary-blue, 0.1);
+  }
+
+  a.text-danger:hover {
+    background: rgba($danger, 0.1);
+  }
+
+  a.text-warning:hover {
+    background: rgba($orange, 0.1);
+  }
+
+  a.text-success:hover {
+    background: rgba($green, 0.1);
+  }
+
+  a.text-info:hover {
+    background: rgba($blue-light, 0.1);
+  }
+}
+
+
+// ─── 6. Toolbar ───────────────────────────────────────────
+.card-body > .row.mb-3 {
+  padding-bottom: 14px;
+  border-bottom: 1px solid $border-light;
+  margin-bottom: 16px !important;
+  align-items: center;
+
+  // Lado esquerdo: "Mostrar X entradas"
+  > .col:first-child,
+  > [class*="col"]:first-child {
+    font-size: 13px;
+    color: $text-secondary;
+  }
+
+  // Page size select
+  select.form-control.w-auto {
+    border: 1.5px solid $border-light;
+    border-radius: $radius-input;
+    padding: 4px 8px;
+    font-size: 13px;
+    color: $text-primary;
+    cursor: pointer;
+    transition: $transition-base;
+
+    &:focus {
+      border-color: $primary-blue;
+      box-shadow: 0 0 0 2px rgba($primary-blue, 0.12);
+    }
+  }
+}
+
+
+// ─── 7. Barra de Pesquisa (GlobalFilter) ──────────────────
+.d-flex.align-items-center.justify-content-end {
+  font-size: 13px;
+  color: $text-secondary;
+
+  > input.form-control.w-auto {
+    border: 1.5px solid $border-light;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    min-width: 180px;
+    transition: $transition-base;
+
+    &:focus {
+      border-color: $primary-blue;
+      box-shadow: 0 0 0 3px rgba($primary-blue, 0.1);
+      outline: none;
+    }
+
+    &::placeholder {
+      color: #A0AEC0;
+    }
+  }
+}
+
+
+// ─── 8. Botão Adicionar ───────────────────────────────────
+.btn-sm.btn-round.has-ripple {
+  border-radius: $radius-btn;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: $transition-base;
+
+  &:hover,
+  &:focus {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  i { font-size: 14px; }
+}
+
+
+// ─── 9. Botões Gerais ─────────────────────────────────────
+.btn {
+  border-radius: $radius-btn;
+  font-weight: 500;
+  font-size: 13px;
+  transition: $transition-base;
+  letter-spacing: 0.2px;
+}
+
+// Botão "Fechar" nos modais - estilo outline suave
+.modal-footer .btn-danger {
+  background: transparent;
+  border: 1.5px solid $border-light;
+  color: $text-secondary;
+
+  &:hover {
+    background: rgba($danger, 0.08);
+    border-color: rgba($danger, 0.3);
+    color: $danger;
+  }
+}
+
+.btn-outline-secondary {
+  border-color: $border-light;
+  color: $text-secondary;
+
+  &:hover {
+    background: $bg-light;
+    border-color: darken($border-light, 5%);
+    color: $text-primary;
+  }
+}
+
+
+// ─── 10. Modais ───────────────────────────────────────────
+.modal-content {
+  border: none;
+  border-radius: $radius-modal;
+  overflow: hidden;
+  box-shadow: $shadow-modal;
+}
+
+.modal-header {
+  border-bottom: 1px solid $border-light;
+  padding: 16px 24px;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $gold, $primary-blue);
+  }
+
+  .modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  .close,
+  button[aria-label="Close"] {
+    opacity: 0.4;
+    transition: $transition-base;
+    padding: 16px;
+    margin: -16px -16px -16px auto;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-footer {
+  border-top: 1px solid $border-light;
+  padding: 12px 24px;
+  gap: 8px;
+}
+
+// Animação de entrada do modal
+.modal.fade .modal-dialog {
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+}
+
+.modal.show .modal-dialog {
+  animation: fadeInModal 0.25s ease-out;
+}
+
+
+// ─── 11. Formulários ──────────────────────────────────────
+.form-group.fill {
+  margin-bottom: 18px;
+  position: relative;
+
+  .floating-label {
+    font-size: 12px;
+    color: $text-secondary;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .form-control {
+    border: 1.5px solid $border-light;
+    border-radius: $radius-input;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: $text-primary;
+    transition: $transition-base;
+    height: auto;
+
+    &:focus {
+      border-color: $primary-blue;
+      box-shadow: 0 0 0 3px rgba($primary-blue, 0.1);
+      outline: none;
+    }
+
+    &:disabled,
+    &[disabled],
+    &[readonly] {
+      background: $bg-light;
+      opacity: 0.75;
+      cursor: not-allowed;
+    }
+
+    &::placeholder {
+      color: #A0AEC0;
+      font-weight: 400;
+    }
+  }
+
+  textarea.form-control {
+    min-height: 80px;
+    resize: vertical;
+  }
+
+  select.form-control {
+    cursor: pointer;
+    appearance: auto;
+  }
+
+  // Campos readonly no modo "Ver" (usam span ou label)
+  span.form-control,
+  label.form-control {
+    background: $bg-light;
+    border: 1px solid $border-light;
+    border-radius: $radius-input;
+    padding: 8px 12px;
+    min-height: 38px;
+    font-size: 13px;
+    color: $text-primary;
+    display: block;
+    height: auto;
+    cursor: default;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+}
+
+// Labels com asterisco vermelho
+.floating-label span[style*="color: red"],
+.floating-label span[style*="color:red"] {
+  color: $danger !important;
+  font-weight: 600;
+}
+
+
+// ─── 12. Paginação ────────────────────────────────────────
+.card-body > .row.justify-content-between {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid $border-light;
+
+  // Texto "Página X de Y"
+  .d-flex.align-items-center {
+    font-size: 13px;
+    color: $text-secondary;
+
+    strong {
+      color: $text-primary;
+      margin: 0 4px;
+    }
+  }
+
+  // Input "Ir para a página"
+  input.form-control[type="number"] {
+    width: 60px !important;
+    text-align: center;
+    border: 1.5px solid $border-light;
+    border-radius: $radius-input;
+    padding: 3px 8px;
+    font-size: 13px;
+
+    &:focus {
+      border-color: $primary-blue;
+      box-shadow: 0 0 0 2px rgba($primary-blue, 0.12);
+    }
+  }
+}
+
+.pagination {
+  margin-bottom: 0;
+
+  .page-item {
+    .page-link {
+      border-radius: $radius-input;
+      margin: 0 2px;
+      font-size: 13px;
+      border-color: $border-light;
+      color: $text-secondary;
+      transition: $transition-base;
+      padding: 5px 10px;
+
+      &:hover {
+        background: $bg-light;
+        color: $primary-blue;
+        border-color: $border-light;
+      }
+    }
+
+    &.active .page-link {
+      background: $primary-blue;
+      border-color: $primary-blue;
+      color: white;
+    }
+
+    &.disabled .page-link {
+      background: transparent;
+      color: lighten($text-secondary, 25%);
+      border-color: $border-light;
+    }
+  }
+}
+
+
+// ─── 13. Custom Switches & Checkboxes ─────────────────────
+.custom-control-input:checked ~ .custom-control-label::before {
+  background-color: $primary-blue;
+  border-color: $primary-blue;
+}
+
+.custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 3px rgba($primary-blue, 0.15);
+}
+
+.custom-switch .custom-control-input:checked ~ .custom-control-label::after {
+  background-color: white;
+}
+
+
+// ─── 14. Breadcrumb / Page Header ─────────────────────────
+.page-header {
+  margin-bottom: 20px;
+
+  .page-header-title {
+    h5 {
+      font-size: 18px;
+      font-weight: 600;
+      color: $text-primary;
+    }
+  }
+}
+
+.breadcrumb {
+  background: transparent;
+  padding: 0;
+  margin-bottom: 0;
+  font-size: 13px;
+
+  .breadcrumb-item {
+    a {
+      color: $text-secondary;
+      text-decoration: none;
+      transition: $transition-base;
+
+      &:hover { color: $primary-blue; }
+    }
+
+    &.active {
+      color: $primary-blue;
+    }
+  }
+}
+
+
+// ─── 15. React-Select ─────────────────────────────────────
+// Nota: React-Select gera classes dinâmicas, usamos seletores de atributo
+[class$="-control"] {
+  border-color: $border-light !important;
+  border-radius: $radius-input !important;
+  min-height: 38px !important;
+  font-size: 13px;
+  transition: $transition-base;
+  box-shadow: none !important;
+
+  &:hover {
+    border-color: darken($border-light, 10%) !important;
+  }
+}
+
+[class$="-control"]:has(input:focus),
+[class*="--is-focused"] [class$="-control"] {
+  border-color: $primary-blue !important;
+  box-shadow: 0 0 0 3px rgba($primary-blue, 0.1) !important;
+}
+
+[class$="-option"] {
+  font-size: 13px !important;
+  transition: background-color 0.1s ease;
+
+  &:hover {
+    background-color: rgba($primary-blue, 0.08) !important;
+  }
+}
+
+[class$="-option--is-selected"] {
+  background-color: $primary-blue !important;
+}
+
+[class$="-placeholder"] {
+  color: #A0AEC0 !important;
+  font-size: 13px;
+}
+
+[class$="-indicatorSeparator"] {
+  background-color: $border-light !important;
+}
+
+
+// ─── 16. Animações ────────────────────────────────────────
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// Utility class para skeleton loading
+.skeleton-line {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+  height: 14px;
+}
+
+
+// ─── 17. Scrollbars Personalizadas ────────────────────────
+.modal-body,
+.card-body {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #CBD5E0;
+    border-radius: 3px;
+
+    &:hover { background: #A0AEC0; }
+  }
+}
+
+
+// ─── 18. Responsivo ───────────────────────────────────────
+@media (max-width: 768px) {
+  .pcoded-content {
+    padding: 15px 15px 5px;
+  }
+
+  .pcoded-inner-content .card .card-body {
+    padding: 14px 16px;
+  }
+
+  // Toolbar empilhada
+  .card-body > .row.mb-3 {
+    flex-direction: column;
+    gap: 10px;
+
+    > .col,
+    > [class*="col"] {
+      max-width: 100%;
+      flex: 0 0 100%;
+    }
+  }
+
+  // Tabela mais compacta
+  .card-body .table {
+    font-size: 12px;
+
+    thead th { padding: 8px 10px; font-size: 10.5px; }
+    tbody td { padding: 8px 10px; }
+  }
+
+  // Modal padding menor
+  .modal-body { padding: 16px; }
+  .modal-header { padding: 12px 16px; }
+  .modal-footer { padding: 10px 16px; }
+}
+
+@media (max-width: 576px) {
+  td {
+    a.text-primary,
+    a.text-danger,
+    a.text-warning,
+    a.text-success {
+      width: 26px;
+      height: 26px;
+
+      i { font-size: 12px; }
+    }
+  }
+}
+
+
+// ─── 19. Toasts (react-hot-toast) ─────────────────────────
+// Estilos globais para toasts mais modernos
+[data-sonner-toaster],
+div[role="status"][style*="position: fixed"] {
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 13px;
+}
+
+
+// ─── 20. Extras / Utilitários ─────────────────────────────
+// Badge genérico para códigos
+.badge-code {
+  display: inline-block;
+  background: $bg-light;
+  color: $dark-blue;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+
+// Separador de secção em modais
+.section-divider {
+  border: none;
+  border-top: 2px solid $bg-light;
+  margin: 20px 0 16px;
+}
+
+// Nav tabs dentro de modais / pages
+.nav-tabs {
+  border-bottom: 2px solid $border-light;
+
+  .nav-link {
+    color: $text-secondary;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    padding: 8px 16px;
+    border-radius: $radius-input $radius-input 0 0;
+    transition: $transition-base;
+
+    &:hover {
+      color: $primary-blue;
+      background: rgba($primary-blue, 0.04);
+    }
+
+    &.active {
+      color: $primary-blue;
+      border-bottom: 2px solid $primary-blue;
+      background: transparent;
+      margin-bottom: -2px;
+
+      .icon-tab-casino {
+        color: #fff !important;
+      }
+    }
+  }
+}
+
+// Ícones dourados nos tabs de casinos/entidades
+.icon-tab-casino {
+  color: $gold;
+  margin-right: 4px;
+  font-size: 15px;
+}
+
+// Tabs de casino/entidades — estilo dourado distinto
+.tabs-casino {
+  > .nav-tabs {
+    .nav-link {
+      &.active {
+        color: #fff !important;
+        background-color: $gold !important;
+        border-color: $gold !important;
+        border-bottom: 2px solid $gold;
+        border-radius: $radius-input $radius-input 0 0;
+
+        .icon-tab-casino {
+          color: #fff !important;
+        }
+      }
+
+      &:hover:not(.active) {
+        color: $gold;
+        background: rgba($gold, 0.06);
+      }
+    }
+  }
+}
+
+// List Group items modernos
+.list-group-item {
+  border-color: $border-light;
+  padding: 12px 16px;
+  font-size: 13px;
+  transition: $transition-base;
+
+  &:hover {
+    background: rgba($primary-blue, 0.03);
+  }
+
+  &.active {
+    background: $primary-blue;
+    border-color: $primary-blue;
+  }
+}
+
+// Alert boxes
+.alert {
+  border-radius: $radius-btn;
+  border: none;
+  font-size: 13px;
+}
+
+// Jodit Editor wrapper
+.jodit-container {
+  border-radius: $radius-input !important;
+  border-color: $border-light !important;
+
+  &.jodit_focused {
+    border-color: $primary-blue !important;
+    box-shadow: 0 0 0 3px rgba($primary-blue, 0.1);
+  }
+}
+
+// Status circles (EST column - colored dots)
+.pcoded-inner-content {
+  img[style*="border-radius: 50%"],
+  img[style*="border-radius:50%"] {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  }
+}

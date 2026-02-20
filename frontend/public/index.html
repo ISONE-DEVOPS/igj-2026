@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="IGJ - Sistema Integrado de Gestão" />
+    <title>IGJ</title>
+    <link rel="stylesheet" href="%PUBLIC_URL%/index.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+      /* Sidebar mais largo (235px -> 270px) */
+      .pcoded-navbar { width: 270px; }
+      .pcoded-navbar.navbar-collapsed { width: 70px; }
+      .pcoded-navbar.navbar-collapsed:hover { width: 270px; }
+      .pcoded-header:after,
+      .pcoded-header .input-group { margin-left: 270px; }
+      .pcoded-main-container { margin-left: 270px; }
+      @media only screen and (max-width: 991px) {
+        .pcoded-header:after,
+        .pcoded-header .input-group { margin-left: 0; }
+        .pcoded-main-container { margin-left: 0; }
+      }
+
+      /* Scroll do sidebar */
+      .pcoded-navbar .navbar-content { overflow: hidden !important; }
+      .pcoded-navbar .navbar-content > .ps { overflow: hidden !important; height: 100%; }
+
+      /* Sub-grupos aninhados no sidebar (Configuracoes) */
+      .pcoded-submenu .pcoded-hasmenu > .nav-link .pcoded-micon i { font-size: 14px; }
+      .pcoded-submenu .pcoded-submenu .nav-link { padding-left: 55px; }
+      .pcoded-submenu .pcoded-hasmenu > .nav-link { font-weight: 500; }
+    </style>
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+</body>
+</html>

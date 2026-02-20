@@ -1,0 +1,674 @@
+// Ajuda / Manual do Sistema - Estilos
+
+$primary-blue: #2B7FB9;
+$gold: #C5A55A;
+$dark-blue: #1B4965;
+$bg-light: #F5F7FA;
+$bg-card: #FFFFFF;
+$text-primary: #2D3436;
+$text-secondary: #636E72;
+$border-light: #E9ECEF;
+
+.ajuda-wrapper {
+  // ─── Header ─────────────────────────────────────────
+  .ajuda-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .ajuda-title {
+      h4 {
+        font-size: 20px;
+        font-weight: 700;
+        color: $text-primary;
+        margin-bottom: 4px;
+      }
+
+      p {
+        font-size: 13px;
+        color: $text-secondary;
+        margin: 0;
+      }
+    }
+
+    .ajuda-search {
+      position: relative;
+      min-width: 260px;
+
+      input {
+        width: 100%;
+        border: 1.5px solid $border-light;
+        border-radius: 20px;
+        padding: 8px 16px 8px 38px;
+        font-size: 13px;
+        transition: all 0.2s ease;
+        background: $bg-card;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-blue;
+          box-shadow: 0 0 0 3px rgba($primary-blue, 0.1);
+        }
+
+        &::placeholder { color: #A0AEC0; }
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #A0AEC0;
+        font-size: 13px;
+      }
+    }
+  }
+
+  // ─── Layout ─────────────────────────────────────────
+  .ajuda-content {
+    display: flex;
+    gap: 24px;
+    min-height: 500px;
+  }
+
+  // ─── Sidebar / Índice ───────────────────────────────
+  .ajuda-sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: $bg-card;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 16px 0;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+
+    .sidebar-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: $text-secondary;
+      padding: 0 20px 12px;
+      border-bottom: 1px solid $border-light;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-left: 3px solid transparent;
+      font-size: 13px;
+      font-weight: 500;
+      color: $text-secondary;
+
+      &:hover {
+        background: $bg-light;
+        color: $text-primary;
+      }
+
+      &.active {
+        background: rgba($primary-blue, 0.05);
+        color: $primary-blue;
+        border-left-color: $primary-blue;
+        font-weight: 600;
+      }
+
+      .sidebar-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  // ─── Painel de Conteúdo ─────────────────────────────
+  .ajuda-panel {
+    flex: 1;
+    background: $bg-card;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 28px 32px;
+    animation: fadeInPanel 0.3s ease-out;
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 8px;
+
+      .panel-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      h5 {
+        font-size: 18px;
+        font-weight: 700;
+        color: $text-primary;
+        margin: 0;
+      }
+    }
+
+    .panel-description {
+      font-size: 14px;
+      color: $text-secondary;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid $bg-light;
+      line-height: 1.6;
+    }
+
+    // Acordeão
+    .subsection-list {
+      .subsection-item {
+        border: 1.5px solid $border-light;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: rgba($primary-blue, 0.2);
+        }
+
+        &.open {
+          border-color: rgba($primary-blue, 0.3);
+          box-shadow: 0 2px 8px rgba($primary-blue, 0.06);
+        }
+      }
+
+      .subsection-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: transparent;
+        border: none;
+        width: 100%;
+        text-align: left;
+
+        &:hover {
+          background: $bg-light;
+        }
+
+        .subsection-title {
+          font-size: 14px;
+          font-weight: 600;
+          color: $text-primary;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .subsection-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: $bg-light;
+            color: $text-secondary;
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+          }
+        }
+
+        .chevron {
+          color: $text-secondary;
+          font-size: 12px;
+          transition: transform 0.25s ease;
+
+          &.open {
+            transform: rotate(180deg);
+          }
+        }
+      }
+
+      .subsection-content {
+        padding: 0 18px 16px 52px;
+        font-size: 13px;
+        color: $text-secondary;
+        line-height: 1.7;
+        animation: fadeInContent 0.25s ease-out;
+      }
+    }
+  }
+
+  // ─── Empty / No Results ─────────────────────────────
+  .ajuda-no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: $text-secondary;
+
+    i {
+      font-size: 40px;
+      color: #CBD5E0;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    p { font-size: 14px; }
+  }
+
+  // ─── Footer ─────────────────────────────────────────
+  .ajuda-footer {
+    text-align: center;
+    margin-top: 24px;
+    padding-top: 16px;
+    font-size: 12px;
+    color: lighten($text-secondary, 15%);
+  }
+}
+
+// ─── Animações ────────────────────────────────────────
+@keyframes fadeInPanel {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInContent {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// ─── Admin Badge ─────────────────────────────────────
+.admin-badge {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(#1B4965, 0.1);
+  color: #1B4965;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: auto;
+}
+
+.admin-badge-panel {
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(#1B4965, 0.08);
+  color: #1B4965;
+  padding: 4px 12px;
+  border-radius: 16px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-item.admin-only {
+  border-top: 1px solid $border-light;
+  margin-top: 8px;
+  padding-top: 14px;
+}
+
+// ─── Relatório Técnico - Conteúdos Interativos ──────
+
+// Nota textual
+.rt-text-note {
+  font-size: 12px;
+  color: lighten($text-secondary, 10%);
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed $border-light;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+// Tabela
+.rt-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 8px;
+}
+
+.rt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  thead {
+    th {
+      background: $bg-light;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: $text-secondary;
+      border-bottom: 2px solid $border-light;
+
+      &:first-child {
+        border-bottom-width: 2px;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid rgba($border-light, 0.6);
+      transition: background 0.15s ease;
+
+      &:hover { background: rgba($primary-blue, 0.02); }
+      &:last-child { border-bottom: none; }
+    }
+
+    td {
+      padding: 9px 14px;
+      color: $text-primary;
+
+      &.rt-value {
+        font-weight: 600;
+        color: $dark-blue;
+      }
+    }
+  }
+}
+
+// Steps (fluxo processual)
+.rt-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 8px;
+}
+
+.rt-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  position: relative;
+  padding-bottom: 4px;
+
+  .rt-step-number {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    z-index: 1;
+  }
+
+  .rt-step-connector {
+    position: absolute;
+    left: 15px;
+    top: 34px;
+    width: 2px;
+    height: calc(100% - 10px);
+    z-index: 0;
+  }
+
+  .rt-step-content {
+    flex: 1;
+    padding-bottom: 16px;
+  }
+
+  .rt-step-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: 2px;
+  }
+
+  .rt-step-desc {
+    font-size: 12px;
+    color: $text-secondary;
+    line-height: 1.5;
+  }
+}
+
+// KPIs
+.rt-kpis-section {
+  margin-bottom: 8px;
+}
+
+.rt-kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: $text-secondary;
+  margin-bottom: 10px;
+}
+
+.rt-kpis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.rt-kpi-card {
+  background: $bg-light;
+  border-radius: 8px;
+  padding: 10px 14px;
+  border-left: 3px solid;
+  transition: transform 0.15s ease;
+
+  &:hover { transform: translateY(-1px); }
+
+  .rt-kpi-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  .rt-kpi-format {
+    font-size: 11px;
+    color: $text-secondary;
+    margin-top: 2px;
+  }
+}
+
+.rt-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 6px;
+}
+
+.rt-chart-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: $text-secondary;
+  padding: 6px 10px;
+  background: $bg-light;
+  border-radius: 6px;
+
+  .rt-chart-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba($primary-blue, 0.1);
+    color: $primary-blue;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+}
+
+// Lista
+.rt-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.rt-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: $text-primary;
+  line-height: 1.5;
+
+  .rt-list-bullet {
+    width: 6px;
+    height: 6px;
+    min-width: 6px;
+    border-radius: 50%;
+    margin-top: 6px;
+  }
+
+  strong {
+    color: $dark-blue;
+  }
+}
+
+// Grupos
+.rt-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.rt-group {
+  .rt-group-label {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .rt-group-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .rt-group-tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 4px 10px;
+    background: $bg-light;
+    border: 1px solid $border-light;
+    border-radius: 14px;
+    color: $text-secondary;
+    font-weight: 500;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: rgba($primary-blue, 0.05);
+      border-color: rgba($primary-blue, 0.2);
+      color: $primary-blue;
+    }
+  }
+}
+
+// Diagrama
+.rt-diagram {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  background: $bg-light;
+  border-radius: 10px;
+  border: 1.5px solid;
+  margin-bottom: 8px;
+
+  .rt-diagram-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .rt-diagram-content {
+    font-size: 13px;
+    color: $text-secondary;
+    line-height: 1.7;
+  }
+}
+
+// Relatório panel específico
+.relatorio-panel {
+  .subsection-content {
+    padding: 12px 18px 16px 18px !important;
+  }
+}
+
+// Arquitetura panel — componente dedicado ocupa todo o painel
+.arquitetura-panel {
+  padding: 16px !important;
+  overflow-x: auto;
+}
+
+// ─── Responsivo ───────────────────────────────────────
+@media (max-width: 768px) {
+  .ajuda-wrapper {
+    .ajuda-content {
+      flex-direction: column;
+    }
+
+    .ajuda-sidebar {
+      width: 100%;
+      min-width: 100%;
+      position: static;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 12px;
+      gap: 4px;
+
+      .sidebar-title {
+        width: 100%;
+        padding: 0 8px 8px;
+      }
+
+      .sidebar-item {
+        padding: 8px 12px;
+        border-left: none;
+        border-radius: 8px;
+        font-size: 12px;
+
+        &.active {
+          border-left: none;
+          background: rgba($primary-blue, 0.1);
+        }
+
+        .sidebar-icon {
+          width: 24px;
+          height: 24px;
+          font-size: 10px;
+        }
+      }
+    }
+
+    .ajuda-panel {
+      padding: 20px;
+    }
+
+    .ajuda-header .ajuda-search {
+      min-width: 100%;
+    }
+  }
+}
