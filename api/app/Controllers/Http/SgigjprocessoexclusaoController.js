@@ -301,6 +301,7 @@ class entity {
   }
 
   async index({ request, response }) {
+    try {
     const allowedMethod = await functionsDatabase.allowed(
       table,
       "index",
@@ -354,6 +355,10 @@ class entity {
         message: "index not allwed",
         code: "4054",
       });
+    } catch (err) {
+      console.error("ERRO index sgigjprocessoexclusao:", err.message, err.stack);
+      return response.status(500).json({ status: "error", message: err.message, code: err.code });
+    }
   }
 
   async show({ params, response, request }) {
@@ -537,15 +542,15 @@ class entity {
                       const element = result[index];
                       tbody =
                         tbody +
-                        \`<tr style="background-color:\${index % 2 == 0 ? '#f5f5f5' : '#fff'};color:#000">
+                        `<tr style="background-color:${index % 2 == 0 ? '#f5f5f5' : '#fff'};color:#000">
           <td style="padding: 3px;"> </td>
-          <td style="padding: 3px;"> \${element.CODIGO}</td>
-          <td style="padding: 3px;"> \${element.sgigjprocessodespacho.length > 0 ? element.sgigjprocessodespacho[0].DESIG : ""}</td>
-          <td style="padding: 3px;"> \${element.sgigjentidade ? element.sgigjentidade.DESIG : ""}</td>
-          <td style="padding: 3px;"> \${element.sgigjrelpessoaentidade.sgigjpessoa.NOME}</td>
-          <td style="padding: 3px;"> \${element.FLAG_RECLAMACAO_VISADO}</td>
-          <td style="padding: 3px;"> \${moment(element.DATA).format("DD-MM-Y")}</td>
-          </tr>\`;
+          <td style="padding: 3px;"> ${element.CODIGO}</td>
+          <td style="padding: 3px;"> ${element.sgigjprocessodespacho.length > 0 ? element.sgigjprocessodespacho[0].DESIG : ""}</td>
+          <td style="padding: 3px;"> ${element.sgigjentidade ? element.sgigjentidade.DESIG : ""}</td>
+          <td style="padding: 3px;"> ${element.sgigjrelpessoaentidade ? element.sgigjrelpessoaentidade.sgigjpessoa.NOME : ""}</td>
+          <td style="padding: 3px;"> ${element.FLAG_RECLAMACAO_VISADO}</td>
+          <td style="padding: 3px;"> ${moment(element.DATA).format("DD-MM-Y")}</td>
+          </tr>`;
                     }
                     return tbody;
                   })()}

@@ -413,7 +413,7 @@ class DashboardController {
 
             const result = await DatabaseDB.raw(
                 `SELECT DATE_FORMAT(Created_At, '%Y-%m') as mes, Text_Modulo as modulo, COUNT(*) as total
-                 FROM create_auditorias
+                 FROM auditoria
                  WHERE Created_At >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
                  GROUP BY DATE_FORMAT(Created_At, '%Y-%m'), Text_Modulo
                  ORDER BY mes, modulo`

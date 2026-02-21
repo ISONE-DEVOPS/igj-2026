@@ -235,7 +235,7 @@ class entity {
 
       else {
         // Campos que o utilizador pode alterar sobre si próprio (apenas foto e dados básicos)
-        const allowedFields = ['URL_FOTO']
+        const allowedFields = ['URL_FOTO', 'ASSINATURA_URL']
         let data = request.only(allowedFields)
 
         if (Object.keys(data).length === 0) {

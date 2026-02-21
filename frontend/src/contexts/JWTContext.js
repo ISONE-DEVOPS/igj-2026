@@ -249,6 +249,56 @@ function transformMenus(menuData) {
   return menuData;
 }
 
+async function injectDynamicCasinoMenus(menuData) {
+  if (!menuData || !menuData.items) return menuData;
+
+  function findCasinoCollapse(items) {
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].title && items[i].title.toLowerCase().trim() === 'casinos' && items[i].type === 'collapse') {
+        return items[i];
+      }
+      if (items[i].children) {
+        var found = findCasinoCollapse(items[i].children);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
+
+  var casinoMenu = findCasinoCollapse(menuData.items);
+  if (!casinoMenu) return menuData;
+
+  try {
+    var response = await api.get('/sgigjentidadecasino');
+    if (response.status == 200 && response.data) {
+      var casinos = response.data.filter(function(e) {
+        return e.sgigjprentidadetp && e.sgigjprentidadetp.DESIG === 'Casino';
+      });
+
+      var nonCasinoChildren = (casinoMenu.children || []).filter(function(child) {
+        return !child.url || child.url.indexOf('/entidades/entidades/detalhes/') !== 0;
+      });
+
+      var dynamicChildren = casinos.map(function(casino) {
+        return {
+          id: 'casino-' + casino.ID,
+          title: casino.DESIG,
+          type: 'item',
+          url: '/entidades/entidades/detalhes/' + casino.ID,
+          icon: 'fas fa-dice',
+          iconColor: '#d4a843'
+        };
+      });
+
+      casinoMenu.children = nonCasinoChildren.concat(dynamicChildren);
+    }
+  } catch (err) {
+    console.error('Error loading casino entities for menu:', err);
+  }
+
+  return menuData;
+}
+
 //--------------------------------| START
 
 const initialState = {
@@ -486,6 +536,7 @@ export const JWTProvider = ({ children }) => {
       maker1(s)
       var x = maker2(s)
       x = transformMenus(x)
+      x = await injectDynamicCasinoMenus(x)
       setmenus(x)
 
       setpermissoes(response.data[0].glbperfil.glbmenu)
@@ -522,6 +573,7 @@ export const JWTProvider = ({ children }) => {
           maker1(s)
           var x = maker2(s)
           x = transformMenus(x)
+          x = await injectDynamicCasinoMenus(x)
           setmenus(x)
 
           setpermissoes(response.data[0].glbperfil.glbmenu)

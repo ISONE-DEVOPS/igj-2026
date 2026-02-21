@@ -234,7 +234,7 @@ const Ajuda = () => {
             <div className="ajuda-header">
                 <div className="ajuda-title">
                     <h4>Manual do Sistema SGIGJ</h4>
-                    <p>Selecione um modulo para ver as instrucoes de utilizacao</p>
+                    <p>Selecione um módulo para ver as instruções de utilização</p>
                 </div>
                 <div className="ajuda-search">
                     <i className="fas fa-search search-icon" />
@@ -251,7 +251,7 @@ const Ajuda = () => {
             <div className="ajuda-content">
                 {/* Sidebar */}
                 <div className="ajuda-sidebar">
-                    <div className="sidebar-title">Modulos</div>
+                    <div className="sidebar-title">Módulos</div>
                     {filteredSections.map(section => (
                         <div
                             key={section.id}
@@ -366,7 +366,7 @@ const Ajuda = () => {
 
             {/* Footer */}
             <div className="ajuda-footer">
-                SGIGJ - Sistema Integrado de Gestao da Inspecao Geral de Jogos | v1.0
+                SGIGJ - Sistema Integrado de Gestao da Inspecao Geral de Jogos | v2.0
             </div>
         </div>
     );

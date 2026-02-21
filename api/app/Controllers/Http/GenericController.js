@@ -192,6 +192,7 @@ class GenericController {
     }
 
     async index({ request, response }) {
+        try {
         const allowedMethod = await functionsDatabase.allowed(this.table, "index", request.userID, "");
         if (allowedMethod || true) {
             const list = await functionsDatabase.DBMaker(this.table);
@@ -203,6 +204,10 @@ class GenericController {
         }
 
         else return response.status(403).json({ status: "403Error", entity: this.table, message: "index not allwed", code: "4054" })
+        } catch (err) {
+            console.error("ERRO index " + this.table + ":", err.message, err.stack);
+            return response.status(500).json({ status: "error", message: err.message, code: err.code });
+        }
     }
 
     async show({ params, response, request }) {

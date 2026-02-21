@@ -108,12 +108,7 @@ function Table({ columns, data, modalOpen, listProjetos, uploadlist, years }) {
     }
     function filterDataInicio(e) {
         setDATA_DE(e)
-        console.log(e)
-        uploadlist(e, DATA_PARA)
-    }
-    function filterDataFim(e) {
-        setDATA_PARA(e)
-        uploadlist(DATA_DE, e)
+        uploadlist(e, e)
     }
     function reloadList() {
         setDATA_DE("")
@@ -204,40 +199,20 @@ function Table({ columns, data, modalOpen, listProjetos, uploadlist, years }) {
            
           </div> */}
                     <div className="d-flex align-items-center mr-2">
-                        <div className="d-flex">
-                            <div className="d-flex align-items-center mr-1">
-                                <span className="floating-label" htmlFor="Name">
-                                    De:<span style={{ color: "red" }}>*</span>
-                                </span>
-                                <input
-                                    type="date"
-                                    onChange={(event) => {
-                                        filterDataInicio(event.target.value);
-                                    }}
-                                    value={DATA_DE}
-                                    max="2050-12-31"
-                                    className="form-control"
-                                    placeholder="Data Inicio"
-                                    required
-                                />
-                            </div>
-                            <div className="d-flex align-items-center">
-                                <span className="floating-label" htmlFor="Name">
-                                    Para:<span style={{ color: "red" }}>*</span>
-                                </span>
-                                <input
-                                    onChange={(event) => {
-                                        filterDataFim(event.target.value);
-                                    }}
-                                    type="date"
-                                    value={DATA_PARA}
-                                    max="2050-12-31"
-                                    className="form-control"
-                                    placeholder="Data Fim"
-                                    required
-                                /></div>
-                        </div>
-                        {DATA_DE !== "" || DATA_PARA !== "" ?
+                        <select
+                            onChange={(event) => {
+                                filterDataInicio(event.target.value);
+                            }}
+                            value={DATA_DE}
+                            className="form-control"
+                            style={{ minWidth: '150px' }}
+                        >
+                            <option value="">Todos os anos</option>
+                            {years.map(y => (
+                                <option key={y} value={y}>{y}</option>
+                            ))}
+                        </select>
+                        {DATA_DE !== "" ?
                             <div style={{ cursor: 'pointer' }} onClick={() => {
                                 reloadList();
                             }} className="ml-2">
@@ -485,8 +460,8 @@ const VisaoGeral = () => {
         "Novembro",
         "Dezembro",
     ];
-    const [startYear] = useState(2000);
-    const [endYear] = useState(2023);
+    const [startYear] = useState(2022);
+    const [endYear] = useState(new Date().getFullYear());
 
     const years = [];
     for (let year = startYear; year <= endYear; year++) {

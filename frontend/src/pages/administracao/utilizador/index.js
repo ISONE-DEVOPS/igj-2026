@@ -162,10 +162,11 @@ function Table({ columns, data, modalOpen }) {
 const Customers = () => {
 
 
-    const { permissoes } = useAuth();
+    const { permissoes, user } = useAuth();
 
     const history = useHistory();
 
+    const isAdminSistema = user && user.PERFIL_ID === 'c55fc99dc15b5f5e22abb36d3eb393db4082'
 
     const { popUp_removerItem, popUp_alertaOK } = useAuth();
 
@@ -274,7 +275,14 @@ const Customers = () => {
 
                 }
 
-                setnewdata(response.data)
+                let filteredData = response.data
+                if (!isAdminSistema) {
+                    filteredData = response.data.filter(item =>
+                        item.USERNAME !== 'suporte' && item.PERFIL_ID !== 'c55fc99dc15b5f5e22abb36d3eb393db4082'
+                    )
+                }
+
+                setnewdata(filteredData)
 
             }
 
@@ -333,7 +341,11 @@ const Customers = () => {
 
             if (response.status == '200') {
 
-                setperfillist(response.data)
+                let perfis = response.data
+                if (!isAdminSistema) {
+                    perfis = response.data.filter(p => p.ID !== 'c55fc99dc15b5f5e22abb36d3eb393db4082')
+                }
+                setperfillist(perfis)
 
             }
 
@@ -417,7 +429,13 @@ const Customers = () => {
 
         }
 
-
+        var anexoSign = ""
+        if (signEdit == null) {
+            anexoSign = (itemSelected.ASSINATURA_URL || "") + "?alt=media&token=0"
+        } else {
+            const signImg = await onFormSubmitImage(signEdit)
+            anexoSign = signImg.file.data
+        }
 
 
         const upload = {
@@ -427,7 +445,7 @@ const Customers = () => {
             REL_PESSOA_ENTIDADE_ID,
             FLAG_NOTIFICACAO,
             URL_FOTO: anexofile,
-
+            ASSINATURA_URL: anexoSign,
         }
 
         console.log(upload)
@@ -600,6 +618,7 @@ const Customers = () => {
         setUSERNAME("")
         setPASSWORD("")
         setURL_FOTO("")
+        setSignCreate(null)
     };
 
 
@@ -621,6 +640,11 @@ const Customers = () => {
             const img = await onFormSubmitImage(thumnail)
             anexofile = img.file.data
 
+            var anexoSign = ""
+            if (signCreate != null) {
+                const signImg = await onFormSubmitImage(signCreate)
+                anexoSign = signImg.file.data
+            }
 
             const upload = {
 
@@ -630,7 +654,7 @@ const Customers = () => {
                 REL_PESSOA_ENTIDADE_ID,
                 FLAG_NOTIFICACAO,
                 URL_FOTO: anexofile,
-
+                ...(anexoSign && { ASSINATURA_URL: anexoSign }),
 
             }
 
@@ -754,7 +778,11 @@ const Customers = () => {
 
     );
 
-
+    const [signCreate, setSignCreate] = useState(null);
+    const previewSignCreate = React.useMemo(
+        () => signCreate ? URL.createObjectURL(signCreate) : null,
+        [signCreate]
+    );
 
     const [thumnail2, setThumnail2] = useState(null);
 
@@ -767,6 +795,12 @@ const Customers = () => {
 
         [thumnail2]
 
+    );
+
+    const [signEdit, setSignEdit] = useState(null);
+    const previewSignEdit = React.useMemo(
+        () => signEdit ? URL.createObjectURL(signEdit) : null,
+        [signEdit]
     );
 
 
@@ -846,6 +880,10 @@ const Customers = () => {
                                         <input onChange={event => setThumnail(event.target.files[0])} style={thumnail ? { backgroundImage: 'url(' + preview + ')', backgroundSize: "cover", backgroundPosition: "center" } : {}} type="file" id="input-file-now" className="file-upload perfil_img_upload-none" />
                                     </div>
 
+                                    <div className="form-group fill">
+                                        <label className="floating-label" htmlFor="Sign">Assinatura</label>
+                                        <input onChange={event => setSignCreate(event.target.files[0])} style={signCreate ? { backgroundImage: 'url(' + previewSignCreate + ')', backgroundSize: "cover", backgroundPosition: "center" } : {}} type="file" id="input-file-sign-create" className="sign-upload perfil_sign_upload-rect" />
+                                    </div>
 
                                     <div className="custom-control custom-switch">
 
@@ -988,6 +1026,10 @@ const Customers = () => {
                                         <input onChange={event => setThumnail2(event.target.files[0])} style={thumnail2 ? { backgroundImage: 'url(' + preview2 + ')', backgroundSize: "cover", backgroundPosition: "center" } : { backgroundImage: 'url(' + itemSelected.URL_FOTO + '?alt=media&token=0)', backgroundSize: "cover", backgroundPosition: "center" }} type="file" id="input-file-now" className="file-upload perfil_img_upload-none" />
                                     </div>
 
+                                    <div className="form-group fill">
+                                        <label className="floating-label" htmlFor="Sign">Assinatura</label>
+                                        <input onChange={event => setSignEdit(event.target.files[0])} style={signEdit ? { backgroundImage: 'url(' + previewSignEdit + ')', backgroundSize: "cover", backgroundPosition: "center" } : { backgroundImage: 'url(' + (itemSelected.ASSINATURA_URL || '') + '?alt=media&token=0)', backgroundSize: "cover", backgroundPosition: "center" }} type="file" id="input-file-sign-edit" className="sign-upload perfil_sign_upload-rect" />
+                                    </div>
 
                                     <div className="custom-control custom-switch">
 
@@ -1141,6 +1183,10 @@ const Customers = () => {
                                         <label style={{ backgroundImage: 'url(' + itemSelected.URL_FOTO + '?alt=media&token=0)', backgroundSize: "cover", backgroundPosition: "center" }} className="file-upload perfil_img_upload-none" />
                                     </div>
 
+                                    <div className="form-group fill">
+                                        <label className="floating-label" htmlFor="Sign">Assinatura</label>
+                                        <label style={{ backgroundImage: 'url(' + (itemSelected.ASSINATURA_URL || '') + '?alt=media&token=0)', backgroundSize: "cover", backgroundPosition: "center" }} className="sign-upload perfil_sign_upload-rect" />
+                                    </div>
 
                                     <div className="custom-control custom-switch">
 

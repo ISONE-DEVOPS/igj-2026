@@ -71,33 +71,29 @@ class Authentication {
 
     const [, token] = authHeadear.split(' ');
 
+    let decoded
     try {
-
-      const decoded = await promisify(jwt.verify)(token, authConfig.secret);
-
-      // Verificar se o utilizador ainda está activo
-      const user = await Database.table('glbuser')
-        .where('ID', decoded.id)
-        .where('ESTADO', '<>', '0')
-        .limit(1)
-
-      if (user.length < 1) {
-        return response.status(401).json({ status: "401Error", message: "user inactive or not found" });
-      }
-
-      request.userID = decoded.id;
-      request.perfilID = decoded.perfil;
-      request.connectedsocket = connectedsocket
-      request.io = io
-
-      await next()
-
-
+      decoded = await promisify(jwt.verify)(token, authConfig.secret);
     } catch (err) {
-
       return response.status(401).json({ status: "401Error", message: "invalid or expired token" });
-
     }
+
+    // Verificar se o utilizador ainda está activo
+    const user = await Database.table('glbuser')
+      .where('ID', decoded.id)
+      .where('ESTADO', '<>', '0')
+      .limit(1)
+
+    if (user.length < 1) {
+      return response.status(401).json({ status: "401Error", message: "user inactive or not found" });
+    }
+
+    request.userID = decoded.id;
+    request.perfilID = decoded.perfil;
+    request.connectedsocket = connectedsocket
+    request.io = io
+
+    await next()
 
 
   }

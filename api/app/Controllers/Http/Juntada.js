@@ -125,7 +125,7 @@ class entity {
                 for (let index = 0; index < pecas.length; index++) {
                     const element = pecas[index];
                     if (!pecasImp.includes(pecas)) {
-                        li = li + \`<li>\${element.name}</li>\`
+                        li = li + `<li>${element.name}</li>`
                     }
                     pecasImp.push(pecas)
                 }

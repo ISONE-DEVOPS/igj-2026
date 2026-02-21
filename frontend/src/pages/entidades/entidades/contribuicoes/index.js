@@ -98,23 +98,10 @@ function Table({ columns, data, modalOpen, years, uploadList, uploadmeiospagamen
         }
 
     }
-    const [timeoutId, setTimeoutId] = useState(null);
-
     function handleChangeAno(ano) {
         setANO(ano)
-
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-        }
-        // Set a new timeout
-        const newTimeoutId = setTimeout(() => {
-            uploadList(ano)
-            uploadmeiospagamento()
-        }, 1500);
-
-        // Save the new timeout ID
-        setTimeoutId(newTimeoutId);
-
+        uploadList(ano)
+        uploadmeiospagamento()
     }
     const {
         getTableProps,
@@ -167,23 +154,12 @@ function Table({ columns, data, modalOpen, years, uploadList, uploadmeiospagamen
                     entradas
                 </Col>
                 <Col md={3} className="d-flex align-items-center">
-                    <input
-                        type="number"
-                        className='form-control '
-                        placeholder='Pesquise por ano'
-                        onChange={event => { handleChangeAno(event.target.value) }}
-                    />
-                    {/* <select onChange={event => { handleChangeAno(event.target.value) }} className="form-control" id="perfil" required aria-required="true">
-
-                        <option value="">Selecione um Ano </option>
-
-                        {years.map(e => (
-
-                            <option key={e} value={e}>{e}</option>
-
+                    <select onChange={event => { handleChangeAno(event.target.value) }} className="form-control" style={{ minWidth: '150px' }}>
+                        <option value="">Todos os anos</option>
+                        {Array.from({ length: new Date().getFullYear() - 2022 + 1 }, (_, i) => 2022 + i).map(y => (
+                            <option key={y} value={y}>{y}</option>
                         ))}
-
-                    </select> */}
+                    </select>
 
                 </Col>
                 <Col className='d-flex justify-content-end'>

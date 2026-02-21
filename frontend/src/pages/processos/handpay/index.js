@@ -42,7 +42,7 @@ import Documentos from "../../../components/Custom/Documentoshorizontal";
 const pageAcess = "/processos/handpay";
 
 const columns2 = [
-  { header: 'CODIGO', key: 'CODIGO' },
+  { header: 'REFERÊNCIA', key: 'REF' },
   { header: 'PESSAO', key: 'PESSOA2' },
   { header: 'ENTIDADE', key: "ENTIDADE" },
   { header: 'VALOR', key: 'VALOR2' },
@@ -122,22 +122,9 @@ function Table({ uploadList, columns, data, modalOpen, exportPDF, saveExcel }) {
       resetForm()
     }
   }
-  const [timeoutId, setTimeoutId] = useState(null);
-
   function handleChangeAno(ano) {
     setANO(ano)
-
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    // Set a new timeout
-    const newTimeoutId = setTimeout(() => {
-      uploadList(ano)
-    }, 1500);
-
-    // Save the new timeout ID
-    setTimeoutId(newTimeoutId);
-
+    uploadList(ano)
   }
 
   const handleGlobalFilterChange = (value) => {
@@ -189,14 +176,16 @@ function Table({ uploadList, columns, data, modalOpen, exportPDF, saveExcel }) {
           entradas
         </Col>
         <Col md={3} className="d-flex align-items-center">
-
-
-          <input
-            type="number"
-            className='form-control '
-            placeholder='Pesquise por ano'
-            onChange={event => { handleChangeAno(event.target.value) }} />
-
+          <select
+            onChange={event => { handleChangeAno(event.target.value) }}
+            className="form-control"
+            style={{ minWidth: '150px' }}
+          >
+            <option value="">Todos os anos</option>
+            {Array.from({ length: new Date().getFullYear() - 2022 + 1 }, (_, i) => 2022 + i).map(y => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
         </Col>
         <Col className='d-flex justify-content-end'>
           <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} setNewFilter={handleGlobalFilterChange} />
@@ -335,8 +324,8 @@ const Handpay = () => {
   const columns = React.useMemo(
     () => [
       {
-        Header: "Código",
-        accessor: "CODIGO",
+        Header: "Referência",
+        accessor: "REF",
         centered: false
       },
       {
@@ -403,7 +392,7 @@ const Handpay = () => {
   var exportEx = []
   newdata?.forEach((dat, i) => {
     exportEx.push({
-      "CODIGO": dat.CODIGO,
+      "REF": dat.REF,
       "PESSOA2": dat.PESSOA2,
       "ENTIDADE": dat.sgigjentidade.DESIG,
       "VALOR2": dat.VALOR2,
@@ -424,9 +413,9 @@ const Handpay = () => {
     doc.setFontSize(15);
 
     const title = "Lista de Handpay";
-    const headers = [["CODIGO", "PESSOA", "ENTIDADE", "VALOR", "DATA"]];
+    const headers = [["REFERÊNCIA", "PESSOA", "ENTIDADE", "VALOR", "DATA"]];
 
-    const data = exportEx?.map(c => [c.CODIGO, c.PESSOA2, c.ENTIDADE, c.VALOR2, c.DATA2]);
+    const data = exportEx?.map(c => [c.REF, c.PESSOA2, c.ENTIDADE, c.VALOR2, c.DATA2]);
 
     let content = {
       startY: 50,
@@ -1210,7 +1199,7 @@ const Handpay = () => {
                       <Col sm={4}>
                         <div className="form-group fill">
                           <label className="floating-label" htmlFor="Name">
-                            Código <span style={{ color: "red" }}>*</span>
+                            Referência <span style={{ color: "red" }}>*</span>
                           </label>
                           <input
                             disabled
@@ -1472,14 +1461,14 @@ const Handpay = () => {
                       <Col sm={4}>
                         <div className="form-group fill">
                           <label className="floating-label" htmlFor="Name">
-                            Código <span style={{ color: "red" }}>*</span>
+                            Referência <span style={{ color: "red" }}>*</span>
                           </label>
                           <input
                             disabled
                             type="text"
                             className="form-control"
                             id="Name"
-                            value={itemSelected.CODIGO}
+                            value={itemSelected.REF}
                             required
                           />
                         </div>
@@ -1702,7 +1691,7 @@ const Handpay = () => {
                   <Row>
                     <Col sm={4}>
                       <div className="form-group fill">
-                        <label className="floating-label" htmlFor="Name"> Código </label>
+                        <label className="floating-label" htmlFor="Name"> Referência </label>
                         <span
                           style={{
                             overflow: "auto",
@@ -1711,7 +1700,7 @@ const Handpay = () => {
                           }}
                           className="form-control"
                         >
-                          {itemSelected.CODIGO}
+                          {itemSelected.REF}
                         </span>
                       </div>
                     </Col>

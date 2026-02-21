@@ -669,11 +669,15 @@ class entity {
           .fetch()
         data = data.toJSON();
 
-        const user = await User.query()
-          .with("sgigjrelpessoaentidade.sgigjpessoa")
-          .where("REL_PESSOA_ENTIDADE_ID", data[0].REL_PESSOA_ENTIDADE_REGISTO_ID)
-          .first();
-        data[0]["criado_por"] = user
+        if (data[0].REL_PESSOA_ENTIDADE_REGISTO_ID) {
+          const user = await User.query()
+            .with("sgigjrelpessoaentidade.sgigjpessoa")
+            .where("REL_PESSOA_ENTIDADE_ID", data[0].REL_PESSOA_ENTIDADE_REGISTO_ID)
+            .first();
+          if (user) {
+            data[0]["criado_por"] = user
+          }
+        }
 
         return data
       }

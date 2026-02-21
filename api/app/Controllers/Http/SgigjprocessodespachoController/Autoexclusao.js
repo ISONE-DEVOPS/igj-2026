@@ -172,7 +172,7 @@ const store = async ({ params, request, response, auth }) => {
                 <p>Inspetor Geral</p>
                 ${(function () {
                   if(user && user.ASSINATURA_URL){
-                    return \`<img src="\${user.ASSINATURA_URL}?alt=media&token=0" width="250" height="100" style="position: absolute;top: -30px;left: 35%;">\`
+                    return `<img src="${user.ASSINATURA_URL}?alt=media&token=0" width="250" height="100" style="position: absolute;top: -30px;left: 35%;">`
                   }
                   return ''
                 })()}
@@ -253,8 +253,14 @@ const store = async ({ params, request, response, auth }) => {
 
         if (newE === 1) {
 
-
-
+          // Sync autoexclusão REF with despacho REFERENCIA (format: ANO.NNNN)
+          if (data.REFERENCIA) {
+            const ano = new Date().getFullYear()
+            const refPadded = String(parseInt(data.REFERENCIA)).padStart(4, '0')
+            await Database.table("sgigjprocessoautoexclusao")
+              .where('ID', data.PROCESSO_AUTOEXCLUSAO_ID)
+              .update({ REF: `${ano}.${refPadded}` })
+          }
 
           if (data.TIPO == "CONCLUIR") {
             GlbnotificacaoFunctions.storeToUser({
@@ -315,6 +321,15 @@ const store = async ({ params, request, response, auth }) => {
 
 
       if (newE[0] === 0) {
+
+        // Sync autoexclusão REF with despacho REFERENCIA (format: ANO.NNNN)
+        if (data.REFERENCIA) {
+          const ano = new Date().getFullYear()
+          const refPadded = String(parseInt(data.REFERENCIA)).padStart(4, '0')
+          await Database.table("sgigjprocessoautoexclusao")
+            .where('ID', data.PROCESSO_AUTOEXCLUSAO_ID)
+            .update({ REF: `${ano}.${refPadded}` })
+        }
 
         if (data.TIPO == "CONCLUIR") {
           GlbnotificacaoFunctions.storeToUser({

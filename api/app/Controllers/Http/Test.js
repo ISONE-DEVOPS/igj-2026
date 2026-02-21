@@ -50,7 +50,7 @@ class FileController {
                     <p>Inspetor</p>
                     ${(function () {
                       if(user.ASSINATURA_URL){
-                        return \`<img src="\${user.ASSINATURA_URL}?alt=media&token=0" width="250" height="100" style="position: absolute;top: -30px;left: 35%;">\`
+                        return `<img src="${user.ASSINATURA_URL}?alt=media&token=0" width="250" height="100" style="position: absolute;top: -30px;left: 35%;">`
                       }
                       return ''
                     })()}

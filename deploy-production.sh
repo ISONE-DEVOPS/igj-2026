@@ -28,10 +28,10 @@ if [ "$confirm" != "sim" ]; then
     exit 0
 fi
 
-# 1. Build do frontend
-echo -e "${YELLOW}[1/3]${NC} Building frontend..."
+# 1. Build do frontend com API de producao
+echo -e "${YELLOW}[1/3]${NC} Building frontend (API Producao)..."
 cd frontend
-NODE_OPTIONS=--openssl-legacy-provider npm run build
+REACT_APP_API_URL=https://sgigj-api-production-935874352349.europe-west1.run.app NODE_OPTIONS=--openssl-legacy-provider npm run build
 echo -e "${GREEN}Build concluido${NC}"
 
 # 2. Sync para pasta prod/

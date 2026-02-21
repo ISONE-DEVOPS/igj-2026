@@ -374,7 +374,7 @@ class entity {
                   <table style="border-collapse: collapse;font-size: 5pt !important;width: 97%;">
                     <thead style="background-color:#2b7fb9;color:#fff">
                       <tr>
-                         <th style="text-align: center;">CODIGO</th>
+                         <th style="text-align: center;">REFERÊNCIA</th>
                          <th style="text-align: center;">PESSOA</th>
                          <th style="text-align: center;">ENTIDADE</th>
                          <th style="text-align: center;">NACIONALIDADE</th>
@@ -391,7 +391,7 @@ class entity {
             const element = result[index];
             sum = sum + element.VALOR
             tbody = tbody + `<tr ${index % 2 == 0 ? 'style="background-color:#f5f5f5;color:#000"' : 'background-color:#fff;color:#000"'}>
-                             <td style="text-align: center;"> ${element.CODIGO}</tb>
+                             <td style="text-align: center;"> ${element.REF}</tb>
                              <td style="text-align: center;"> ${element.sgigjpessoa.NOME}</tb>
                              <td style="text-align: center;"> ${element.sgigjentidade.DESIG}</tb>
                              <td style="text-align: center;"> ${element.sgigjpessoa.nacionalidade.NACIONALIDADE}</tb>
@@ -477,7 +477,7 @@ class entity {
         let element = result[index];
         sum = sum + element.VALOR
         dataResult.push({
-          "CODIGO": element.CODIGO,
+          "REFERÊNCIA": element.REF,
           "PESSOA": element.sgigjpessoa.NOME,
           "ENTIDADE": element.sgigjentidade.DESIG,
           "NACIONALIDADE": element.sgigjpessoa.nacionalidade.NACIONALIDADE,
@@ -493,7 +493,7 @@ class entity {
         dataCsv = dataCsv + "\r\n"
         dataCsv = dataCsv + this.toCsv([
           {
-            "CODIGO": "",
+            "REFERÊNCIA": "",
             "PESSOA": "",
             "ENTIDADE": "",
             "NACIONALIDADE": "",
@@ -514,6 +514,47 @@ class entity {
 
     }
     else return response.status(403).json({ status: "403Error", entity: table, message: "index not allwed", code: "4054" })
+  }
+
+  async regenerateRefs({ request, response }) {
+    const DB = use('Database')
+    try {
+      const records = await DB.table(table)
+        .whereNull('DELETADO_EM')
+        .orderBy('DATA', 'asc')
+        .orderBy('DT_REGISTO', 'asc')
+
+      const yearCounters = {}
+      let updated = 0
+
+      for (const record of records) {
+        const dt = new Date(record.DATA)
+        const year = dt.getFullYear()
+
+        if (!yearCounters[year]) {
+          yearCounters[year] = 0
+        }
+        yearCounters[year]++
+
+        const newRef = `${year}.${String(yearCounters[year]).padStart(4, '0')}`
+
+        if (record.REF !== newRef) {
+          await DB.table(table)
+            .where('ID', record.ID)
+            .update({ REF: newRef })
+          updated++
+        }
+      }
+
+      return response.json({
+        status: 'ok',
+        message: `${updated} referências atualizadas de ${records.length} registos`,
+        yearCounters
+      })
+    } catch (err) {
+      console.error('regenerateRefs ERROR:', err.message, err.stack)
+      return response.status(500).json({ status: 'error', message: err.message })
+    }
   }
 
   toCsv(data, hasHeader = true) {

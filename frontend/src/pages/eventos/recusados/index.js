@@ -78,23 +78,11 @@ function Table({ uploadList, columns, data, modalOpen }) {
 
     }
 
-    const [timeoutId, setTimeoutId] = useState(null);
     const [ANO, setANO] = useState("")
 
     function handleChangeAno(ano) {
         setANO(ano)
-
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-        }
-        // Set a new timeout
-        const newTimeoutId = setTimeout(() => {
-            uploadList(ano)
-        }, 1500);
-
-        // Save the new timeout ID
-        setTimeoutId(newTimeoutId);
-
+        uploadList(ano)
     }
 
     const {
@@ -150,11 +138,16 @@ function Table({ uploadList, columns, data, modalOpen }) {
                 <Col md={3} className="d-flex align-items-center">
 
 
-                    <input
-                        type="number"
-                        className='form-control '
-                        placeholder='Pesquise por ano'
-                        onChange={event => { handleChangeAno(event.target.value) }} />
+                    <select
+                        onChange={event => { handleChangeAno(event.target.value) }}
+                        className="form-control"
+                        style={{ minWidth: '150px' }}
+                    >
+                        <option value="">Todos os anos</option>
+                        {Array.from({ length: new Date().getFullYear() - 2022 + 1 }, (_, i) => 2022 + i).map(y => (
+                            <option key={y} value={y}>{y}</option>
+                        ))}
+                    </select>
 
                 </Col>
                 <Col className='d-flex justify-content-end'>

@@ -80,15 +80,16 @@ function Table({ columns, data, modalOpen, uploadlist }) {
         <>
             <Row className='mb-3'>
 
-                <Col md={4}>
-
-                    <input
-                        type="number"
-                        className='form-control '
-                        placeholder='Pesquise por ano...'
-                        onChange={event => { handleChangeAno(event.target.value) }} />
-
-
+                <Col md={3}>
+                    <select
+                        onChange={event => { handleChangeAno(event.target.value) }}
+                        className="form-control"
+                    >
+                        <option value="">Todos os anos</option>
+                        {Array.from({ length: new Date().getFullYear() - 2022 + 1 }, (_, i) => 2022 + i).map(y => (
+                            <option key={y} value={y}>{y}</option>
+                        ))}
+                    </select>
                 </Col>
                 <Col className='d-flex justify-content-end'>
                     {/* <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} /> */}

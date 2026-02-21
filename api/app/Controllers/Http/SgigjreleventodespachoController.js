@@ -102,7 +102,7 @@ class entity {
                   <p>Inspetor Geral</p>
                   ${(function () {
                     if(newuser_Glbuser && newuser_Glbuser.rows[0].ASSINATURA_URL){
-                      return \`<img src="\${newuser_Glbuser.rows[0].ASSINATURA_URL}?alt=media&token=0" width="250" height="100" style="position: absolute;top: -30px;left: 35%;">\`
+                      return `<img src="${newuser_Glbuser.rows[0].ASSINATURA_URL}?alt=media&token=0" width="250" height="100" style="position: absolute;top: -30px;left: 35%;">`
                     }
                     return ''
                   })()}

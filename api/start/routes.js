@@ -42,6 +42,7 @@ Route.group(() => {
   Route.get("/sgigjprocessoautoexclusao/exportPdf", "SgigjprocessoautoexclusaoController.exportPdf")
 
   Route.get("/sgigjhandpay/exportPdf", "SgigjhandpayController.exportPdf")
+  Route.post("/sgigjhandpay/regenerate-refs", "SgigjhandpayController.regenerateRefs")
 
   Route.resource("glbmenu", "GlbmenuController").apiOnly();
   Route.resource("glbperfil", "GlbperfilController").apiOnly();

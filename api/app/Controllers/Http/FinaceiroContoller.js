@@ -15,10 +15,11 @@ class FinaceiroContoller extends GenericController {
     async index({ response, request }) {
         const allowedMethod = await functionsDatabase.allowed(this.table, "index", request.userID, "");
         if (allowedMethod || true) {
+          try {
             let DATA_INCIO = request.get().DATA_INICIO
             let DATA_FIM = request.get().DATA_FIM
 
-            
+
             if (DATA_INCIO) {
                 DATA_INCIO = (new Date(DATA_INCIO)).getFullYear();
             }
@@ -114,6 +115,10 @@ class FinaceiroContoller extends GenericController {
             )
 
             return dataResult
+          } catch (err) {
+            console.error('FinaceiroContoller.index ERROR:', err.message, err.stack)
+            return response.status(500).json({ status: "500Error", message: err.message })
+          }
         }
 
         else return response.status(403).json({ status: "403Error", entity: this.table, message: "index not allwed", code: "4054" })
@@ -129,11 +134,11 @@ class FinaceiroContoller extends GenericController {
 
             let premios = (await Premio.query().where('ANO', index).where('ESTADO', 1).fetch()).toJSON()
             let imposto = (await Imposto.query().select(DatabaseDB
-                .raw('*, sum(IMPOSTO) as TOTAL_IMPOSTO,sum(BRUTO) as TOTALBRUTO')).groupBy("ANO").where('ANO', index).where('ESTADO', 1).fetch()).toJSON()
+                .raw('ANO, sum(IMPOSTO) as TOTAL_IMPOSTO, sum(BRUTO) as TOTALBRUTO')).groupBy("ANO").where('ANO', index).where('ESTADO', 1).fetch()).toJSON()
             let contrapartida = (await Contrapartida.query().select(DatabaseDB
-                .raw('*, sum(BRUTO) as TOTAL_BRUTO,sum(Art_48_percent) as TOTAL_Art_48_percent,sum(Art_49_percent) as TOTAL_Art_49_percent')).groupBy("ANO").where('ANO', index).where('ESTADO', 1).fetch()).toJSON()
+                .raw('ANO, sum(BRUTO) as TOTAL_BRUTO, sum(Art_48_percent) as TOTAL_Art_48_percent, sum(Art_49_percent) as TOTAL_Art_49_percent')).groupBy("ANO").where('ANO', index).where('ESTADO', 1).fetch()).toJSON()
             let contribuicoes = (await Contibuicoes.query().select(DatabaseDB
-                .raw('*, sum(VALOR) as TOTAL_VALOR')).groupBy("ANO").where('ANO', index).where('ESTADO', 1).fetch()).toJSON()
+                .raw('ANO, sum(VALOR) as TOTAL_VALOR')).groupBy("ANO").where('ANO', index).where('ESTADO', 1).fetch()).toJSON()
 
             if (premios.length > 0 || imposto.length > 0 || contrapartida.length > 0 || contribuicoes.length > 0) {
 

@@ -1045,8 +1045,12 @@ const Autoexclusao = ({ activeValue }) => {
             }
           }
 
-          let personThatCreateTheAutoexclusion = listOfPerson.find(person => person.ID === response.data[0].criado_por.sgigjrelpessoaentidade.PESSOA_ID)
-          setCreateBy(personThatCreateTheAutoexclusion.NOME)
+          if (response.data[0].criado_por && response.data[0].criado_por.sgigjrelpessoaentidade) {
+            let personThatCreateTheAutoexclusion = listOfPerson.find(person => person.ID === response.data[0].criado_por.sgigjrelpessoaentidade.PESSOA_ID)
+            setCreateBy(personThatCreateTheAutoexclusion ? personThatCreateTheAutoexclusion.NOME : "N/D")
+          } else {
+            setCreateBy("N/D")
+          }
           setVerOpen(true);
           // setIsEditarOpen(false);
           // setisDepachoopen(false);
