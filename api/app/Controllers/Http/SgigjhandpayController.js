@@ -254,7 +254,7 @@ class entity {
 
       // }
       if (ANO) {
-        result = result.whereRaw("YEAR(DT_REGISTO) = ? ", [ANO])
+        result = result.whereRaw("YEAR(DATA) = ? ", [ANO])
       }
 
       result = await result.orderBy("CODIGO", "desc").fetch()
