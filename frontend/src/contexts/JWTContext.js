@@ -578,15 +578,12 @@ export const JWTProvider = ({ children }) => {
 
           setpermissoes(response.data[0].glbperfil.glbmenu)
 
-          console.log("SSSSSSSSSS")
 
           uploadlistnotificacao()
 
           const socket = socketio(backendURL, { query: { token: serviceToken } })
 
           socket.on('standard', async data => {
-
-            console.log(data)
 
             if (data == "useronline") setuseronline(Math.random())
 
@@ -666,8 +663,6 @@ export const JWTProvider = ({ children }) => {
         setnotificacao(data)
 
       }
-
-      console.log(response)
 
     } catch (err) {
 

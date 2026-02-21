@@ -38,7 +38,6 @@ const Friends = ({ listOpen, search }) => {
         
         uploadlist()
 
-        console.log("dfsdfs")
 
 
     

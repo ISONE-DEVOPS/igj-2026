@@ -11,7 +11,6 @@ export default ({ Open, setOpen, list }) => {
 
 
     useEffect(()=> { 
-        console.log("ROberto",list)
         setimgprev("")
 
       },[list])

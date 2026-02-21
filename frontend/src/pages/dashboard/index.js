@@ -176,7 +176,7 @@ const DashAnalytics = () => {
                         <Col lg={7} className="mb-3">
                             <ChartCard title="Evolução Financeira Anual" subtitle="Receita, impostos, contrapartidas e contribuições" loading={isLoading}>
                                 {financialTrend ? (
-                                    <Chart options={financialTrend.options} series={financialTrend.series} type="area" height={320} />
+                                    <Chart options={financialTrend.options} series={financialTrend.series} type="area" height={320} width="100%" />
                                 ) : (
                                     <div className="dashboard-empty-state">
                                         <i className="feather icon-bar-chart-2" />
@@ -188,7 +188,7 @@ const DashAnalytics = () => {
                         <Col lg={5} className="mb-3">
                             <ChartCard title="Composição da Receita" subtitle="Distribuição por categoria" loading={isLoading}>
                                 {revenueComposition ? (
-                                    <Chart options={revenueComposition.options} series={revenueComposition.series} type="donut" height={320} />
+                                    <Chart options={revenueComposition.options} series={revenueComposition.series} type="donut" height={320} width="100%" />
                                 ) : (
                                     <div className="dashboard-empty-state">
                                         <i className="feather icon-pie-chart" />
@@ -214,6 +214,7 @@ const DashAnalytics = () => {
                                         series={revenueByEntity.series}
                                         type="bar"
                                         height={320}
+                                        width="100%"
                                     />
                                 ) : (
                                     <div className="dashboard-empty-state">
@@ -226,7 +227,7 @@ const DashAnalytics = () => {
                         <Col lg={5} className="mb-3">
                             <ChartCard title="Equipamentos por Entidade" subtitle="Máquinas, bancas e equipamentos" loading={isLoading}>
                                 {equipmentTreemap ? (
-                                    <Chart options={equipmentTreemap.options} series={equipmentTreemap.series} type="treemap" height={320} />
+                                    <Chart options={equipmentTreemap.options} series={equipmentTreemap.series} type="treemap" height={320} width="100%" />
                                 ) : (
                                     <div className="dashboard-empty-state">
                                         <i className="feather icon-grid" />
@@ -247,7 +248,7 @@ const DashAnalytics = () => {
                         <Col lg={7} className="mb-3">
                             <ChartCard title="Processos por Mês" subtitle="Exclusão vs Auto-exclusão (últimos 12 meses)" loading={isLoading}>
                                 {processTrend ? (
-                                    <Chart options={processTrend.options} series={processTrend.series} type="bar" height={320} />
+                                    <Chart options={processTrend.options} series={processTrend.series} type="bar" height={320} width="100%" />
                                 ) : (
                                     <div className="dashboard-empty-state">
                                         <i className="feather icon-file-text" />
@@ -259,7 +260,7 @@ const DashAnalytics = () => {
                         <Col lg={5} className="mb-3">
                             <ChartCard title="Status dos Processos" subtitle="Distribuição por estado" loading={isLoading}>
                                 {processStatus ? (
-                                    <Chart options={processStatus.options} series={processStatus.series} type="radialBar" height={320} />
+                                    <Chart options={processStatus.options} series={processStatus.series} type="radialBar" height={320} width="100%" />
                                 ) : (
                                     <div className="dashboard-empty-state">
                                         <i className="feather icon-activity" />
@@ -280,7 +281,7 @@ const DashAnalytics = () => {
                         <Col lg={5} className="mb-3">
                             <ChartCard title="Eventos por Status" subtitle="Aprovados, pendentes e recusados" loading={isLoading}>
                                 {eventStatus ? (
-                                    <Chart options={eventStatus.options} series={eventStatus.series} type="pie" height={320} />
+                                    <Chart options={eventStatus.options} series={eventStatus.series} type="pie" height={320} width="100%" />
                                 ) : (
                                     <div className="dashboard-empty-state">
                                         <i className="feather icon-calendar" />
@@ -292,7 +293,7 @@ const DashAnalytics = () => {
                         <Col lg={7} className="mb-3">
                             <ChartCard title="Atividade do Sistema" subtitle="Registos por módulo (últimos 12 meses)" loading={isLoading}>
                                 {activityHeatmap ? (
-                                    <Chart options={activityHeatmap.options} series={activityHeatmap.series} type="heatmap" height={320} />
+                                    <Chart options={activityHeatmap.options} series={activityHeatmap.series} type="heatmap" height={320} width="100%" />
                                 ) : (
                                     <div className="dashboard-empty-state">
                                         <i className="feather icon-activity" />
@@ -313,7 +314,7 @@ const DashAnalytics = () => {
                         <Col lg={7} className="mb-3">
                             <ChartCard title="Handpay por Entidade" subtitle="Valor total e quantidade de registos" loading={isLoading}>
                                 {handpayChart ? (
-                                    <Chart options={handpayChart.options} series={handpayChart.series} type="bar" height={320} />
+                                    <Chart options={handpayChart.options} series={handpayChart.series} type="bar" height={320} width="100%" />
                                 ) : (
                                     <div className="dashboard-empty-state">
                                         <i className="feather icon-credit-card" />
@@ -325,7 +326,7 @@ const DashAnalytics = () => {
                         <Col lg={5} className="mb-3">
                             <ChartCard title="Casos Suspeitos - Evolução" subtitle="Mensal e acumulado" loading={isLoading}>
                                 {suspiciousCases ? (
-                                    <Chart options={suspiciousCases.options} series={suspiciousCases.series} type="area" height={320} />
+                                    <Chart options={suspiciousCases.options} series={suspiciousCases.series} type="area" height={320} width="100%" />
                                 ) : (
                                     <div className="dashboard-empty-state">
                                         <i className="feather icon-alert-triangle" />
@@ -346,7 +347,7 @@ const DashAnalytics = () => {
                         <Col lg={7} className="mb-3">
                             <ChartCard title="Orçamento vs Despesa" subtitle="Por projeto/rubrica" loading={isLoading}>
                                 {budgetChart ? (
-                                    <Chart options={budgetChart.options} series={budgetChart.series} type="bar" height={320} />
+                                    <Chart options={budgetChart.options} series={budgetChart.series} type="bar" height={320} width="100%" />
                                 ) : (
                                     <div className="dashboard-empty-state">
                                         <i className="feather icon-book" />
@@ -359,7 +360,7 @@ const DashAnalytics = () => {
                             <ChartCard title="Taxa de Execução Orçamental" subtitle="Progresso de execução" loading={isLoading}>
                                 {budgetExecution ? (
                                     <>
-                                        <Chart options={budgetExecution.options} series={budgetExecution.series} type="radialBar" height={280} />
+                                        <Chart options={budgetExecution.options} series={budgetExecution.series} type="radialBar" height={280} width="100%" />
                                         <Row className="budget-info">
                                             <Col xs={6}>
                                                 <span className="budget-label">Orçamento</span>

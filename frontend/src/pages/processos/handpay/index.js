@@ -822,7 +822,7 @@ const Handpay = () => {
         DESCR,
         OBS_INTERNA,
         PESSOA_ID,
-
+        REF: itemSelected.REF,
         FOTO: anexofile ? anexofile : itemSelected.FOTO,
         ENTIDADE_ID: params.id
       };
@@ -928,7 +928,7 @@ const Handpay = () => {
         const upload = {
           PESSOA_ID: itemSelected.PESSOA_ID,
           URL_DOC: responseDoc.data,
-
+          REF: itemSelected.REF,
           VALOR: itemSelected.VALOR,
           DATA: itemSelected.DATA,
           DESCR: itemSelected.DESCR,

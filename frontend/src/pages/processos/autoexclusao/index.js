@@ -173,22 +173,9 @@ function Table({ uploadList, columns, data, modalOpen, exportPDF, saveExcel, toS
   } const resetForm = () => {
     setValues("")
   }
-  const [timeoutId, setTimeoutId] = useState(null);
-
   function handleChangeAno(ano) {
     setANO(ano)
-
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    // Set a new timeout
-    const newTimeoutId = setTimeout(() => {
-      uploadList(active, dispatch, ano)
-    }, 1500);
-
-    // Save the new timeout ID
-    setTimeoutId(newTimeoutId);
-
+    uploadList(active, dispatch, ano)
   }
   function reloadList() {
     setDATA_DE("")
@@ -275,11 +262,15 @@ function Table({ uploadList, columns, data, modalOpen, exportPDF, saveExcel, toS
         <Col md={4} className="d-flex align-items-center">
 
 
-          <input
-            type="number"
-            className='form-control '
-            placeholder='Pesquise por ano'
-            onChange={event => { handleChangeAno(event.target.value) }} />
+          <select
+            className='form-control'
+            value={ANO}
+            onChange={event => { handleChangeAno(event.target.value) }}>
+            <option value="">Todos os anos</option>
+            {Array.from({ length: new Date().getFullYear() - 2019 }, (_, i) => new Date().getFullYear() - i).map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
 
         </Col>
         {/* xcxss */}
@@ -781,7 +772,6 @@ const Autoexclusao = ({ activeValue }) => {
             </React.Fragment>
           );
         }
-        console.log({ data: response.data['data'] })
         setnewdata(response.data['data'])
         let isShowAlertFromLocalStorage = localStorage.getItem("showAlert")
         if (isShowAlertFromLocalStorage == "false") {
@@ -833,7 +823,6 @@ const Autoexclusao = ({ activeValue }) => {
           response.data[i].value = response.data[i].ID;
           response.data[i].label = response.data[i].NOME;
         }
-        console.log({ uploadpessoa: response.data })
         listOfPerson = response.data
         setpessoalist(response.data);
       }
@@ -856,7 +845,6 @@ const Autoexclusao = ({ activeValue }) => {
           entidades[i].value = entidades[i].ID;
           entidades[i].label = entidades[i].DESIG;
         }
-        console.log({ getENtidade: entidades })
         setentidadelist(entidades);
       }
     } catch (err) {
@@ -995,7 +983,6 @@ const Autoexclusao = ({ activeValue }) => {
   const [imgprev, setimgprev] = useState("");
   const [createBy, setCreateBy] = useState("");
 
-  console.log(pessoalist)
   const openVerHandler = async (idx) => {
 
     setPESSOA_ID(idx.PESSOA_ID);

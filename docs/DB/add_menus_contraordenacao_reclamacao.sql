@@ -8,10 +8,10 @@ INSERT INTO glbmenu (ID, DT_REGISTO, SELF_ID, DS_MENU, URL, URL_ICON, TIPO, ESTA
 ('a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8', NOW(), '0ab0e8dd8d3782b0af2be3a1cfa9174fd04b', 'Contraordenação', '/processos/contraordenacao', 'feather icon-alert-octagon', 'item', '1', 7),
 ('b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9', NOW(), '0ab0e8dd8d3782b0af2be3a1cfa9174fd04b', 'Reclamação', '/processos/reclamacao', 'feather icon-alert-circle', 'item', '1', 8);
 
--- 2. Sub-tarefas (Ler)
+-- 2. Sub-tarefas (Ler) - URL DEVE usar o nome da tabela da API (functionsDatabase.allowed() usa /{table}/{method})
 INSERT INTO glbmenu (ID, DT_REGISTO, SELF_ID, DS_MENU, URL, URL_ICON, TIPO, ESTADO, ORDEM) VALUES
-('c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0', NOW(), 'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8', 'Ler', '/processos/contraordenacao/Ler', 'feather icon-eye', 'task', '1', 0),
-('d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1', NOW(), 'b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9', 'Ler', '/processos/reclamacao/Ler', 'feather icon-eye', 'task', '1', 0);
+('c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0', NOW(), 'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8', 'Ler', '/sgigjprocessoexclusao/Ler', 'feather icon-eye', 'task', '1', 0),
+('d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1', NOW(), 'b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9', 'Ler', '/sgigjexclusaoreclamacao/Ler', 'feather icon-eye', 'task', '1', 0);
 
 -- 3. Associar aos perfis
 -- Admin Sistema

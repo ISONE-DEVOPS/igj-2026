@@ -1778,7 +1778,7 @@ const DetalhesEntidade = () => {
                                             } /> Grupo</span>}>
                                                 {(tabDescription === "parametrizacao" || tabDescriptionChildren === "grupo") &&
 
-                                                    <Grupo />
+                                                    <Grupo key={id} />
                                                 }
                                             </Tab>
                                         )}
@@ -1789,7 +1789,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "Tabequipamento")
                                             } /> Equipamento</span>}>
                                                 {tabDescriptionChildren === "equipamentos" &&
-                                                    <Equipamento />}
+                                                    <Equipamento key={id} />}
                                             </Tab>
                                         )}
                                         {taskEnable(pageAcess, permissoes, "Tabparametrizacaobanca") == false ? null : (
@@ -1798,7 +1798,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "Tabparametrizacaobanca")
                                             } /> Banca</span>}>
                                                 {tabDescriptionChildren === "banca" &&
-                                                    <Banca />}
+                                                    <Banca key={id} />}
                                             </Tab>
                                         )}
                                         {taskEnable(pageAcess, permissoes, "Tabparametrizacaomaquina") == false ? null : (
@@ -1807,7 +1807,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "Tabparametrizacaomaquina")
                                             } /> Máquina</span>}>
                                                 {tabDescriptionChildren === "maquina" &&
-                                                    <Maquina />}
+                                                    <Maquina key={id} />}
                                             </Tab>
                                         )}
                                         {taskEnable(pageAcess, permissoes, "Tabparametrizacaocolaboradores") == false ? null : (
@@ -1817,7 +1817,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "Tabparametrizacaocolaboradores")
                                             } /> Colaboradores</span>}>
                                                 {tabDescriptionChildren === "colaboradores" &&
-                                                    <Colaboradores />}
+                                                    <Colaboradores key={id} />}
                                             </Tab>
                                         )}
                                     </Tabs>
@@ -1831,7 +1831,7 @@ const DetalhesEntidade = () => {
                                 taskEnableIcon(pageAcess, permissoes, "Tabhandpay")
                             } /> Handpay</span>}>
                                 {tabDescription === "handpay" &&
-                                    <Handpay />}
+                                    <Handpay key={id} />}
                             </Tab>
                         )}
                         {taskEnable(pageAcess, permissoes, "Tabeventos") == false ? null : (
@@ -1854,7 +1854,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "Tabeventospedidos")
                                             } /> Pedidos</span>}>
                                                 {(tabDescription === "eventos" || tabDescriptionChildren === "eventospedidos") &&
-                                                    < EventosPedidos />
+                                                    < EventosPedidos key={id} />
                                                 }
                                             </Tab>)}
                                         {taskEnable(pageAcess, permissoes, "Tabeventoseaprovados") == false ? null : (
@@ -1863,7 +1863,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "Tabeventoseaprovados")
                                             } /> Aprovados</span>}>
                                                 {tabDescriptionChildren == "aprovados" &&
-                                                    <EventosAprovados />
+                                                    <EventosAprovados key={id} />
                                                 }
                                             </Tab>
                                         )}
@@ -1875,7 +1875,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "Tabeventosrecusados")
                                             } /> Recusados</span>}>
                                                 {tabDescriptionChildren == "recusados" &&
-                                                    <EventosRecusados />
+                                                    <EventosRecusados key={id} />
                                                 }
                                             </Tab>)}
 
@@ -1906,7 +1906,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "Tabprocessosempcurso")
                                             } /> Em curso</span>}>
                                                 {(tabDescription === "processos" || tabDescriptionChildren === "emcurso") &&
-                                                    <ProcessoEmCurso />}
+                                                    <ProcessoEmCurso key={id} />}
                                             </Tab>
                                         )}
                                         {taskEnable(pageAcess, permissoes, "Tabprocessosdespachados") == false ? null : (
@@ -1915,7 +1915,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "Tabprocessosdespachados")
                                             } /> Despachados</span>}>
                                                 {tabDescriptionChildren === "despachados" &&
-                                                    <ProcessoFinalizado />
+                                                    <ProcessoFinalizado key={id} />
                                                 }
                                             </Tab>
                                         )}
@@ -1927,7 +1927,7 @@ const DetalhesEntidade = () => {
                                             } /> Arquivados</span>}>
                                                 {tabDescriptionChildren === "arquivados" &&
 
-                                                    <ProcessoArquivados />}
+                                                    <ProcessoArquivados key={id} />}
                                             </Tab>
                                         )}
                                         {taskEnable(pageAcess, permissoes, "Tabprocessosprescritos") == false ? null : (
@@ -1937,7 +1937,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "Tabprocessosprescritos")
                                             } /> Prescritos</span>} >
                                                 {tabDescriptionChildren === "prescritos" &&
-                                                    <ProcessoPrescritos />
+                                                    <ProcessoPrescritos key={id} />
                                                 }
                                             </Tab>
                                         )}
@@ -1954,7 +1954,7 @@ const DetalhesEntidade = () => {
                                 taskEnableIcon(pageAcess, permissoes, "Tabparametrizacaocasosuspeito")
                             } /> Casos Suspeitos</span>} >
                                 {tabDescription === "casossuspeitos" &&
-                                    <CasoSuspeito />}
+                                    <CasoSuspeito key={id} />}
 
                             </Tab>)}
                         {taskEnable(pageAcess, permissoes, "Tabparametrizacaofinanceiro") == false ? null : (
@@ -1981,7 +1981,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "TabContrapartida")
                                             } /> Contrapartida</span>}>
                                                 {(tabDescription === "financeiros" || tabDescriptionChildren === "contrapartida") &&
-                                                    <Contrapartida />}
+                                                    <Contrapartida key={id} />}
                                             </Tab>
                                         )}
                                         {taskEnable(pageAcess, permissoes, "TabContribuicoes") == false ? null : (
@@ -1991,7 +1991,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "TabContribuicoes")
                                             } /> Contribuições IGJ</span>}>
                                                 {(tabDescriptionChildren === "contribuicoes") &&
-                                                    <Contribuicoes />}
+                                                    <Contribuicoes key={id} />}
                                             </Tab>
                                         )}
                                         {taskEnable(pageAcess, permissoes, "TabImposto") == false ? null : (
@@ -2001,7 +2001,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "TabImposto")
                                             } /> Imposto Especial</span>}>
                                                 {(tabDescriptionChildren === "imposto") &&
-                                                    <Imposto />}
+                                                    <Imposto key={id} />}
                                             </Tab>
                                         )}
                                         {taskEnable(pageAcess, permissoes, "TabPremios") == false ? null : (
@@ -2011,7 +2011,7 @@ const DetalhesEntidade = () => {
                                                 taskEnableIcon(pageAcess, permissoes, "TabPremios")
                                             } /> Prêmios</span>}>
                                                 {(tabDescriptionChildren === "premios") &&
-                                                    <Premios />}
+                                                    <Premios key={id} />}
                                             </Tab>
                                         )}
 
