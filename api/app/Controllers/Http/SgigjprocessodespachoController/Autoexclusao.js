@@ -148,9 +148,9 @@ const store = async ({ params, request, response, auth }) => {
       if (request_TIPO == "CONCLUIR") {
         let despacho = data?.DESPACHO
         if (despacho) {
-          despacho = despacho.replace(/font-size: 21px;/gm, "font-size: 9pt;")
-          despacho = despacho.replace(/font-size: 13px;/gm, "font-size: 5pt;")
-          despacho = despacho.replace(/font-size: 32px;/gm, "font-size: 15px;")
+          despacho = despacho.replace(/font-size: 21px;/gm, "font-size: 12pt;")
+          despacho = despacho.replace(/font-size: 13px;/gm, "font-size: 10pt;")
+          despacho = despacho.replace(/font-size: 32px;/gm, "font-size: 16pt;")
           despacho = despacho.replace(/&nbsp;&nbsp;&nbsp;/gm, "")
           despacho = despacho.replace(/text-indent: -24px;/gm, "text-indent: -12px;")
           despacho = despacho.replace(/text-indent: -20px;/gm, "text-indent: -17px;")
@@ -161,55 +161,33 @@ const store = async ({ params, request, response, auth }) => {
 
         const pdftxt = {
           content:
-            `<div>
-            <div style="width: 95%;">
-                <div style="padding-right: 40px; padding-left: 40px;padding-top: 20px;">
-    
-                    <div style=" margin-bottom: 40px; ">
-    
-                        <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0"
-                            alt="Paris" style="width: 100%;">
-    
-                    </div>
-    
-    
-                    <div style="font-size:5px !important;text-align: justify !important;font-family: 'Times New Roman&quot' !important;">
-                        ${despacho}
-                    </div>
-                </div>
-    
-            </div>
-    
-            <div
-                style="font-size: 9pt; line-height: 106%; font-family: 'Times New Roman';text-align: center;margin-top: 50px;position: relative;">
-                <span>
-                    <p>Inspetor Geral</p>
-                    ${(function () {
-                      if(user && user.ASSINATURA_URL){
-                        return `<img src="${user.ASSINATURA_URL}?alt=media&token=0" width="250" height="100" style="position: absolute;top: -30px;left: 35%;">`
-                      }
-                      return ''
-                    })()}
-                    <p>_________________________________</p>
-                    <p>${nameUser}</p>
-                    <img src="${assinaturaIGJ}" width="100" height="100">
-                </span>
-            </div>
-    
-
-            <div style="position: absolute;left: 28px;width: 90%;bottom: 0px;">
-        
-                <p class="MsoNormal" align="center"
-                    style="font-size: 7px; font-family: Calibri, sans-serif; text-align: center;background-color: #5B9BD5;padding: 4px 5px;color: white;font-style: italic;">
-                    <span>Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A
-                        - Telf: 2601877 Achada de Santo António – Praia www.igj.cv</span>
+            `<div style="width: 100%; height: 100%; zoom: ${Env.get('ZOOM_PDF', '')};">
+              <div style="margin-bottom: 30px;">
+                <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0" alt="IGJ" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 20px;">
+              </div>
+              <div style="padding: 0 40px; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">
+                ${despacho}
+              </div>
+              <div style="font-family: 'Times New Roman', serif; font-size: 12pt; text-align: center; margin-top: 40px; position: relative;">
+                <p>Inspetor Geral</p>
+                ${(function () {
+                  if(user && user.ASSINATURA_URL){
+                    return \`<img src="\${user.ASSINATURA_URL}?alt=media&token=0" width="250" height="100" style="position: absolute;top: -30px;left: 35%;">\`
+                  }
+                  return ''
+                })()}
+                <p>_________________________________</p>
+                <p>${nameUser}</p>
+                <img src="${assinaturaIGJ}" width="100" height="100">
+              </div>
+              <div style="margin-top: 30px; text-align: center; border-top: 1px solid #999; padding-top: 8px;">
+                <p style="margin: 0; font-size: 9pt; font-family: 'Times New Roman', serif; color: #555;">
+                  Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A - Telf: 2601877 Achada de Santo António – Praia www.igj.cv
                 </p>
-
-            </div>
-    
-            <img src="${bandeira}" style="position: absolute;top: 0;right: 0;width: 10px;height:100%">
-            <img src="${escudo}" style="position: absolute;top: 20%;left: 10%;height: 50%;opacity: 0.1;width: 80%;z-index: -1;">
-        </div>`,
+              </div>
+              <img src="${bandeira}" style="position: absolute;top: 0;right: 0;width: 10px;height:100%">
+              <img src="${escudo}" style="position: absolute;top: 20%;left: 10%;height: 50%;opacity: 0.1;width: 80%;z-index: -1;">
+            </div>`,
           tipo: "despachoAutoExclusao.pdf",
         }
 

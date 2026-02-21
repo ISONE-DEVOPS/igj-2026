@@ -144,31 +144,19 @@ const store = async ({ params, request, response }) => {
 
         const pdftxt = {
           content:
-            `
-            <div style="width: 100%; height: 100%; zoom: ${Env.get('ZOOM_PDF', "")};">
-    
-                <div style=" margin-bottom: 96px; ">
-        
-                    <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0" alt="Paris" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 40px;">
-
-                </div>    
-
-
-                <div style=" min-height: 1190px; padding-right: 96px; padding-left: 96px;">              
-                  ${data?.DESPACHO}  
-                </div>
-
-
-              <div >
-
-                  <p class="MsoNormal" align="center" style=" margin: 0in 0px 0in 0in; font-size: 13px; font-family: Calibri, sans-serif; text-align: center;">_______________________________________________________________________________________</p><p class="MsoNormal" align="center" style="margin: 0in 0px 0in 0in; font-size: 13px; font-family: Calibri, sans-serif; text-align: center;"><span style="font-size: 12px;">Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A
-                  - Telf: 2601877 Achada de Santo António – Praia www.igj.cv</span></p>
-                  
+            `<div style="width: 100%; height: 100%; zoom: ${Env.get('ZOOM_PDF', '')};">
+              <div style="margin-bottom: 30px;">
+                <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0" alt="IGJ" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 20px;">
               </div>
-          
-          </div>
-              
-            `,
+              <div style="padding: 0 40px; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">
+                ${data?.DESPACHO}
+              </div>
+              <div style="margin-top: 30px; text-align: center; border-top: 1px solid #999; padding-top: 8px;">
+                <p style="margin: 0; font-size: 9pt; font-family: 'Times New Roman', serif; color: #555;">
+                  Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A - Telf: 2601877 Achada de Santo António – Praia www.igj.cv
+                </p>
+              </div>
+            </div>`,
           tipo: "despachoExclusao.pdf",
         }
 
@@ -257,7 +245,7 @@ const store = async ({ params, request, response }) => {
 
       if (newitem.length > 0) {
 
-        if (!newitem[0].URL_DOC_GERADO == null) {
+        if (newitem[0].URL_DOC_GERADO != null) {
 
           return response.status(400).json({ status: "error", entity: "sgigjprocessodespacho", message: "it already has URL_DOC_GERADO, its FINALIZADO", code: "5345" })
 

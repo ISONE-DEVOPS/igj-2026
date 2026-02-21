@@ -647,88 +647,50 @@ const ProcessoEmCurso = () => {
           let colorx = "grey";
           let interrompido = false;
 
-          if(response.data[i].ENCERRAMENTO){
+          try {
+          const proc = response.data[i];
+          const despacho = proc?.sgigjprocessodespacho?.[0];
+          const instrutor = despacho?.sgigjrelprocessoinstrutor?.[0];
+          const instrucao = instrutor?.sgigjrelprocessoinstrucao?.[0];
+          const despFinal = proc?.sgigjdespachofinal?.[0];
+
+          if (proc.ESTADO_ENCERRAMENTO == "ENCERRADO") {
             colorx = "black";
 
-          }else if (response.data[i]?.sgigjdespachofinal.length > 0) {
-            // if (response.data[i]?.sgigjdespachofinal[0]?.URL_DOC_GERADO != null)
-              // colorx = "blue";
-
-            TIPO_DESPACHO = "Despacho Final";
-          } else if (response.data[i]?.sgigjprocessodespacho.length > 0) {
-            if (
-              response.data[i]?.sgigjprocessodespacho[0]
-                ?.TIPO_PROCESSO_EXCLUSAO == "I"
-            )
+          } else if (proc?.sgigjprocessodespacho?.length > 0) {
+            if (despacho?.TIPO_PROCESSO_EXCLUSAO == "I")
               TIPO_DESPACHO = "Inquérito";
-            if (
-              response.data[i]?.sgigjprocessodespacho[0]
-                ?.TIPO_PROCESSO_EXCLUSAO == "C"
-            )
+            if (despacho?.TIPO_PROCESSO_EXCLUSAO == "C")
               TIPO_DESPACHO = "Contraordenação";
-            if (
-              response.data[i]?.sgigjprocessodespacho[0]
-                ?.TIPO_PROCESSO_EXCLUSAO == "A"
-            )
+            if (despacho?.TIPO_PROCESSO_EXCLUSAO == "A")
               TIPO_DESPACHO = "Averiguação Sumária";
 
-            if (
-              response.data[i]?.sgigjprocessodespacho[0]?.URL_DOC_GERADO != null
-            )
+            if (despacho?.URL_DOC_GERADO != null)
               colorx = "green";
 
-            if (
-              response.data[i]?.sgigjprocessodespacho[0]
-                ?.sgigjrelprocessoinstrutor.length > 0
-            ) {
-              if (
-                response.data[i]?.sgigjprocessodespacho[0]
-                  ?.sgigjrelprocessoinstrutor[0]?.sgigjrelprocessoinstrucao
-                  .length > 0
-              ) {
-                if (
-                  response.data[i]?.sgigjprocessodespacho[0]
-                    ?.sgigjrelprocessoinstrutor[0]?.sgigjrelprocessoinstrucao[0]
-                    ?.RELATORIO_FINAL != null
-                )
-                  colorx = "orange";
+            if (instrutor?.sgigjrelprocessoinstrucao?.length > 0) {
+              if (instrucao?.RELATORIO_FINAL != null) {
+                colorx = "orange";
+              }
 
-                if (
-                  response.data[i]?.sgigjprocessodespacho[0]
-                    ?.sgigjrelprocessoinstrutor[0]?.sgigjrelprocessoinstrucao[0]
-                    ?.sgigjprocessodespacho.length > 0
-                ) {
-                  if (
-                    response.data[i]?.sgigjprocessodespacho[0]
-                      ?.sgigjrelprocessoinstrutor[0]
-                      ?.sgigjrelprocessoinstrucao[0]?.sgigjprocessodespacho[0]
-                      .URL_DOC_GERADO != null
-                  ) {
-                    colorx = "blue";
-                  }
-                }
-
-                if (
-                  response.data[i]?.sgigjprocessodespacho[0]
-                    ?.sgigjrelprocessoinstrutor[0]?.sgigjrelprocessoinstrucao[0]
-                    ?.sgigjdespachointerrompido.length > 0
-                ) {
-                  interrompido = true;
-
-                  if (
-                    response.data[i]?.sgigjprocessodespacho[0]
-                      ?.sgigjrelprocessoinstrutor[0]
-                      ?.sgigjrelprocessoinstrucao[0]
-                      ?.sgigjdespachointerrompido[0].TIPO == "A" ||
-                    response.data[i]?.sgigjprocessodespacho[0]
-                      ?.sgigjrelprocessoinstrutor[0]
-                      ?.sgigjrelprocessoinstrucao[0]
-                      ?.sgigjdespachointerrompido[0].TIPO == "P"
-                  )
-                    colorx = "blue";
-                }
+              if (instrucao?.sgigjdespachointerrompido?.length > 0) {
+                interrompido = true;
+                const tipoInt = instrucao?.sgigjdespachointerrompido?.[0]?.TIPO;
+                if (tipoInt == "A" || tipoInt == "P")
+                  colorx = "blue";
               }
             }
+          }
+
+          // Despacho Decisão — aplica blue se concluído
+          if (proc?.sgigjdespachofinal?.length > 0) {
+            if (despFinal?.URL_DOC_GERADO != null && despFinal?.ESTADO != 0)
+              colorx = "blue";
+            TIPO_DESPACHO = "Despacho Decisão";
+          }
+
+          } catch (colorErr) {
+            console.error("ERRO colorx processo:", response.data[i]?.ID, colorErr);
           }
 
           response.data[i].TIPO_DESPACHO = TIPO_DESPACHO;
@@ -864,7 +826,7 @@ const ProcessoEmCurso = () => {
               {interrompido
                 ? taskEnable(pageAcess, permissoes, "Interromper") == false
                   ? null
-                  : colorx == "green" && (
+                  : (colorx == "green" || colorx == "orange") && (
                       <Link
                         to="#"
                         title={taskEnableTitle(
@@ -885,7 +847,7 @@ const ProcessoEmCurso = () => {
                     )
                 : taskEnable(pageAcess, permissoes, "Instrucao") == false
                 ? null
-                : colorx == "green" && (
+                : (colorx == "green" || colorx == "orange") && (
                     <Link
                       to="#"
                       title={taskEnableTitle(
@@ -1060,6 +1022,7 @@ const ProcessoEmCurso = () => {
 
           console.log(instrucao);
 
+          response.data[0].colorx = idx.colorx;
           setitemSelectedver(response.data[0]);
 
           setVerOpen(true);
@@ -2024,7 +1987,7 @@ const ProcessoEmCurso = () => {
                       >
                         <span>
                           <i className="feather icon-map-pin m-r-5" />
-                          Pedido Pedido
+                          Data do Pedido
                         </span>
                         <span style={{ color: "#6c757d" }}>
                           {itemSelectedver.DATA2}

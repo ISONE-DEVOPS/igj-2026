@@ -58,7 +58,7 @@ class NotificacaoProcessosController extends GenericController {
             if (validation.status === 'ok') {
 
                 if (data.ESTADO_NOTIFICACAO == "CONCLUIR") {
-                    data.URL_DOC_GERADO = await this.gerarDoc(data.CORPO)
+                    data.URL_DOC_GERADO = await this.gerarDoc(data.CORPO, data.TIPO_NOTIFICACAO)
                     if (!data.URL_DOC_GERADO) {
                         return { status: "fail", entity: this.table, message: "Falha ao gerar documento PDF", code: "PDF_ERROR" }
                     }
@@ -156,7 +156,7 @@ class NotificacaoProcessosController extends GenericController {
                 if (validation.status === 'ok') {
 
                     if (data.ESTADO_NOTIFICACAO == "CONCLUIR") {
-                        data.URL_DOC_GERADO = await this.gerarDoc(data.CORPO)
+                        data.URL_DOC_GERADO = await this.gerarDoc(data.CORPO, data.TIPO_NOTIFICACAO)
                         if (!data.URL_DOC_GERADO) {
                             return { status: "fail", entity: this.table, message: "Falha ao gerar documento PDF", code: "PDF_ERROR" }
                         }
@@ -324,21 +324,46 @@ class NotificacaoProcessosController extends GenericController {
     }
 
 
-    async gerarDoc(corpo){
+    async gerarDoc(corpo, tipoNotificacao){
+        let titulo = "NOTIFICA\u00c7\u00c3O";
+        let subtitulo = "";
+        let tipoLabel = "";
+
+        if (tipoNotificacao === "PESSOAL") {
+            titulo = "TERMO DE NOTIFICA\u00c7\u00c3O PESSOAL";
+            subtitulo = "<p style='text-align: center; font-size: 10pt; font-family: Times New Roman, serif; color: #666;'>Nos termos do artigo aplic\u00e1vel do C\u00f3digo de Processo Penal de Cabo Verde</p>";
+            tipoLabel = "Notifica\u00e7\u00e3o Pessoal";
+        } else if (tipoNotificacao === "POSTAL") {
+            titulo = "NOTIFICA\u00c7\u00c3O POR VIA POSTAL";
+            subtitulo = "<p style='text-align: center; font-size: 10pt; font-family: Times New Roman, serif; color: #666;'>Correio Registado com Aviso de Recep\u00e7\u00e3o</p>";
+            tipoLabel = "Via Postal (AR)";
+        } else if (tipoNotificacao === "PUBLICACAO") {
+            titulo = "AVISO DE NOTIFICA\u00c7\u00c3O POR PUBLICA\u00c7\u00c3O";
+            subtitulo = "<p style='text-align: center; font-size: 10pt; font-family: Times New Roman, serif; color: #666;'>Nos termos da lei, por n\u00e3o ter sido poss\u00edvel a notifica\u00e7\u00e3o pessoal ou postal</p>";
+            tipoLabel = "Por Publica\u00e7\u00e3o";
+        }
+
+        const tipoHeader = tipoLabel ? `<p style="text-align: right; font-size: 9pt; font-family: 'Times New Roman', serif; color: #999; margin-bottom: 0;">Tipo: ${tipoLabel}</p>` : "";
+
         const pdftxt = {
           content: `
             <div style="width: 100%; height: 100%; zoom: ${Env.get("ZOOM_PDF","")};">
-                <div style=" margin-bottom: 96px; ">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0" alt="Paris" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 40px;">
-                </div>    
-                <div style=" min-height: 1190px; padding-right: 96px; padding-left: 96px;">              
-                  ${corpo}  
-                </div>
-              <div >
-                  <p class="MsoNormal" align="center" style=" margin: 0in 0px 0in 0in; font-size: 13px; font-family: Calibri, sans-serif; text-align: center;">_______________________________________________________________________________________</p><p class="MsoNormal" align="center" style="margin: 0in 0px 0in 0in; font-size: 13px; font-family: Calibri, sans-serif; text-align: center;"><span style="font-size: 12px;">Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A
-                  - Telf: 2601877 Achada de Santo António – Praia www.igj.cv</span></p>
+              <div style="margin-bottom: 30px;">
+                <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0" alt="IGJ" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 20px;">
               </div>
-          </div>
+              <div style="padding: 0 40px; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">
+                ${tipoHeader}
+                <h3 style="text-align: center; margin-bottom: 5px; font-family: 'Times New Roman', serif; font-size: 16pt;">${titulo}</h3>
+                ${subtitulo}
+                <hr style="margin: 20px 0;" />
+                ${corpo}
+              </div>
+              <div style="margin-top: 30px; text-align: center; border-top: 1px solid #999; padding-top: 8px;">
+                <p style="margin: 0; font-size: 9pt; font-family: 'Times New Roman', serif; color: #555;">
+                  Rua Largo da Europa, Pr\u00e9dio BCA 2\u00ba Andar C.P. 57 A - Telf: 2601877 Achada de Santo Ant\u00f3nio \u2013 Praia www.igj.cv
+                </p>
+              </div>
+            </div>
             `,
           tipo: "notificacao.pdf",
         };

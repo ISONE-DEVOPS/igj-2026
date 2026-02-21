@@ -36,6 +36,8 @@ export const ICON_OVERRIDES = {
   '/processos/exclusaointerdicao': { icon: 'fas fa-ban', color: '#AB7DF6' },
   '/processos/exclusao/arquivados': { icon: 'fas fa-archive', color: '#AB7DF6' },
   '/processos/exclusao/finalizado': { icon: 'fas fa-flag-checkered', color: '#AB7DF6' },
+  '/processos/contraordenacao': { icon: 'fas fa-gavel', color: '#E8575A' },
+  '/processos/reclamacao': { icon: 'fas fa-exclamation-circle', color: '#FF8C00' },
 
   // ── Configuracao: Pessoas ──
   '/configuracao/estadocivil': { icon: 'fas fa-ring', color: '#4680FF' },
@@ -106,6 +108,14 @@ export const COLLAPSE_OVERRIDES = {
   'exclusão interdição': { icon: 'fas fa-ban', color: '#FC6180' },
   'exclusao interdicao': { icon: 'fas fa-ban', color: '#FC6180' },
   'arquivados': { icon: 'fas fa-archive', color: '#999' },
+  'contra-ordenação': { icon: 'fas fa-gavel', color: '#E8575A' },
+  'contra-ordenacao': { icon: 'fas fa-gavel', color: '#E8575A' },
+  'contraordenação': { icon: 'fas fa-gavel', color: '#E8575A' },
+  'contraordenacao': { icon: 'fas fa-gavel', color: '#E8575A' },
+  'reclamações': { icon: 'fas fa-exclamation-circle', color: '#FF8C00' },
+  'reclamacoes': { icon: 'fas fa-exclamation-circle', color: '#FF8C00' },
+  'reclamação': { icon: 'fas fa-exclamation-circle', color: '#FF8C00' },
+  'reclamacao': { icon: 'fas fa-exclamation-circle', color: '#FF8C00' },
   'notificações': { icon: 'fas fa-bell', color: '#FFB64D' },
   'notificacoes': { icon: 'fas fa-bell', color: '#FFB64D' },
   'pessoas': { icon: 'fas fa-users', color: '#4680FF' },

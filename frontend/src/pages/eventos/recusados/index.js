@@ -829,7 +829,7 @@ const EventosRecusados = () => {
         var decisao_a_decisao_temp = ""
         var decisao_a_id_temp = ""
 
-        parecerEdit = `<p class="MsoNormal" style="margin: 0in; line-height: 107%; font-size: 15px; font-family: Calibri, sans-serif; text-align: justify;"><span style="font-size: 29px; line-height: 107%; font-family: &quot;Ropa Mix Pro&quot;, sans-serif;">Escreva um texto aqui</span></p>`
+        parecerEdit = `<p style="margin: 0; line-height: 1.6; font-size: 12pt; font-family: 'Times New Roman', serif; text-align: justify;">Escreva um texto aqui</p>`
 
         if (itemx.sgigjreleventodespacho.length > 0) {
 
@@ -1463,7 +1463,7 @@ const EventosRecusados = () => {
         var parecer_ID_temp = ""
         var parecer_a_parecer_temp = ""
 
-        parecerEdit = `<p class="MsoNormal" style="margin: 0in; line-height: 107%; font-size: 15px; font-family: Calibri, sans-serif; text-align: justify;"><span style="font-size: 29px; line-height: 107%; font-family: &quot;Ropa Mix Pro&quot;, sans-serif;">Escreva um texto aqui</span></p>`
+        parecerEdit = `<p style="margin: 0; line-height: 1.6; font-size: 12pt; font-family: 'Times New Roman', serif; text-align: justify;">Escreva um texto aqui</p>`
 
         if (itemx.sgigjreleventodespacho.length > 0) {
             if (itemx.sgigjreleventodespacho[0].sgigjreleventoparecer.length > 0) {

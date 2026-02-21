@@ -111,31 +111,40 @@ class entity {
         const anoPorExtenso = this.numeroPorExtenso(ano);
         let pecasImp = []
         let content = `
-            <div style="text-align: justify;margin:50px;font-size:10pt !important;">
-                <h2 style="text-align:center;font-weight:700;margin-top:100px;text-transform: uppercase;">Termo de Juntada</h2>
-                <p style="margin-top:50px">Proc. nº ____/______
-
-                <p style="margin-top:50px">Aos ${diaPorExtenso + ' de ' + moment().format('MMMM') + ' de ' + anoPorExtenso}, juntam-se ao processo os documentos: </p>
-                <ul>
+            <div style="width: 100%; height: 100%;">
+              <div style="margin-bottom: 30px;">
+                <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0" alt="IGJ" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 20px;">
+              </div>
+              <div style="padding: 0 40px; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">
+                <h2 style="text-align: center; font-family: 'Times New Roman', serif; font-size: 16pt; font-weight: 700; margin-top: 100px; text-transform: uppercase;">Termo de Juntada</h2>
+                <p style="margin-top: 50px;">Proc. n\u00ba ____/______</p>
+                <p style="margin-top: 50px;">Aos ${diaPorExtenso + ' de ' + moment().format('MMMM') + ' de ' + anoPorExtenso}, juntam-se ao processo os documentos: </p>
+                <ul style="font-family: 'Times New Roman', serif; font-size: 12pt;">
                 ${(() => {
                 let li = ""
                 for (let index = 0; index < pecas.length; index++) {
                     const element = pecas[index];
-                    if (!pecasImp.includes(pecas)) { 
-                        li = li + `<li>${element.name}</li>` 
+                    if (!pecasImp.includes(pecas)) {
+                        li = li + \`<li>\${element.name}</li>\`
                     }
                     pecasImp.push(pecas)
                 }
                 return li
             })()}
                 </ul>
-                <p style="margin-top:50px">O/A ------------------------------------------------------------- Instrutor/a.</p>
+                <p style="margin-top: 50px;">O/A ------------------------------------------------------------- Instrutor/a.</p>
+              </div>
+              <div style="margin-top: 30px; text-align: center; border-top: 1px solid #999; padding-top: 8px;">
+                <p style="margin: 0; font-size: 9pt; font-family: 'Times New Roman', serif; color: #555;">
+                  Rua Largo da Europa, Pr\u00e9dio BCA 2\u00ba Andar C.P. 57 A - Telf: 2601877 Achada de Santo Ant\u00f3nio \u2013 Praia www.igj.cv
+                </p>
+              </div>
             </div>
         `
 
         const pdfCreater = async (data) => {
             let promise = new Promise((resolve, reject) => {
-                pdf.create(data, { "format": "A4", "border": "0", "type": "pdf" }).toBuffer(function (err, buffer) {
+                pdf.create(data, { "format": "A4", "border": { "top": "15mm", "right": "15mm", "bottom": "15mm", "left": "15mm" }, "type": "pdf" }).toBuffer(function (err, buffer) {
                     if (err) {
                         reject(err)
                     }

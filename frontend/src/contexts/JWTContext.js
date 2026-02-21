@@ -528,6 +528,7 @@ export const JWTProvider = ({ children }) => {
 
           console.log("SSSSSSSSSS")
 
+          uploadlistnotificacao()
 
           const socket = socketio(backendURL, { query: { token: serviceToken } })
 
@@ -571,8 +572,6 @@ export const JWTProvider = ({ children }) => {
     };
 
     init();
-
-    uploadlistnotificacao()
 
 
 

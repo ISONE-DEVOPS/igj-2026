@@ -538,7 +538,7 @@ class CasoSuspeitoController extends GenericController {
         const pdfCreater = async (data) => {
             let promise = new Promise((resolve, reject) => {
                 pdf.create(data, {
-                    "format": "A4", "border": "0", "type": "pdf",
+                    "format": "A4", "border": { "top": "15mm", "right": "15mm", "bottom": "15mm", "left": "15mm" }, "type": "pdf",
                     paginationOffset: 1,       // Override the initial pagination number
                     "header": {
                         "height": "20mm",

@@ -104,24 +104,19 @@ class entity {
         if (data.hasOwnProperty("OBS")) {
           const pdftxt = {
             content: `
-                <div style="width: 100%; height: 100%; zoom: ${Env.get(
-                  "ZOOM_PDF",
-                  ""
-                )};">
-                    <div style=" margin-bottom: 96px; ">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0" alt="Paris" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 40px;">
-                    </div>    
-
-                    <div style=" min-height: 1190px; padding-right: 96px; padding-left: 96px;">              
-                      ${data?.OBS}  
-                    </div>
-
-                  <div >
-                      <p class="MsoNormal" align="center" style=" margin: 0in 0px 0in 0in; font-size: 13px; font-family: Calibri, sans-serif; text-align: center;">_______________________________________________________________________________________</p><p class="MsoNormal" align="center" style="margin: 0in 0px 0in 0in; font-size: 13px; font-family: Calibri, sans-serif; text-align: center;"><span style="font-size: 12px;">Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A
-                      - Telf: 2601877 Achada de Santo António – Praia www.igj.cv</span></p>
+                <div style="width: 100%; height: 100%; zoom: ${Env.get("ZOOM_PDF", "")};">
+                  <div style="margin-bottom: 30px;">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0" alt="IGJ" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 20px;">
                   </div>
-              </div>
-                  
+                  <div style="padding: 0 40px; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">
+                    ${data?.OBS}
+                  </div>
+                  <div style="margin-top: 30px; text-align: center; border-top: 1px solid #999; padding-top: 8px;">
+                    <p style="margin: 0; font-size: 9pt; font-family: 'Times New Roman', serif; color: #555;">
+                      Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A - Telf: 2601877 Achada de Santo António – Praia www.igj.cv
+                    </p>
+                  </div>
+                </div>
                 `,
             tipo: "processoexclusao.pdf",
           };
@@ -154,7 +149,7 @@ class entity {
           if (data.ESTADO_DEPACHO_INICIAL && data.ESTADO_DEPACHO_INICIAL == "CONCLUIR") {
             const nomeUtilizador = await functionsDatabase.userIDToNome(request.userID);
             const dataHoje = moment().format("DD/MM/YYYY HH:mm");
-            const msgProcesso = `${nomeUtilizador} registrou um novo processo (Código: ${data.CODIGO}) em ${dataHoje}. Descrição: ${data.DESCR}`;
+            const msgProcesso = `${nomeUtilizador} registrou um novo processo (Código: ${data.CODIGO}) em ${dataHoje}.${data.DESCR ? ` Descrição: ${data.DESCR}` : ''}`;
 
             const allPerfis = await DatabaseDB.table("glbperfil").where("ESTADO", 1);
             for (const perfil of allPerfis) {
@@ -232,7 +227,7 @@ class entity {
                 GlbnotificacaoFunctions.storeToPerfil({
                   request: null,
                   PERFIL_ID: perfil.ID,
-                  MSG: `Foi registrado um processo com o codigo ${data.CODIGO} e com a seguinte descrisão: ${data.DESCR}`,
+                  MSG: `Foi registrado um processo com o código ${data.CODIGO}${data.DESCR ? ` e com a seguinte descrição: ${data.DESCR}` : ''}`,
                   TITULO: "Processo registrado",
                   PESSOA_ID: null,
                   URL: `entidades/entidades/detalhes/${data.ENTIDADE_ID}`,
@@ -516,58 +511,53 @@ class entity {
       let logo =
         "https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0";
 
-      const content = `<div >
-        <div style="margin:20px 20px 20px 40px;width: 90%;z-index: 2;">
-            <div style=" margin-bottom: 40px; margin-left: -20px;">
-                <img src="${logo}" alt="Paris" style="width: 100%;height:70px">
+      const content = `<div style="width: 100%; font-family: 'Times New Roman', serif;">
+            <div style="margin-bottom: 30px;">
+                <img src="${logo}" alt="IGJ" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 20px;">
             </div>
-            <h2 style="font-size: 12pt !important">Processo Exclusão</h2>
+            <div style="padding: 0 40px;">
+              <h2 style="font-family: 'Times New Roman', serif; font-size: 16pt; text-align: center;">Processo Exclusão</h2>
 
-            <table style="border-collapse: collapse;font-size: 5pt !important;width: 97%;">
-              <thead style="background-color:#2b7fb9;color:#fff">
-                <tr>
-                   <th style="text-align: center;">EST</th>
-                   <th style="text-align: center;">Código</th>
-                   <th style="text-align: center;">Despacho</th>
-                   <th style="text-align: center;">Entidade Decisora</th>
-                   <th style="text-align: center;">Pessoa</th>
-                   <th style="text-align: center;">Visado</th>
-                   <th style="text-align: center;">Data</th>
-                </tr>
-              </thead>
-              
-              <tbody>
-
-                ${(function () {
-                  let tbody = "";
-                  for (let index = 0; index < result.length; index++) {
-                    const element = result[index];
-
-                    tbody =
-                      tbody +
-                      `<tr ${
-                        index % 2 == 0
-                          ? 'style="background-color:#f5f5f5;color:#000"'
-                          : 'background-color:#fff;color:#000"'
-                      }>
-        <td > </tb>
-        <td > ${element.CODIGO}</tb>
-        <td > ${
-          element.sgigjprocessodespacho.length > 0
-            ? element.sgigjprocessodespacho[0].DESIG
-            : ""
-        }</tb>
-        <td > ${element.sgigjentidade ? element.sgigjentidade.DESIG : ""}</tb>
-        <td > ${element.sgigjrelpessoaentidade.sgigjpessoa.NOME}</tb>
-        <td > ${element.FLAG_RECLAMACAO_VISADO}</tb>
-        <td > ${moment(element.DATA).format("DD-MM-Y")}</tb>
-        </tr>`;
-                  }
-                  return tbody;
-                })()}
-              </tbody>
-            </table>
-        <div>`;
+              <table style="border-collapse: collapse; font-family: 'Times New Roman', serif; font-size: 8pt; width: 100%;">
+                <thead style="background-color:#2b7fb9;color:#fff">
+                  <tr>
+                     <th style="text-align: center; padding: 4px;">EST</th>
+                     <th style="text-align: center; padding: 4px;">Código</th>
+                     <th style="text-align: center; padding: 4px;">Despacho</th>
+                     <th style="text-align: center; padding: 4px;">Entidade Decisora</th>
+                     <th style="text-align: center; padding: 4px;">Pessoa</th>
+                     <th style="text-align: center; padding: 4px;">Visado</th>
+                     <th style="text-align: center; padding: 4px;">Data</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${(function () {
+                    let tbody = "";
+                    for (let index = 0; index < result.length; index++) {
+                      const element = result[index];
+                      tbody =
+                        tbody +
+                        \`<tr style="background-color:\${index % 2 == 0 ? '#f5f5f5' : '#fff'};color:#000">
+          <td style="padding: 3px;"> </td>
+          <td style="padding: 3px;"> \${element.CODIGO}</td>
+          <td style="padding: 3px;"> \${element.sgigjprocessodespacho.length > 0 ? element.sgigjprocessodespacho[0].DESIG : ""}</td>
+          <td style="padding: 3px;"> \${element.sgigjentidade ? element.sgigjentidade.DESIG : ""}</td>
+          <td style="padding: 3px;"> \${element.sgigjrelpessoaentidade.sgigjpessoa.NOME}</td>
+          <td style="padding: 3px;"> \${element.FLAG_RECLAMACAO_VISADO}</td>
+          <td style="padding: 3px;"> \${moment(element.DATA).format("DD-MM-Y")}</td>
+          </tr>\`;
+                    }
+                    return tbody;
+                  })()}
+                </tbody>
+              </table>
+            </div>
+            <div style="margin-top: 30px; text-align: center; border-top: 1px solid #999; padding-top: 8px;">
+              <p style="margin: 0; font-size: 9pt; font-family: 'Times New Roman', serif; color: #555;">
+                Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A - Telf: 2601877 Achada de Santo António – Praia www.igj.cv
+              </p>
+            </div>
+        </div>`;
 
       await Database.table(table).userID(request.userID).registerExport("PDF");
       response.header("Content-type", "application/pdf");

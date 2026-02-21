@@ -16,6 +16,7 @@ moment.locale('pt');
 const User = use('App/Models/Glbuser');
 const Sgigjrelpessoaentidade = use('App/Models/Sgigjrelpessoaentidade');
 const pdfCreater = require('./pdfCreater');
+const Env = use('Env');
 
 class FileController {
 
@@ -34,43 +35,34 @@ class FileController {
       nameUser = Pessoa ? Pessoa.$relations.sgigjpessoa.$attributes.NOME : ""
     }
     let content =
-      `<div style="width: 100%; height: 100%; zoom: 0.55;">
-    
-                <div style=" margin-bottom: 96px; ">
-        
-                    <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=45ef8643-34b1-4c29-a068-b8d24a16c508" alt="Paris" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 40px;">
-
-                </div>    
+      `<div style="width: 100%; height: 100%; zoom: ${Env.get('ZOOM_PDF', '')};">
+                <div style="margin-bottom: 30px;">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0" alt="IGJ" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 20px;">
+                </div>
                 ${user.ASSINATURA_URL}
 
-                <img src="https://res.klook.com/image/upload/w_750,h_469,c_fill,q_85/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/nabd3lsoifdkrmfifqrn.jpg" style="width: 250px; padding-left: 15%; padding-right: 15%; padding-top: 40px;">
+                <img src="https://res.klook.com/image/upload/w_750,h_469,c_fill,q_85/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/nabd3lsoifdkrmfifqrn.jpg" style="width: 250px; padding-left: 15%; padding-right: 15%; padding-top: 20px;">
 
-                <div style=" min-height: 1190px; padding-right: 96px; padding-left: 96px;">  
+                <div style="padding: 0 40px; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">
                 </div>
 
-              <div style="font-size: 9pt; line-height: 106%; font-family: 'Times New Roman';text-align: center;margin-top: 60px;position: relative;">
-                  <span>
-                      <p>Inspetor</p>
-      
-                      ${(function () {
-                        if(user.ASSINATURA_URL){
-                          return `<img src="${user.ASSINATURA_URL}?alt=media&token=45ef8643-34b1-4c29-a068-b8d24a16c508" width="250" height="100" style="position: absolute;top: -30px;left: 41%;">`
-                        }
-                        return ''
-                      })()}
-                      <p>_________________________________</p>
-                      <p>${nameUser}</p>
-                      
-                  </span>
-              </div>
+                <div style="font-family: 'Times New Roman', serif; font-size: 12pt; text-align: center; margin-top: 40px; position: relative;">
+                    <p>Inspetor</p>
+                    ${(function () {
+                      if(user.ASSINATURA_URL){
+                        return \`<img src="\${user.ASSINATURA_URL}?alt=media&token=0" width="250" height="100" style="position: absolute;top: -30px;left: 35%;">\`
+                      }
+                      return ''
+                    })()}
+                    <p>_________________________________</p>
+                    <p>${nameUser}</p>
+                </div>
 
-              <div >
-
-                  <p class="MsoNormal" align="center" style=" margin: 0in 0px 0in 0in; font-size: 13px; font-family: Calibri, sans-serif; text-align: center;">_______________________________________________________________________________________</p><p class="MsoNormal" align="center" style="margin: 0in 0px 0in 0in; font-size: 13px; font-family: Calibri, sans-serif; text-align: center;"><span style="font-size: 12px;">Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A
-                  - Telf: 2601877 Achada de Santo António – Praia www.igj.cv</span></p>
-                  
-              </div>
-          
+                <div style="margin-top: 30px; text-align: center; border-top: 1px solid #999; padding-top: 8px;">
+                    <p style="margin: 0; font-size: 9pt; font-family: 'Times New Roman', serif; color: #555;">
+                        Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A - Telf: 2601877 Achada de Santo António – Praia www.igj.cv
+                    </p>
+                </div>
           </div>`
       // return content
     const xx = await pdfCreater({content, tipo: "aaaaaaaaaaaa.pdf",})

@@ -25,16 +25,19 @@ const pdfCreater = async (data) => {
 
       const page = await browser.newPage();
 
+      // Viewport A4 a 96dpi
+      await page.setViewport({ width: 794, height: 1123 });
+
       // Load HTML
       await page.setContent(data.content, {
         waitUntil: "networkidle0",
       });
 
-      // Create PDF buffer
+      // Create PDF buffer - formato A4 com margens normais
       const buffer = await page.pdf({
         format: "A4",
         printBackground: true,
-        margin: { top: 0, right: 0, bottom: 0, left: 0 },
+        margin: { top: '15mm', right: '15mm', bottom: '15mm', left: '15mm' },
       });
 
       await browser.close();

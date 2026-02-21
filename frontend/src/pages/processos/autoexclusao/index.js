@@ -1880,67 +1880,40 @@ const Autoexclusao = ({ activeValue }) => {
       popUp_alertaOK("Preencha todos os campos obrigatórios");
     } else {
       parecerEdit = `
-                
-                    <p class="MsoNormal" align="center" style="margin: 0in 0px 0in 0in; font-size: 13px; font-family: Calibri, sans-serif; text-align: center;"><b style="mso-bidi-font-weight:normal"><span style="font-size: 32px; font-family: &quot;Times New Roman&quot;, serif;">AUTO-EXCLUSÃO  N.º ${REFERENCIA_D}/${convertDateToPT(dataagora)?.ano
-        }</span></b></p>
-                    <p class="MsoNormal" style="margin: 0in; font-size: 13px; font-family: Calibri, sans-serif; line-height: 13px;"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">&nbsp;</span></p>
-                    
-                    <p class="MsoNormal" style="margin: 0in; font-size: 13px; font-family: Calibri, sans-serif; line-height: 13px;"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">&nbsp;</span></p>
-                    
-                    <p class="MsoNormal" style="margin: 0in; font-size: 13px; font-family: Calibri, sans-serif; line-height: 13px;"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">&nbsp;</span></p>
-                    
-                    <p class="MsoNormal" style="margin: 0in; font-size: 13px; font-family: Calibri, sans-serif; line-height: 14px;"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">&nbsp;</span></p>
-                    
-                    <p class="MsoNormal" style="margin: 0in 17px 0in 0in; font-size: 13px; font-family: Calibri, sans-serif; text-align: justify; line-height: 107%;"><span style="font-size: 21px; line-height: 107%; font-family: &quot;Times New Roman&quot;, serif;">Ao abrigo da faculdade conferida pelo n.º 5 do artigo 65º da Lei 62/VII/2010 de 31 de maio, que altera a Lei n.º 77/VII/2005 de 16 de agosto, que estabelece o Regime Jurídico da Exploração de Jogos de Fortuna ou Azar, suportada pelo pedido, por escrito, datado de ${convertDateToPT(DATA_PEDIDO)?.dia
-        } de ${convertDateToPT(DATA_PEDIDO)?.mes} de ${convertDateToPT(DATA_PEDIDO)?.ano}, de auto proibição, apresentado pelo Sr. ${itemSelectedEdit?.PESSOA2
-        } alegando motivos de perda no casino, determino:</span></p>
-                    
-                    <p class="MsoNormal" style="margin: 0in; font-size: 13px; font-family: Calibri, sans-serif; line-height: 13px;"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">&nbsp;</span></p>
-                    
-                    <p class="MsoNormal" style="margin: 0in; font-size: 13px; font-family: Calibri, sans-serif; line-height: 13px;"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">&nbsp;</span></p>
-                    
-                    <p class="MsoNormal" style="margin: 0in; font-size: 13px; font-family: Calibri, sans-serif; line-height: 16px;"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">&nbsp;</span></p>
-                    
-                    <p class="MsoNormal" style="margin: 0in 0in 0in 65px; font-size: 13px; font-family: Calibri, sans-serif; text-indent: -24px;"><b style="mso-bidi-font-weight:normal"><span style="font-size: 21px; line-height: 105%; font-family: &quot;Times New Roman&quot;, serif;"><span style="mso-list:Ignore">1.<span style="font: 9px &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;
-                    </span></span></span></b>
-                    <span 
-                    style="font-weight:600; font-size: 21px; line-height: 105%; font-family: &quot;Times New Roman&quot;, serif;">
-                    Fica o Sr. ${itemSelectedEdit?.PESSOA2}, proibido do acesso à sala de jogos de fortuna ou azar no país, pelo período de ${periodoDesignacao}, a
-                    partir da data da comunicação de auto proibição, ou seja, ${convertDateToPT(DT_INICIO_D)?.dia} de ${convertDateToPT(DT_INICIO_D)?.mes} de ${convertDateToPT(DT_INICIO_D)?.ano};
-                    </span>
-                    </p>
-                    
-                    <p class="MsoNormal" style="margin: 0in; font-size: 13px; font-family: Calibri, sans-serif; line-height: 20px;"><b style="mso-bidi-font-weight:normal"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">&nbsp;</span></b></p>
+                <p style="margin: 0; font-family: 'Times New Roman', serif; text-align: center;"><b><span style="font-size: 16pt; font-family: 'Times New Roman', serif;">AUTO-EXCLUSÃO N.º ${REFERENCIA_D}/${convertDateToPT(dataagora)?.ano}</span></b></p>
 
-                    <p class="MsoNormal" style="margin: 0in 0in 0in 65px; font-size: 13px; font-family: Calibri, sans-serif; text-indent: -24px;"><b style="mso-bidi-font-weight:normal"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;"><span style="mso-list:Ignore">2.<span style="font: 9px &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp; </span></span></span></b><b style="mso-bidi-font-weight:normal"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">Notifique-se
-                                a Direção do(a) ${entidade} ;</span></b></p>
-                    
-                    <p class="MsoNormal" style="margin: 0in; font-size: 13px; font-family: Calibri, sans-serif; line-height: 13px;"><b style="mso-bidi-font-weight:normal"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">&nbsp;</span></b></p>
-                    
-                    
-                    
-                    <p class="MsoNormal" style="margin: 0in 0in 0in 65px; font-size: 13px; font-family: Calibri, sans-serif; text-indent: -24px;"><b style="mso-bidi-font-weight:normal"><span style="font-size: 21px; line-height: 106%; font-family: &quot;Times New Roman&quot;, serif;"><span style="mso-list:Ignore">3.<span style="font: 9px &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;
-                                    </span></span></span></b><b style="mso-bidi-font-weight:normal"><span style="font-size: 21px; line-height: 106%; font-family: &quot;Times New Roman&quot;, serif;">Deve a Direção do Casino dar
-                                de imediato conhecimento à receção do mesmo, devendo esta, bem como o Diretor
-                                Geral do casino estarem cientes das suas responsabilidades se permitirem o
-                                acesso do referido frequentador ao espaço confinado ao jogo.</span></b></p>
-                    
-                            
-                    <p class="MsoNormal" style="margin: 0in; font-size: 13px; font-family: Calibri, sans-serif; line-height: 20px;"><b style="mso-bidi-font-weight:normal"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">&nbsp;</span></b></p>
-                    <p class="MsoNormal" style="margin: 0in 0in 0in 65px; font-size: 13px; font-family: Calibri, sans-serif; text-indent: -24px;"><b style="mso-bidi-font-weight:normal"><span style="font-size: 21px; line-height: 106%; font-family: &quot;Times New Roman&quot;, serif;"><span style="mso-list:Ignore">4.<span style="font: 9px &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;
-                    </span></span></span></b><b style="mso-bidi-font-weight:normal"><span style="font-size: 21px; line-height: 106%; font-family: &quot;Times New Roman&quot;, serif;">Dar conhecimento ao visado.</span></b></p>
-    
-                    <p class="MsoNormal" style="margin: 0in; font-size: 13px; font-family: Calibri, sans-serif; line-height: 13px;"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">&nbsp;</span></p>
-                    <p class="MsoNormal" style="margin: 0in 0in 0in 65px; font-size: 13px; font-family: Calibri, sans-serif; text-indent: -24px;"><b style="mso-bidi-font-weight:normal"><span style="font-size: 21px; line-height: 106%; font-family: &quot;Times New Roman&quot;, serif;"><span style="mso-list:Ignore">5.<span style="font: 9px &quot;Times New Roman&quot;;">&nbsp;&nbsp;&nbsp;
-                    </span></span></span></b><b style="mso-bidi-font-weight:normal"><span style="font-size: 21px; line-height: 106%; font-family: &quot;Times New Roman&quot;, serif;">CUMPRA-SE.</span></b></p>
-    
-                    <p class="MsoNormal" style="margin: 0in; font-size: 13px; font-family: Calibri, sans-serif; line-height: 13px;"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">&nbsp;</span></p>
-        
-                    <p class="MsoNormal" style="margin: 0in 0in 0in 17px; font-size: 13px; font-family: Calibri, sans-serif;"><span style="font-size: 21px; font-family: &quot;Times New Roman&quot;, serif;">Praia, ${convertDateToPT(dataagora)?.dia
-        } de ${convertDateToPT(dataagora)?.mes} de ${convertDateToPT(dataagora)?.ano
-        }</span></p>
-                                
-                            
+                <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+                <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+                <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+
+                <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">Ao abrigo da faculdade conferida pelo n.º 5 do artigo 65º da Lei 62/VII/2010 de 31 de maio, que altera a Lei n.º 77/VII/2005 de 16 de agosto, que estabelece o Regime Jurídico da Exploração de Jogos de Fortuna ou Azar, suportada pelo pedido, por escrito, datado de ${convertDateToPT(DATA_PEDIDO)?.dia} de ${convertDateToPT(DATA_PEDIDO)?.mes} de ${convertDateToPT(DATA_PEDIDO)?.ano}, de auto proibição, apresentado pelo Sr. ${itemSelectedEdit?.PESSOA2} alegando motivos de perda no casino, determino:</p>
+
+                <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+
+                <p style="margin: 0 0 0 65px; font-family: 'Times New Roman', serif; font-size: 12pt; text-indent: -24px; line-height: 1.6;"><b>1.&nbsp;&nbsp;&nbsp;</b>
+                <span style="font-weight: 600; font-size: 12pt; line-height: 1.6; font-family: 'Times New Roman', serif;">
+                Fica o Sr. ${itemSelectedEdit?.PESSOA2}, proibido do acesso à sala de jogos de fortuna ou azar no país, pelo período de ${periodoDesignacao}, a partir da data da comunicação de auto proibição, ou seja, ${convertDateToPT(DT_INICIO_D)?.dia} de ${convertDateToPT(DT_INICIO_D)?.mes} de ${convertDateToPT(DT_INICIO_D)?.ano};
+                </span></p>
+
+                <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+
+                <p style="margin: 0 0 0 65px; font-family: 'Times New Roman', serif; font-size: 12pt; text-indent: -24px; line-height: 1.6;"><b>2.&nbsp;&nbsp;&nbsp;</b><b>Notifique-se a Direção do(a) ${entidade};</b></p>
+
+                <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+
+                <p style="margin: 0 0 0 65px; font-family: 'Times New Roman', serif; font-size: 12pt; text-indent: -24px; line-height: 1.6;"><b>3.&nbsp;&nbsp;&nbsp;</b><b>Deve a Direção do Casino dar de imediato conhecimento à receção do mesmo, devendo esta, bem como o Diretor Geral do casino estarem cientes das suas responsabilidades se permitirem o acesso do referido frequentador ao espaço confinado ao jogo.</b></p>
+
+                <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+
+                <p style="margin: 0 0 0 65px; font-family: 'Times New Roman', serif; font-size: 12pt; text-indent: -24px; line-height: 1.6;"><b>4.&nbsp;&nbsp;&nbsp;</b><b>Dar conhecimento ao visado.</b></p>
+
+                <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+
+                <p style="margin: 0 0 0 65px; font-family: 'Times New Roman', serif; font-size: 12pt; text-indent: -24px; line-height: 1.6;"><b>5.&nbsp;&nbsp;&nbsp;</b><b>CUMPRA-SE.</b></p>
+
+                <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+
+                <p style="margin: 0 0 0 17px; font-family: 'Times New Roman', serif; font-size: 12pt;">Praia, ${convertDateToPT(dataagora)?.dia} de ${convertDateToPT(dataagora)?.mes} de ${convertDateToPT(dataagora)?.ano}</p>
                 `;
       seteditorcontent(parecerEdit);
     }

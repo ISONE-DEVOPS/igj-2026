@@ -502,6 +502,18 @@ const routes = [
         component: lazy(() => import('./pages/processos/exclusaoprescrito'))
       },
 
+      {
+        exact: true,
+        path: '/processos/reclamacao',
+        component: lazy(() => import('./pages/processos/reclamacao'))
+      },
+
+      {
+        exact: true,
+        path: '/processos/contraordenacao',
+        component: lazy(() => import('./pages/processos/contraordenacao'))
+      },
+
 
 
 

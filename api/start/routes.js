@@ -121,6 +121,8 @@ Route.group(() => {
   Route.get("export-csv/sgigjprocessoexclusao", "SgigjprocessoexclusaoController.exportCsv");
 
   Route.resource("sgigjexclusaoreclamacao", "SgigjexclusaoreclamacaoController").apiOnly();
+  Route.get("export-pdf/sgigjexclusaoreclamacao", "SgigjexclusaoreclamacaoController.exportPdf");
+  Route.get("export-csv/sgigjexclusaoreclamacao", "SgigjexclusaoreclamacaoController.exportCsv");
   Route.resource("sgigjrelprocessoinstrucao", "SgigjrelprocessoinstrucaoController").apiOnly();
   Route.resource("sgigjrelprocessoinstrutor", "SgigjrelprocessoinstrutorController").apiOnly();
   Route.resource("sgigjrelreclamacaopeca", "SgigjrelreclamacaopecaController").apiOnly();

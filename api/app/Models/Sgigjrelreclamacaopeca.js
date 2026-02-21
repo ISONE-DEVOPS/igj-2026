@@ -14,7 +14,15 @@ class Sgigjrelreclamacaopeca extends Model {
     deletadoPor() {
         return this.belongsTo('App/Models/Glbuser', 'DELETADO_POR', 'ID')
     }
-    
+
+    sgigjexclusaoreclamacao() {
+        return this.belongsTo('App/Models/Sgigjexclusaoreclamacao', 'EXCLUSAO_RECLAMACAO_ID', 'ID')
+    }
+
+    sgigjprpecasprocessual() {
+        return this.belongsTo('App/Models/Sgigjprpecasprocessual', 'PR_PECAS_PROCESSUAIS_ID', 'ID')
+    }
+
 }
 
 module.exports = Sgigjrelreclamacaopeca

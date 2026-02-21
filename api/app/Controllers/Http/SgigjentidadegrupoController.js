@@ -331,7 +331,7 @@ class entity {
 
     const pdfCreater = async (data) => {
       let promise = new Promise((resolve, reject) => {
-        pdf.create(data, { "format": "A4", "border": "0", "type": "pdf" }).toBuffer(function (err, buffer) {
+        pdf.create(data, { "format": "A4", "border": { "top": "15mm", "right": "15mm", "bottom": "15mm", "left": "15mm" }, "type": "pdf" }).toBuffer(function (err, buffer) {
           if (err) {
             reject(err)
           }
