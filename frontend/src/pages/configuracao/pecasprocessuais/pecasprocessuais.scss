@@ -62,11 +62,19 @@ $danger: #E74C3C;
     padding: 4px 10px;
     border-radius: 6px;
     letter-spacing: 0.3px;
+    text-align: left;
   }
 
   .desig-text {
     font-weight: 500;
     color: $text-primary;
+    text-align: left;
+  }
+
+  // Forçar alinhamento à esquerda nas colunas Código e Designação
+  .table thead th,
+  .table tbody td {
+    text-align: left;
   }
 
   .desc-truncated {
