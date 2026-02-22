@@ -86,3 +86,26 @@ INSERT IGNORE INTO glbperfilmenu (ID, PERFIL_ID, MENUS_ID, ESTADO) VALUES
 (MD5(CONCAT('pm_insp_reclam_editar')), @perfil_insp, MD5('reclamacao_editar'), '1');
 
 -- Nota: Atribuir permissões adicionais a outros perfis via UI /administracao/permissoes
+
+-- ============================================================
+-- Fix: Adicionar tarefa "Remover" à página Peças Processuais
+-- (falta o botão de eliminar na coluna Ações)
+-- ============================================================
+SET @pecas_id = '3703bc333651f47f00879ad2517c21825d12';
+
+-- "Remover" - visibilidade do botão no frontend (taskEnable verifica "Remover")
+INSERT IGNORE INTO glbmenu (ID, DS_MENU, URL, URL_ICON, SELF_ID, ORDEM, ESTADO, TIPO)
+VALUES (MD5('pecasprocessuais_remover'), 'Remover', '/sgigjprpecasprocessual/Remover', 'feather icon-trash-2', @pecas_id, 0, '1', 'task');
+
+-- "Eliminar" - permissão da API (functionsDatabase.allowed mapeia delete -> "Eliminar")
+INSERT IGNORE INTO glbmenu (ID, DS_MENU, URL, URL_ICON, SELF_ID, ORDEM, ESTADO, TIPO)
+VALUES (MD5('pecasprocessuais_eliminar'), 'Eliminar', '/sgigjprpecasprocessual/Eliminar', 'feather icon-trash-2', @pecas_id, 0, '1', 'task');
+
+-- Atribuir ambas as tarefas a todos os perfis que já têm acesso à página Peças Processuais
+INSERT IGNORE INTO glbperfilmenu (ID, PERFIL_ID, MENUS_ID, ESTADO)
+SELECT MD5(CONCAT('pm_', pm.PERFIL_ID, '_pecas_remover')), pm.PERFIL_ID, MD5('pecasprocessuais_remover'), '1'
+FROM glbperfilmenu pm WHERE pm.MENUS_ID = @pecas_id AND pm.ESTADO = '1';
+
+INSERT IGNORE INTO glbperfilmenu (ID, PERFIL_ID, MENUS_ID, ESTADO)
+SELECT MD5(CONCAT('pm_', pm.PERFIL_ID, '_pecas_eliminar')), pm.PERFIL_ID, MD5('pecasprocessuais_eliminar'), '1'
+FROM glbperfilmenu pm WHERE pm.MENUS_ID = @pecas_id AND pm.ESTADO = '1';
