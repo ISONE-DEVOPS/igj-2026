@@ -6,6 +6,11 @@ node_modules/
 .env.*
 .env_local
 
+# Frontend env files por ambiente (sem segredos - podem ser commitados)
+!frontend/.env
+!frontend/.env.development
+!frontend/.env.production
+
 # OS files
 .DS_Store
 Thumbs.db

@@ -1513,7 +1513,7 @@ const ProcessoEmCurso = () => {
 
           {/* --------------------Criar Item------------------- */}
 
-          <Modal size="xl" show={isOpen} onHide={() => setIsOpen(false)}>
+          <Modal size="lg" show={isOpen} onHide={() => setIsOpen(false)} scrollable centered>
             <Modal.Header closeButton>
               <Modal.Title as="h5">Criar</Modal.Title>
             </Modal.Header>
@@ -1568,46 +1568,25 @@ const ProcessoEmCurso = () => {
                   </Col>
 
                   {/* <Col sm={10}>
-
-                                        <label className="floating-label" htmlFor="text">Pessoa <span style={{ color: "red" }} >*</span></label>
-                                        <div style={{ display: "flex" }} >
-                                            <div className="form-group fill" style={{ width: "100%" }} >
-
-
-
-                                                <Select
-                                                    className="basic-single"
-                                                    classNamePrefix="select"
-                                                    onChange={event => setPESSOAS(event)}
-                                                    name="pessoa"
-                                                    options={pessoalist}
-                                                    defaultValue={
-
-                                                        pessoalist.map(p => (
-
-                                                            p.ID == PESSOA_ID ? p : null
-
-                                                        ))
-
-
-                                                    }
-                                                    required
-                                                    menuPlacement="auto"
-                                                    menuPosition="fixed"
-                                                    placeholder="Pessoa..."
-                                                    isMulti
-                                                />
-
-
-
-
-                                            </div>
-
-                                            <Button onClick={() => openpessoafunction()} style={{ marginLeft: "8px", height: "38px" }} variant="primary"><i className="feather icon-plus" /></Button>
-
-                                        </div>
-
-                                    </Col> */}
+                    <label className="floating-label" htmlFor="text">Pessoa</label>
+                    <div style={{ display: "flex" }}>
+                      <div className="form-group fill" style={{ width: "100%" }}>
+                        <Select
+                          className="basic-single"
+                          classNamePrefix="select"
+                          onChange={event => setPESSOAS(event)}
+                          name="pessoa"
+                          options={pessoalist}
+                          defaultValue={pessoalist.map(p => (p.ID == PESSOA_ID ? p : null))}
+                          menuPlacement="auto"
+                          menuPosition="fixed"
+                          placeholder="Pessoa..."
+                          isMulti
+                        />
+                      </div>
+                      <Button onClick={() => openpessoafunction()} style={{ marginLeft: "8px", height: "38px" }} variant="primary"><i className="feather icon-plus" /></Button>
+                    </div>
+                  </Col> */}
 
                   <Col sm={6}>
                     <div className="form-group fill">
@@ -1629,64 +1608,46 @@ const ProcessoEmCurso = () => {
                   </Col>
 
                   {/* <Col sm={9}>
-                                        <div className="form-group fill">
-                                            <label className="floating-label" htmlFor="Name">Entidade <span style={{ color: "red" }} >*</span></label>
-
-                                            <select className="form-control" disabled={isUserCasino()} onChange={event => { setENTIDADE_ID(event.target.value) }} value={ENTIDADE_ID} id="perfil" required aria-required="true">
-
-                                                <option hidden value="">--- Selecione ---</option>
-
-
-                                                {entidadelist.map(e => (
-
-                                                    <option key={e.ID} value={e.ID}>{e.DESIG}</option>
-
-                                                ))}
-
-
-                                            </select>
-
-                                        </div>
-                                    </Col> */}
-                  {/*                                     
-                                    <div className="col-sm-12">
-                                        <div className="form-group fill">
-                                            <label className="floating-label" htmlFor="Address">Descrição <span style={{ color: "red" }} >*</span></label>
-                                            <textarea maxLength="64000" className="form-control" onChange={event => { setDESCR(event.target.value) }} defaultValue={DESCR} rows="3" placeholder='Descrição...' required />
-                                        </div>
-                                    </div> */}
-                  {/* {tipo_pedido == "C" && 
-
-                                        <>
-
-
-                                            <div className="col-sm-12">
-                                                <div className="form-group fill">
-                                                    <label className="floating-label" htmlFor="Address">Observação</label>
-                                                    <textarea maxLength="64000" className="form-control" onChange={event => { setOBS(event.target.value) }} defaultValue={OBS} rows="3" placeholder='Observação...' />
-                                                </div>
-                                            </div>
-                                        </>
-
-                                    } */}
-
-                  {/* {tipo_pedido == "N" && */}
-
-                  <>
-                    <div className="col-sm-12">
-                      <JoditEditor
-                        editorRef={setRef}
-                        value={editorcontent}
-                        config={{
-                          readonly: false,
-                        }}
-                        ref={editorREF}
-                        onChange={(event) => updateContent(event)}
-                      />
+                    <div className="form-group fill">
+                      <label className="floating-label" htmlFor="Name">Entidade</label>
+                      <select className="form-control" disabled={isUserCasino()} onChange={event => { setENTIDADE_ID(event.target.value) }} value={ENTIDADE_ID} id="perfil">
+                        <option hidden value="">--- Selecione ---</option>
+                        {entidadelist.map(e => (
+                          <option key={e.ID} value={e.ID}>{e.DESIG}</option>
+                        ))}
+                      </select>
                     </div>
-                  </>
+                  </Col>
 
-                  {/* } */}
+                  <div className="col-sm-12">
+                    <div className="form-group fill">
+                      <label className="floating-label" htmlFor="Address">Descrição</label>
+                      <textarea maxLength="64000" className="form-control" onChange={event => { setDESCR(event.target.value) }} defaultValue={DESCR} rows="3" placeholder='Descrição...' />
+                    </div>
+                  </div>
+
+                  {tipo_pedido == "C" &&
+                    <>
+                      <div className="col-sm-12">
+                        <div className="form-group fill">
+                          <label className="floating-label" htmlFor="Address">Observação</label>
+                          <textarea maxLength="64000" className="form-control" onChange={event => { setOBS(event.target.value) }} defaultValue={OBS} rows="3" placeholder='Observação...' />
+                        </div>
+                      </div>
+                    </>
+                  } */}
+
+                  <div className="col-sm-12">
+                    <JoditEditor
+                      editorRef={setRef}
+                      value={editorcontent}
+                      config={{
+                        readonly: false,
+                      }}
+                      ref={editorREF}
+                      onChange={(event) => updateContent(event)}
+                    />
+                  </div>
                 </Row>
               </form>
             </Modal.Body>
@@ -1695,7 +1656,22 @@ const ProcessoEmCurso = () => {
               <Button variant="danger" onClick={() => setIsOpen(false)}>
                 Fechar
               </Button>
-
+              {tipo_pedido == "N" && (
+                <Button variant="primary" onClick={() => {
+                  const texto = `
+                    <p class="MsoNormal" align="center" style="margin: 0cm 0cm 8pt; line-height: 16.866667px; font-size: 11pt; font-family: Calibri, sans-serif; text-align: center;"><strong><span lang="PT" style="font-size: 12pt; line-height: 18.4px; font-family: Cambria, serif;">Auto de Notícia</span></strong></p>
+                    <p class="MsoNormal" style="margin: 0in; line-height: 107%; text-align: justify; font-size: 15px;"><span style="line-height: 107%; font-size: 24px;">Aos _______ dias do mês de ___ do ano de dois mil e _____ no _____ (identificação do serviço ou entidade), sito em ______ (localidade), no seguimento de _______ (diligência, circunstância ocasional ou denúncia), tomei conhecimento e por esta via dou notícia do seguinte:<br>
+                    __________________(descrição detalhada dos factos com menção dos fatores tempo, modo e lugar das ocorrências).<br>
+                    Com os ditos procedimentos os ___________ (autores) incorrem em infração por violação do ____________ (enquadramento legal).<br>
+                    É quanto me cumpre dar notícia e para os devidos e legais efeitos se lavrou o presente auto.<br>
+                    A Testemunha: (nome legível/n.° do documento de identificação) ______________________<br>
+                    A Testemunha: (nome legível/n.° do documento de identificação) ______________________<br>
+                    O (denunciante): ______________________</span></p>`;
+                  seteditorcontent(texto);
+                }}>
+                  Gerar Texto
+                </Button>
+              )}
               {!isLoading ? (
                 <Button
                   type="button"
@@ -1728,6 +1704,8 @@ const ProcessoEmCurso = () => {
             size="lg"
             show={isEditarOpen}
             onHide={() => setIsEditarOpen(false)}
+            scrollable
+            centered
           >
             <Modal.Header closeButton>
               <Modal.Title as="h5">Editar</Modal.Title>
@@ -1750,46 +1728,25 @@ const ProcessoEmCurso = () => {
                       />
                     </div>
                   </Col>
-                  {/* 
-                                     <Col sm={10}>
-
-                                        <label className="floating-label" htmlFor="text">Pessoa <span style={{ color: "red" }} >*</span></label>
-                                        <div style={{ display: "flex" }} >
-                                            <div className="form-group fill" style={{ width: "100%" }} >
-
-
-
-                                                <Select
-                                                    className="basic-single"
-                                                    classNamePrefix="select"
-                                                    onChange={event => setPESSOA_ID(event.value)}
-                                                    name="pessoa"
-                                                    options={pessoalist}
-                                                    defaultValue={
-
-                                                        pessoalist.map(p => (
-
-                                                            p.ID == PESSOA_ID ? p : null
-
-                                                        ))
-
-                                                    }
-                                                    required
-                                                    menuPlacement="auto"
-                                                    menuPosition="fixed"
-                                                    placeholder="Pessoa..."
-                                                />
-
-
-
-
-                                            </div>
-
-                                            <Button onClick={() => openpessoafunction()} style={{ marginLeft: "8px", height: "38px" }} variant="primary"><i className="feather icon-plus" /></Button>
-
-                                        </div>
-
-                                    </Col>  */}
+                  {/* <Col sm={10}>
+                    <label className="floating-label" htmlFor="text">Pessoa</label>
+                    <div style={{ display: "flex" }}>
+                      <div className="form-group fill" style={{ width: "100%" }}>
+                        <Select
+                          className="basic-single"
+                          classNamePrefix="select"
+                          onChange={event => setPESSOA_ID(event.value)}
+                          name="pessoa"
+                          options={pessoalist}
+                          defaultValue={pessoalist.map(p => (p.ID == PESSOA_ID ? p : null))}
+                          menuPlacement="auto"
+                          menuPosition="fixed"
+                          placeholder="Pessoa..."
+                        />
+                      </div>
+                      <Button onClick={() => openpessoafunction()} style={{ marginLeft: "8px", height: "38px" }} variant="primary"><i className="feather icon-plus" /></Button>
+                    </div>
+                  </Col> */}
 
                   <Col sm={6}>
                     <div className="form-group fill">
@@ -1811,37 +1768,26 @@ const ProcessoEmCurso = () => {
                   </Col>
 
                   {/* <Col sm={9}>
-                                        <div className="form-group fill">
-                                            <label className="floating-label" htmlFor="Name">Entidade <span style={{ color: "red" }} >*</span></label>
-
-                                            <select className="form-control" disabled={isUserCasino()} onChange={event => { setENTIDADE_ID(event.target.value) }} value={ENTIDADE_ID} id="perfil" required aria-required="true">
-
-                                                <option hidden value="">--- Selecione ---</option>
-
-
-                                                {entidadelist.map(e => (
-
-                                                    <option key={e.ID} value={e.ID}>{e.DESIG}</option>
-
-                                                ))}
-
-
-                                            </select>
-
-                                        </div>
-                                    </Col> */}
-
-                  {/* <div className="col-sm-12">
-                                        <div className="form-group fill">
-                                            <label className="floating-label" htmlFor="Address">Descrição <span style={{ color: "red" }} >*</span></label>
-                                            <textarea maxLength="64000" className="form-control" onChange={event => { setDESCR(event.target.value) }} defaultValue={DESCR} rows="3" placeholder='Descrição...' required />
-                                        </div>
-                                    </div> */}
+                    <div className="form-group fill">
+                      <label className="floating-label" htmlFor="Name">Entidade</label>
+                      <select className="form-control" disabled={isUserCasino()} onChange={event => { setENTIDADE_ID(event.target.value) }} value={ENTIDADE_ID} id="perfil">
+                        <option hidden value="">--- Selecione ---</option>
+                        {entidadelist.map(e => (
+                          <option key={e.ID} value={e.ID}>{e.DESIG}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </Col>
 
                   <div className="col-sm-12">
                     <div className="form-group fill">
-                      {/* <label className="floating-label" htmlFor="Address">Observação</label> */}
+                      <label className="floating-label" htmlFor="Address">Descrição</label>
+                      <textarea maxLength="64000" className="form-control" onChange={event => { setDESCR(event.target.value) }} defaultValue={DESCR} rows="3" placeholder='Descrição...' />
+                    </div>
+                  </div> */}
 
+                  <div className="col-sm-12">
+                    <div className="form-group fill">
                       <JoditEditor
                         editorRef={setRef}
                         value={editorcontent}
@@ -1853,12 +1799,6 @@ const ProcessoEmCurso = () => {
                       />
                     </div>
                   </div>
-
-                  {/* <div className="col-sm-12">
-                                       
-                                            <textarea maxLength="64000" className="form-control" onChange={event => { setOBS(event.target.value) }} defaultValue={OBS} rows="3" placeholder='Observação...' />
-                                     
-                                    </div> */}
                 </Row>
               </form>
             </Modal.Body>
@@ -1886,9 +1826,8 @@ const ProcessoEmCurso = () => {
             </Modal.Footer>
           </Modal>
 
-          <Modal size="lg" show={isVerOpen} onHide={() => setVerOpen(false)}>
-            <Modal.Header style={{ border: "0" }} closeButton>
-              <Modal.Title as="h5"></Modal.Title>
+          <Modal size="lg" show={isVerOpen} onHide={() => setVerOpen(false)} scrollable centered>
+            <Modal.Header className="modal-header--processo" closeButton>
               <Modal.Title as="h5">Processo</Modal.Title>
             </Modal.Header>
 
@@ -2064,15 +2003,17 @@ const ProcessoEmCurso = () => {
             </Modal.Footer>
           </Modal>
 
-          {/* --------------------Interropido Final------------------- */}
+          {/* --------------------Interrompido Final------------------- */}
 
           <Modal
             size="lg"
             show={isOpenInterropido}
             onHide={() => setIsOpenInterropido(false)}
+            scrollable
+            centered
           >
             <Modal.Header closeButton>
-              <Modal.Title as="h5">Interropido Final</Modal.Title>
+              <Modal.Title as="h5">Interrompido Final</Modal.Title>
             </Modal.Header>
             <Modal.Body className="newuserbox w-100">
               <form
@@ -2146,7 +2087,7 @@ const ProcessoEmCurso = () => {
               height={1000}
               src={`${mergedPdfUrl}`}
               title="pdf-viewer"
-              width="100%s"
+              width="100%"
             ></iframe>
           </Modal>
 

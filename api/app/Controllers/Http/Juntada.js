@@ -9,7 +9,7 @@ const functionsDatabase = require('../functionsDatabase');
 const Env = use('Env')
 const PDFMerger = require('pdf-merger-js');
 const fetch = require('node-fetch');
-var pdf = require('html-pdf');
+const puppeteer = require('puppeteer');
 const moment = require('moment');
 const Sgigjrelinstrutorpeca = use('App/Models/Sgigjrelinstrutorpeca');
 moment.locale('pt');
@@ -21,82 +21,87 @@ var admin = require("firebase-admin");
 class entity {
 
     async file({ params, response, request }) {
-        let data = []
-        let pecas = (await Sgigjrelinstrutorpeca.query()
-            .with('sgigjprpecasprocessual')
-            .with('sgigjrelprocessoinstrucao.sgigjrelprocessoinstrutor.sgigjrelpessoaentidade.sgigjpessoa')
-            .where('REL_PROCESSO_INSTRUCAO_ID', params.id)
-            .fetch()).toJSON()
+        try {
+            let data = []
+            let pecas = (await Sgigjrelinstrutorpeca.query()
+                .with('sgigjprpecasprocessual')
+                .with('sgigjrelprocessoinstrucao.sgigjrelprocessoinstrutor.sgigjrelpessoaentidade.sgigjpessoa')
+                .where('REL_PROCESSO_INSTRUCAO_ID', params.id)
+                .fetch()).toJSON()
 
 
-        if (pecas.length > 0) {
-            for (let index = 0; index < pecas.length; index++) {
-                const element = pecas[index];
-                data.push({
-                    name: element.sgigjprpecasprocessual.DESIG,
-                    doc: element.URL_DOC,
-                    instrutor:element.sgigjrelprocessoinstrucao.sgigjrelprocessoinstrutor.sgigjrelpessoaentidade.sgigjpessoa.NOME
-                })
+            if (pecas.length > 0) {
+                for (let index = 0; index < pecas.length; index++) {
+                    const element = pecas[index];
+                    data.push({
+                        name: element.sgigjprpecasprocessual?.DESIG || '',
+                        doc: element.URL_DOC,
+                        instrutor: element.sgigjrelprocessoinstrucao?.sgigjrelprocessoinstrutor?.sgigjrelpessoaentidade?.sgigjpessoa?.NOME || ''
+                    })
+
+                }
+            }
+
+
+            var docs = data.filter(function (e) {
+                if (e.doc && e.doc.slice(e.doc.length - 4, e.doc.length) == ".pdf") return true
+                else return false
+
+            })
+
+            var merger = new PDFMerger();
+            merger.add(await this.capa(data));
+
+            for (let index4 = 0; index4 < docs.length; index4++) {
+
+                const element5 = docs[index4].doc + "?alt=media&token=0";
+                let blob = await fetch(element5).then(r => r.blob());
+
+                const arrayBuffer = await blob.arrayBuffer();
+                const buffer = Buffer.from(arrayBuffer);
+
+                console.log(buffer)
+                merger.add(buffer);
 
             }
-        }
+            const file2 = await merger.saveAsBuffer();;
 
+            const bucket = admin.storage().bucket();
+            const blob = bucket.file("pdf-generator"+(Math.random() * (9999999999999999 + 9999999999999999) - 9999999999999999)+"-juntada")
+            const blobStream = blob.createWriteStream();
+            blobStream.end(file2)
 
-        var docs = data.filter(function (e) {
-            if (e.doc.slice(e.doc.length - 4, e.doc.length) == ".pdf") return true
-            else return false
+            const publicUrl = `https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/${encodeURIComponent(blob.name)}`;
 
-        })
+            let dataInstrucao = {
+                ID:await functionsDatabase.createID("sgigjrelinstrutorpeca"),
+                CODIGO:await functionsDatabase.createCODIGO("sgigjrelinstrutorpeca"),
+                REL_PROCESSO_INSTRUCAO_ID:params.id,
+                ESTADO: "1",
+                CRIADO_POR: request.userID,
+                DT_REGISTO:functionsDatabase.createDateNow(),
+                PR_PECAS_PROCESSUAIS_ID: Env.get('PECAPROCESSUAL_JUNTADA_ID', ""),
+                PESSOA_TESTEMUNHA_ID:null,
+                PR_DECISAO_TP_ID:null,
+                INFRACAO_COIMA_ID:null,
+                COIMA:null,
+                OBS:"",
+                DATA:functionsDatabase.createDate(),
+                URL_DOC:publicUrl
 
-        var merger = new PDFMerger();
-        merger.add(await this.capa(data));
+            }
+            const newE = await Database
+              .table("sgigjrelinstrutorpeca")
+              .insert(dataInstrucao)
 
-        for (let index4 = 0; index4 < docs.length; index4++) {
-
-            const element5 = docs[index4].doc + "?alt=media&token=0";
-            let blob = await fetch(element5).then(r => r.blob());
-
-            const arrayBuffer = await blob.arrayBuffer();
-            const buffer = Buffer.from(arrayBuffer);
-
-            console.log(buffer)
-            merger.add(buffer);
-
-        }
-        const file2 = await merger.saveAsBuffer();;
-
-        const bucket = admin.storage().bucket();
-        const blob = bucket.file("pdf-generator"+(Math.random() * (9999999999999999 + 9999999999999999) - 9999999999999999)+"-juntada")
-        const blobStream = blob.createWriteStream();
-        blobStream.end(file2)
-
-        const publicUrl = format(`https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/${blob.name}`);
-
-        let dataInstrucao = {
-            ID:await functionsDatabase.createID("sgigjrelinstrutorpeca"),
-            REL_PROCESSO_INSTRUCAO_ID:params.id,
-            ESTADO: "1",
-            CRIADO_POR: request.userID,
-            DT_REGISTO:functionsDatabase.createDateNow(),
-            PR_PECAS_PROCESSUAIS_ID: Env.get('PECAPROCESSUAL_JUNTADA_ID', ""),
-            PESSOA_TESTEMUNHA_ID:null,
-            DESTINATARIO_ID:null,
-            PR_DECISAO_TP_ID:null,
-            INFRACAO_COIMA_ID:null,
-            COIMA:null,
-            OBS:"",
-            DATA:functionsDatabase.createDate(),
-            publicUrl:publicUrl
-
-        }
-        const newE = await Database
-          .table("sgigjrelinstrutorpeca")
-          .insert(dataInstrucao)
-
-        //   const file= await merger.save('merged.pdf');
-        return {
-            buffer: file2,
-            data:dataInstrucao
+            //   const file= await merger.save('merged.pdf');
+            return {
+                buffer: file2,
+                data:dataInstrucao
+            }
+        } catch (err) {
+            console.error('Juntada error:', err)
+            return response.status(500).json({ error: err.message || 'Erro ao gerar juntada' })
         }
 
     }
@@ -142,20 +147,19 @@ class entity {
             </div>
         `
 
-        const pdfCreater = async (data) => {
-            let promise = new Promise((resolve, reject) => {
-                pdf.create(data, { "format": "A4", "border": { "top": "15mm", "right": "15mm", "bottom": "15mm", "left": "15mm" }, "type": "pdf" }).toBuffer(function (err, buffer) {
-                    if (err) {
-                        reject(err)
-                    }
-                    resolve(buffer)
-
-                })
-            })
-            return promise
-        }
-
-        return await pdfCreater(content)
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+        const page = await browser.newPage();
+        await page.setContent(content, { waitUntil: 'networkidle0' });
+        const buffer = await page.pdf({
+            format: 'A4',
+            margin: { top: '15mm', right: '15mm', bottom: '15mm', left: '15mm' },
+            printBackground: true
+        });
+        await browser.close();
+        return buffer
 
     }
 

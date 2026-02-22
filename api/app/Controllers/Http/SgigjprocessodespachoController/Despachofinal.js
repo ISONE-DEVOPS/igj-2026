@@ -186,6 +186,35 @@ const store = async ({ params, request, response }) => {
               PESSOA_ID: null,
               URL: `/processos/exclusaointerdicao`
             })
+
+            // Notificar registante e instrutor do processo
+            try {
+              const processo = await DatabaseDB.table("sgigjprocessoexclusao").where("ID", params.id).limit(1)
+              if (processo.length > 0 && processo[0].USER_ID && processo[0].USER_ID != request.userID) {
+                GlbnotificacaoFunctions.storeToUser({
+                  request,
+                  USER_ID: processo[0].USER_ID,
+                  MSG: `O despacho de decisão do processo (Código: ${newitem[0].CODIGO}) foi concluído em ${dataHoje}. Referência: ${data.REFERENCIA || ''}.`,
+                  TITULO: "Despacho de Decisão",
+                  PESSOA_ID: null,
+                  URL: `/processos/exclusaointerdicao`
+                })
+              }
+              const despacho = await DatabaseDB.table("sgigjprocessodespacho").where("PROCESSO_EXCLUSAO_ID", params.id).limit(1)
+              if (despacho.length > 0) {
+                const instrutor = await DatabaseDB.table("sgigjrelprocessoinstrutor").where("PROCESSO_DESPACHO_ID", despacho[0].ID).limit(1)
+                if (instrutor.length > 0 && instrutor[0].USER_ID && instrutor[0].USER_ID != request.userID && (!processo.length || instrutor[0].USER_ID != processo[0].USER_ID)) {
+                  GlbnotificacaoFunctions.storeToUser({
+                    request,
+                    USER_ID: instrutor[0].USER_ID,
+                    MSG: `O despacho de decisão do processo (Código: ${newitem[0].CODIGO}) foi concluído em ${dataHoje}. Referência: ${data.REFERENCIA || ''}.`,
+                    TITULO: "Despacho de Decisão",
+                    PESSOA_ID: null,
+                    URL: `/processos/exclusaointerdicao`
+                  })
+                }
+              }
+            } catch (err) { console.error("Erro ao notificar registante/instrutor:", err) }
           }
           return data;
         } else
@@ -225,6 +254,35 @@ const store = async ({ params, request, response }) => {
             PESSOA_ID: null,
             URL: `/processos/exclusaointerdicao`
           })
+
+          // Notificar registante e instrutor do processo
+          try {
+            const processo2 = await DatabaseDB.table("sgigjprocessoexclusao").where("ID", params.id).limit(1)
+            if (processo2.length > 0 && processo2[0].USER_ID && processo2[0].USER_ID != request.userID) {
+              GlbnotificacaoFunctions.storeToUser({
+                request,
+                USER_ID: processo2[0].USER_ID,
+                MSG: `O despacho de decisão do processo (Código: ${data.CODIGO}) foi concluído em ${dataHoje2}. Referência: ${data.REFERENCIA || ''}.`,
+                TITULO: "Despacho de Decisão",
+                PESSOA_ID: null,
+                URL: `/processos/exclusaointerdicao`
+              })
+            }
+            const despacho2 = await DatabaseDB.table("sgigjprocessodespacho").where("PROCESSO_EXCLUSAO_ID", params.id).limit(1)
+            if (despacho2.length > 0) {
+              const instrutor2 = await DatabaseDB.table("sgigjrelprocessoinstrutor").where("PROCESSO_DESPACHO_ID", despacho2[0].ID).limit(1)
+              if (instrutor2.length > 0 && instrutor2[0].USER_ID && instrutor2[0].USER_ID != request.userID && (!processo2.length || instrutor2[0].USER_ID != processo2[0].USER_ID)) {
+                GlbnotificacaoFunctions.storeToUser({
+                  request,
+                  USER_ID: instrutor2[0].USER_ID,
+                  MSG: `O despacho de decisão do processo (Código: ${data.CODIGO}) foi concluído em ${dataHoje2}. Referência: ${data.REFERENCIA || ''}.`,
+                  TITULO: "Despacho de Decisão",
+                  PESSOA_ID: null,
+                  URL: `/processos/exclusaointerdicao`
+                })
+              }
+            }
+          } catch (err) { console.error("Erro ao notificar registante/instrutor:", err) }
         }
         return data;
       } else

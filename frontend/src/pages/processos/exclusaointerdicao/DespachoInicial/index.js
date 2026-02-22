@@ -69,6 +69,8 @@ const Customers = ({
     const [INSTRUTOR, setINSTRUTOR] = useState("");
     const [INFRACAO_COIMA_ID, setINFRACAO_COIMA_ID] = useState("");
     const [COIMA, setCOIMA] = useState("");
+    const [coimaMin, setCoimaMin] = useState("");
+    const [coimaMax, setCoimaMax] = useState("");
 
     const [CODIGO_D, setCODIGO_D] = useState("");
     const [itemSelectedEdit, setitemSelectedEdit] = useState("");
@@ -308,7 +310,7 @@ const Customers = ({
                 INSTRUTOR,
                 REFERENCIA: REFERENCIA_D,
                 OBS: OBS_D,
-                // PRAZO: PRAZO_D,
+                PRAZO: PRAZO_D,
                 DATA: DATA_D,
                 DESPACHO: editorREF?.current?.value,
                 TIPO_PROCESSO_EXCLUSAO: tipo_pedido,
@@ -374,7 +376,7 @@ const Customers = ({
                 PR_DECISAO_TP_ID: PR_DECISAO_TP_ID_D,
                 REFERENCIA: REFERENCIA_D,
                 OBS: OBS_D,
-                // PRAZO: PRAZO_D,
+                PRAZO: PRAZO_D,
                 DATA: DATA_D,
                 OBS: OBS_D,
                 COIMA,
@@ -454,7 +456,7 @@ const Customers = ({
     return (
 
 
-        <Modal size='xl' show={isDepachoopen} onHide={() => setisDepachoopen(false)}>
+        <Modal size='xl' show={isDepachoopen} onHide={() => setisDepachoopen(false)} scrollable centered>
             <Modal.Header closeButton>
                 <Modal.Title as="h5">Despacho</Modal.Title>
             </Modal.Header>
@@ -638,13 +640,12 @@ const Customers = ({
                                 </Col>
 
 
-                                {/* {tipo_pedido == "D" && <Col sm={2}>
+                                <Col sm={2}>
                                     <div className="form-group fill">
-                                        <label className="floating-label" htmlFor="Name">Prazo<span style={{ color: "red" }} >*</span></label>
-                                        <input type="number" value={PRAZO_D} min="0" disabled={tipo_pedido == "I" ? true : false} onChange={event => { setPRAZO_D(event.target.value) }} defaultValue={PRAZO_D} className="form-control" placeholder="Referência..." required />
-
+                                        <label className="floating-label" htmlFor="Name">Prazo (dias)</label>
+                                        <input type="number" value={PRAZO_D} min="0" disabled={tipo_pedido == "I"} onChange={event => { setPRAZO_D(event.target.value) }} className="form-control" placeholder="Prazo..." />
                                     </div>
-                                </Col>} */}
+                                </Col>
 
 
                                 <Col sm={10}>
@@ -656,49 +657,38 @@ const Customers = ({
 
 
 
-                                {/* {(tipo_pedido == "C" || tipo_pedido == "D") && 
-
-
-
+                                {(tipo_pedido == "C" || tipo_pedido == "D") &&
                                     <Col sm={8}>
                                         <div className="form-group fill">
-                                            <label className="floating-label" htmlFor="Name">Infração{/*<span style={{ color: "red" }} >*</span></label>
-
-                                            <select id="perfil" value={INFRACAO_COIMA_ID} onChange={event => { setINFRACAO_COIMA_ID(event.target.value) }} className="form-control" required aria-required="true">
-
-
+                                            <label className="floating-label" htmlFor="Name">Infração</label>
+                                            <select id="perfil" value={INFRACAO_COIMA_ID} onChange={event => {
+                                                setINFRACAO_COIMA_ID(event.target.value);
+                                                const selected = infracaocoimalist.find(e => e.ID == event.target.value);
+                                                if (selected) {
+                                                    setCoimaMin(selected.VALOR_MINIMO || "");
+                                                    setCoimaMax(selected.VALOR_MAXIMO || "");
+                                                } else {
+                                                    setCoimaMin("");
+                                                    setCoimaMax("");
+                                                }
+                                            }} className="form-control">
                                                 <option hidden value="">--- Selecione ---</option>
-
                                                 {infracaocoimalist.map(e => (
-
                                                     <option key={e.ID} value={e.ID}>{e?.sgigjprinfracaotp?.DESIG}</option>
-
                                                 ))}
-
-
                                             </select>
-
                                         </div>
                                     </Col>
-
-
-                               */}
-
-
-
-                                {/* {(tipo_pedido == "D") && */}
+                                }
 
                                     <>
-
                                         <Col sm={4}>
                                             <div className="form-group fill">
-                                                <label className="floating-label" htmlFor="Name">Coima</label>
-                                                <input type="number" defaultValue={COIMA} onChange={event => { setCOIMA(event.target.value) }} className="form-control" placeholder="Coima..." />
+                                                <label className="floating-label" htmlFor="Name">Coima {coimaMin && coimaMax ? `(${coimaMin}€ - ${coimaMax}€)` : ""}</label>
+                                                <input type="number" value={COIMA} min={coimaMin || undefined} max={coimaMax || undefined} onChange={event => { setCOIMA(event.target.value) }} className="form-control" placeholder="Coima..." />
                                             </div>
                                         </Col>
                                     </>
-
-                                {/* } */}
 
 
 

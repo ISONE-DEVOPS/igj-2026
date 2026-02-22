@@ -507,6 +507,11 @@ const routes = [
         path: '/processos/reclamacao',
         component: lazy(() => import('./pages/processos/reclamacao'))
       },
+      {
+        exact: true,
+        path: '/processos/reclamacao/estatisticas',
+        component: lazy(() => import('./pages/processos/reclamacao/estatisticas'))
+      },
 
       {
         exact: true,

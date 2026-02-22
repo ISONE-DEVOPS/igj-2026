@@ -38,6 +38,8 @@ export default function ({
     const [PR_EXCLUSAO_PERIODO_ID, setPR_EXCLUSAO_PERIODO_ID] = useState("");
     const [COIMA, setCOIMA] = useState("");
     const [INFRACAO_COIMA_ID, setINFRACAO_COIMA_ID] = useState("");
+    const [coimaMin, setCoimaMin] = useState("");
+    const [coimaMax, setCoimaMax] = useState("");
 
 
     const [periodolist, setperiodolist] = useState([]);
@@ -507,7 +509,7 @@ export default function ({
 
         <>
 
-            <Modal size='xl' show={isdepachofinal} onHide={() => setisdepachofinal(false)}>
+            <Modal size='xl' show={isdepachofinal} onHide={() => setisdepachofinal(false)} scrollable centered>
                 <Modal.Header closeButton>
                     <Modal.Title as="h5">Despacho Decisão</Modal.Title>
                 </Modal.Header>
@@ -563,30 +565,30 @@ export default function ({
 
                                         <Col sm={8}>
                                             <div className="form-group fill">
-                                                <label className="floating-label" htmlFor="Name">Infração {/*<span style={{ color: "red" }} >*</span>*/}</label>
-
-                                                <select id="perfil" value={INFRACAO_COIMA_ID} onChange={event => { setINFRACAO_COIMA_ID(event.target.value) }} className="form-control" required aria-required="true">
-
-
+                                                <label className="floating-label" htmlFor="Name">Infração</label>
+                                                <select id="perfil" value={INFRACAO_COIMA_ID} onChange={event => {
+                                                    setINFRACAO_COIMA_ID(event.target.value);
+                                                    const selected = infracaocoimalist.find(e => e.ID == event.target.value);
+                                                    if (selected) {
+                                                        setCoimaMin(selected.VALOR_MINIMO || "");
+                                                        setCoimaMax(selected.VALOR_MAXIMO || "");
+                                                    } else {
+                                                        setCoimaMin("");
+                                                        setCoimaMax("");
+                                                    }
+                                                }} className="form-control">
                                                     <option hidden value="">--- Selecione ---</option>
-
                                                     {infracaocoimalist.map(e => (
-
                                                         <option key={e.ID} value={e.ID}>{e?.sgigjprinfracaotp?.DESIG}</option>
-
                                                     ))}
-
-
                                                 </select>
-
                                             </div>
                                         </Col>
 
-
                                         <Col sm={4}>
                                             <div className="form-group fill">
-                                                <label className="floating-label" htmlFor="Name">Coima </label>
-                                                <input maxLength="128" type="number" onChange={event => { setCOIMA(event.target.value) }} defaultValue={COIMA} className="form-control" placeholder="Valor..." required />
+                                                <label className="floating-label" htmlFor="Name">Coima {coimaMin && coimaMax ? `(${coimaMin}€ - ${coimaMax}€)` : ""}</label>
+                                                <input type="number" min={coimaMin || undefined} max={coimaMax || undefined} onChange={event => { setCOIMA(event.target.value) }} defaultValue={COIMA} className="form-control" placeholder="Valor..." />
                                             </div>
                                         </Col>
 
@@ -675,7 +677,7 @@ export default function ({
 
                 <Modal.Footer>
                     <Button variant="danger" onClick={() => setisdepachofinal(false)}>Fechar</Button>
-                    <Button variant="primary" onClick={() => juntada(ID)} >Dados Proc</Button>
+                    <Button variant="primary" onClick={() => juntada(ID)} >Ver Juntada</Button>
                     <Button type="submit" form="onSubmit" variant="primary" onClick={() => setdespacho_tipo("SALVAR")}>Guardar</Button>
                     <Button type="submit" form="onSubmit" variant="primary" onClick={() => setdespacho_tipo("CONCLUIR")}>Concluir</Button>
                 </Modal.Footer>
@@ -687,7 +689,7 @@ export default function ({
                     height={1000}
                     src={`${mergedPdfUrl}`}
                     title='pdf-viewer'
-                    width='100%s'
+                    width='100%'
                 ></iframe>
 
 

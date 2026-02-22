@@ -36,6 +36,8 @@ import {
 import CriarPessoa from "../../../components/Custom/CriarPessoa";
 
 import Listfiles from "../../../components/Custom/Listfiles";
+import Instrucao from "../exclusaointerdicao/Instrucao";
+import '../processos.scss';
 // import { pageAcess } from '../exclusaofinalizado';
 
 let pageAcess = "/processos/exclusaointerdicao";
@@ -832,7 +834,22 @@ const ProcessoPrescritos = () => {
                   />
                 </Link>
               )}
-
+              {colorx != "black" && taskEnable(pageAcess, permissoes, "Instrucao") != false && (
+                <Link
+                  to="#"
+                  title="Instrução"
+                  onClick={() => openInstrucao(itemx)}
+                  className="text-primary mx-1"
+                >
+                  <i
+                    className={
+                      "text-primary " +
+                      taskEnableIcon(pageAcess, permissoes, "Instrucao")
+                    }
+                  />
+                </Link>
+              )}
+              {/* Resgatar - comentado temporariamente
               {taskEnable(pageAcess, permissoes, "Editar") == false &&
               response.data[i]?.sgigjprocessodespacho[0]
                 ?.sgigjrelprocessoinstrutor[0]?.sgigjrelprocessoinstrucao[0]
@@ -850,7 +867,7 @@ const ProcessoPrescritos = () => {
                 >
                   <i className={"text-primary feather icon-power"} />
                 </Link>
-              )}
+              )} */}
             </React.Fragment>
           );
 
@@ -1336,6 +1353,7 @@ const ProcessoPrescritos = () => {
         <Col sm={12}>
           <Card>
             <Card.Body>
+              {instrucaoitem == null ? (
               <Table
                 listAno={listAno}
                 uploadList={uploadlist}
@@ -1345,12 +1363,21 @@ const ProcessoPrescritos = () => {
                 pageAcess={pageAcess}
                 permissoes={permissoes}
               />
+              ) : (
+                <Instrucao
+                  decisaolist={decisaolist}
+                  uploadlist={uploadlist}
+                  setinstrucaoitem={setinstrucaoitem}
+                  pageAcess={pageAcess}
+                  permissoes={permissoes}
+                  item={instrucaoitem}
+                />
+              )}
             </Card.Body>
           </Card>
 
-          <Modal size="lg" show={isVerOpen} onHide={() => setVerOpen(false)}>
-            <Modal.Header style={{ border: "0" }} closeButton>
-              <Modal.Title as="h5"></Modal.Title>
+          <Modal size="lg" show={isVerOpen} onHide={() => setVerOpen(false)} scrollable centered>
+            <Modal.Header className="modal-header--processo" closeButton>
               <Modal.Title as="h5">Processo</Modal.Title>
             </Modal.Header>
 
@@ -1528,188 +1555,32 @@ const ProcessoPrescritos = () => {
                   </Col>
 
                   <Col xl={8} className="task-detail-right">
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "spaceAround",
-                      }}
-                    >
-                      <span
-                        onClick={() => setverlistgp("Despacho")}
-                        style={
-                          verlistgp == "Despacho"
-                            ? {
-                                paddingBottom: "4px",
-                                cursor: "pointer",
-                                borderBottom: "2px solid #d2b32a",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                            : {
-                                paddingBottom: "4px",
-                                cursor: "pointer",
-                                borderBottom: "1px solid #E5E5E5",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                        }
-                      >
-                        <i className="feather icon-film m-r-5" />
-                        Despacho
+                    <div className="processo-modal-tabs">
+                      <span className={`processo-modal-tab ${verlistgp == "Despacho" ? "processo-modal-tab--active" : ""}`}
+                        onClick={() => setverlistgp("Despacho")}>
+                        <i className="feather icon-send" /> Despacho
                       </span>
-
-                      <span
-                        onClick={() => setverlistgp("Instrucao")}
-                        style={
-                          verlistgp == "Instrucao"
-                            ? {
-                                paddingBottom: "4px",
-                                cursor: "pointer",
-                                borderBottom: "2px solid #d2b32a",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                            : {
-                                paddingBottom: "4px",
-                                cursor: "pointer",
-                                borderBottom: "1px solid #E5E5E5",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                        }
-                      >
-                        <i className="feather icon-voicemail m-r-5" />
-                        Instrução
+                      <span className={`processo-modal-tab ${verlistgp == "Instrucao" ? "processo-modal-tab--active" : ""}`}
+                        onClick={() => setverlistgp("Instrucao")}>
+                        <i className="feather icon-clipboard" /> Instrução
                       </span>
-
-                      <span
-                        onClick={() => setverlistgp("Despachofinal")}
-                        style={
-                          verlistgp == "Despachofinal"
-                            ? {
-                                paddingBottom: "4px",
-                                cursor: "pointer",
-                                borderBottom: "2px solid #d2b32a",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                            : {
-                                paddingBottom: "4px",
-                                cursor: "pointer",
-                                borderBottom: "1px solid #E5E5E5",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                        }
-                      >
-                        <i className="feather icon-file-text m-r-5" />
-                        Despacho Decisão
+                      <span className={`processo-modal-tab ${verlistgp == "Despachofinal" ? "processo-modal-tab--active" : ""}`}
+                        onClick={() => setverlistgp("Despachofinal")}>
+                        <i className="feather icon-check-square" /> Despacho Decisão
                       </span>
                     </div>
-
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "spaceAround",
-                        marginTop: "20px",
-                      }}
-                    >
-                      <span
-                        onClick={() => setverlistgp("Notificacao")}
-                        style={
-                          verlistgp == "Notificacao"
-                            ? {
-                                paddingBottom: "4px",
-                                cursor: "pointer",
-                                borderBottom: "2px solid #d2b32a",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                            : {
-                                paddingBottom: "4px",
-                                cursor: "pointer",
-                                borderBottom: "1px solid #E5E5E5",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                        }
-                      >
-                        <i className="feather icon-file-text m-r-5" />
-                        Notificação
+                    <div className="processo-modal-tabs" style={{ marginTop: "12px" }}>
+                      <span className={`processo-modal-tab ${verlistgp == "Notificacao" ? "processo-modal-tab--active" : ""}`}
+                        onClick={() => setverlistgp("Notificacao")}>
+                        <i className="feather icon-bell" /> Notificação
                       </span>
-
-                      <span
-                        onClick={() => setverlistgp("DesicaoTutela")}
-                        style={
-                          verlistgp == "DesicaoTutela"
-                            ? {
-                                paddingBottom: "4px",
-                                cursor: "pointer",
-                                borderBottom: "2px solid #d2b32a",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                            : {
-                                paddingBottom: "4px",
-                                cursor: "pointer",
-                                borderBottom: "1px solid #E5E5E5",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                        }
-                      >
-                        <i className="feather icon-file-text m-r-5" />
-                        Decisão Tutela
+                      <span className={`processo-modal-tab ${verlistgp == "DesicaoTutela" ? "processo-modal-tab--active" : ""}`}
+                        onClick={() => setverlistgp("DesicaoTutela")}>
+                        <i className="feather icon-shield" /> Decisão Tutela
                       </span>
-
-                      <span
-                        onClick={() => setverlistgp("DesicaoTribunal")}
-                        style={
-                          verlistgp == "DesicaoTribunal"
-                            ? {
-                                paddingBottom: "4px",
-                                cursor: "pointer",
-                                borderBottom: "2px solid #d2b32a",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                            : {
-                                paddingBottom: "4px",
-                                cursor: "pointer",
-                                borderBottom: "1px solid #E5E5E5",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }
-                        }
-                      >
-                        <i className="feather icon-file-text m-r-5" />
-                        Decisão Tribunal
+                      <span className={`processo-modal-tab ${verlistgp == "DesicaoTribunal" ? "processo-modal-tab--active" : ""}`}
+                        onClick={() => setverlistgp("DesicaoTribunal")}>
+                        <i className="feather icon-briefcase" /> Decisão Tribunal
                       </span>
                     </div>
 
@@ -2191,8 +2062,10 @@ const ProcessoPrescritos = () => {
             size="lg"
             show={isNotificationOpen}
             onHide={() => setIsNotificationOpen(false)}
+            scrollable
+            centered
           >
-            <Modal.Header style={{ border: "0" }} closeButton>
+            <Modal.Header className="modal-header--processo" closeButton>
               <Modal.Title as="h5">Notificação</Modal.Title>
             </Modal.Header>
 
@@ -2419,10 +2292,12 @@ const ProcessoPrescritos = () => {
             size="lg"
             show={isTutelaOpen == true}
             onHide={() => setIsTutelaOpen(false)}
+            scrollable
+            centered
           >
-            <Modal.Header style={{ border: "0" }} closeButton>
+            <Modal.Header className="modal-header--processo" closeButton>
               <Modal.Title as="h5">
-                {DESISAO == "T" ? "Decicao Tulela" : "Desicao Tribunal"}
+                {DESISAO == "T" ? "Decisão Tutela" : "Decisão Tribunal"}
               </Modal.Title>
             </Modal.Header>
 
@@ -2483,7 +2358,7 @@ const ProcessoPrescritos = () => {
                       custom
                       required
                       type="radio"
-                      label="Desicao Tutela"
+                      label="Decisão Tutela"
                       name="supportedRadio"
                       id="averiguacao"
                       checked={DESISAO == "T" ? true : false}
@@ -2495,7 +2370,7 @@ const ProcessoPrescritos = () => {
                       custom
                       required
                       type="radio"
-                      label="Desicao Tribunal"
+                      label="Decisão Tribunal"
                       name="supportedRadio"
                       id="contraordenacao"
                       checked={DESISAO == "TR" ? true : false}
@@ -2552,7 +2427,7 @@ const ProcessoPrescritos = () => {
               height={1000}
               src={`${mergedPdfUrl}`}
               title="pdf-viewer"
-              width="100%s"
+              width="100%"
             ></iframe>
           </Modal>
 

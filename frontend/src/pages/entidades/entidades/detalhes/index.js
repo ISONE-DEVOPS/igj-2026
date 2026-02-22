@@ -1221,7 +1221,7 @@ const DetalhesEntidade = () => {
                                                             }
                                                     }
                                                 >
-                                                    <i className="feather icon-film m-r-5" />
+                                                    <i className="feather icon-users m-r-5" />
                                                     Colaboradores
                                                 </span>
 
@@ -1249,7 +1249,7 @@ const DetalhesEntidade = () => {
                                                             }
                                                     }
                                                 >
-                                                    <i className="feather icon-voicemail m-r-5" />
+                                                    <i className="feather icon-monitor m-r-5" />
                                                     Equipamentos
                                                 </span>
 
@@ -1314,7 +1314,7 @@ const DetalhesEntidade = () => {
                                                             }
                                                     }
                                                 >
-                                                    <i className="feather icon-at-sign m-r-5" />
+                                                    <i className="feather icon-cpu m-r-5" />
                                                     Máquinas
                                                 </span>
 
@@ -1342,7 +1342,7 @@ const DetalhesEntidade = () => {
                                                             }
                                                     }
                                                 >
-                                                    <i className="feather icon-wind m-r-5" />
+                                                    <i className="feather icon-layout m-r-5" />
                                                     Bancas
                                                 </span>
                                             </div>
@@ -1758,8 +1758,7 @@ const DetalhesEntidade = () => {
                         {taskEnable(pageAcess, permissoes, "Tabparametrizacao") == false ? null : (
                             <Tab
                                 eventKey="parametrizacao" title={<span> <i className={
-                                    "icon-tab-casino " +
-                                    taskEnableIcon(pageAcess, permissoes, "Tabparametrizacao")
+                                    "icon-tab-casino feather icon-settings"
                                 } /> Parametrizações</span>}>
                                 {tabDescription === "parametrizacao" &&
                                     <Tabs
@@ -1773,8 +1772,7 @@ const DetalhesEntidade = () => {
                                         {taskEnable(pageAcess, permissoes, "Tabgrupo") == false ? null : (
 
                                             <Tab eventKey="grupo" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "Tabgrupo")
+                                                "icon-tab-casino feather icon-users"
                                             } /> Grupo</span>}>
                                                 {(tabDescription === "parametrizacao" || tabDescriptionChildren === "grupo") &&
 
@@ -1785,8 +1783,7 @@ const DetalhesEntidade = () => {
                                         {taskEnable(pageAcess, permissoes, "Tabequipamento") == false ? null : (
 
                                             <Tab eventKey="equipamentos" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "Tabequipamento")
+                                                "icon-tab-casino feather icon-monitor"
                                             } /> Equipamento</span>}>
                                                 {tabDescriptionChildren === "equipamentos" &&
                                                     <Equipamento key={id} />}
@@ -1794,8 +1791,7 @@ const DetalhesEntidade = () => {
                                         )}
                                         {taskEnable(pageAcess, permissoes, "Tabparametrizacaobanca") == false ? null : (
                                             <Tab eventKey="banca" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "Tabparametrizacaobanca")
+                                                "icon-tab-casino feather icon-layout"
                                             } /> Banca</span>}>
                                                 {tabDescriptionChildren === "banca" &&
                                                     <Banca key={id} />}
@@ -1803,8 +1799,7 @@ const DetalhesEntidade = () => {
                                         )}
                                         {taskEnable(pageAcess, permissoes, "Tabparametrizacaomaquina") == false ? null : (
                                             <Tab eventKey="maquina" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "Tabparametrizacaomaquina")
+                                                "icon-tab-casino feather icon-cpu"
                                             } /> Máquina</span>}>
                                                 {tabDescriptionChildren === "maquina" &&
                                                     <Maquina key={id} />}
@@ -1813,8 +1808,7 @@ const DetalhesEntidade = () => {
                                         {taskEnable(pageAcess, permissoes, "Tabparametrizacaocolaboradores") == false ? null : (
 
                                             <Tab eventKey="colaboradores" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "Tabparametrizacaocolaboradores")
+                                                "icon-tab-casino feather icon-user-check"
                                             } /> Colaboradores</span>}>
                                                 {tabDescriptionChildren === "colaboradores" &&
                                                     <Colaboradores key={id} />}
@@ -1827,8 +1821,7 @@ const DetalhesEntidade = () => {
                         {taskEnable(pageAcess, permissoes, "Tabhandpay") == false ? null : (
 
                             <Tab eventKey="handpay" title={<span> <i className={
-                                "icon-tab-casino " +
-                                taskEnableIcon(pageAcess, permissoes, "Tabhandpay")
+                                "icon-tab-casino feather icon-dollar-sign"
                             } /> Handpay</span>}>
                                 {tabDescription === "handpay" &&
                                     <Handpay key={id} />}
@@ -1836,8 +1829,7 @@ const DetalhesEntidade = () => {
                         )}
                         {taskEnable(pageAcess, permissoes, "Tabeventos") == false ? null : (
                             <Tab eventKey="eventos" title={<span> <i className={
-                                "icon-tab-casino " +
-                                taskEnableIcon(pageAcess, permissoes, "Tabeventos")
+                                "icon-tab-casino feather icon-calendar"
                             } /> Eventos</span>}>
                                 {tabDescription === "eventos" &&
                                     <Tabs
@@ -1850,8 +1842,7 @@ const DetalhesEntidade = () => {
                                         {taskEnable(pageAcess, permissoes, "Tabeventospedidos") == false ? null : (
 
                                             <Tab eventKey="eventospedidos" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "Tabeventospedidos")
+                                                "icon-tab-casino feather icon-inbox"
                                             } /> Pedidos</span>}>
                                                 {(tabDescription === "eventos" || tabDescriptionChildren === "eventospedidos") &&
                                                     < EventosPedidos key={id} />
@@ -1859,8 +1850,7 @@ const DetalhesEntidade = () => {
                                             </Tab>)}
                                         {taskEnable(pageAcess, permissoes, "Tabeventoseaprovados") == false ? null : (
                                             <Tab eventKey="aprovados" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "Tabeventoseaprovados")
+                                                "icon-tab-casino feather icon-check-circle"
                                             } /> Aprovados</span>}>
                                                 {tabDescriptionChildren == "aprovados" &&
                                                     <EventosAprovados key={id} />
@@ -1871,8 +1861,7 @@ const DetalhesEntidade = () => {
                                         {taskEnable(pageAcess, permissoes, "Tabeventosrecusados") == false ? null : (
 
                                             <Tab eventKey="recusados" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "Tabeventosrecusados")
+                                                "icon-tab-casino feather icon-x-circle"
                                             } /> Recusados</span>}>
                                                 {tabDescriptionChildren == "recusados" &&
                                                     <EventosRecusados key={id} />
@@ -1886,8 +1875,7 @@ const DetalhesEntidade = () => {
 
                         {taskEnable(pageAcess, permissoes, "Tabprocessos") == false ? null : (
                             <Tab eventKey="processos" title={<span> <i className={
-                                "icon-tab-casino " +
-                                taskEnableIcon(pageAcess, permissoes, "Tabprocessos")
+                                "icon-tab-casino feather icon-folder"
                             } /> Processos</span>}>
                                 {tabDescription === "processos" &&
 
@@ -1902,8 +1890,7 @@ const DetalhesEntidade = () => {
                                         {taskEnable(pageAcess, permissoes, "Tabprocessosempcurso") == false ? null : (
 
                                             <Tab eventKey="emcurso" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "Tabprocessosempcurso")
+                                                "icon-tab-casino feather icon-clock"
                                             } /> Em curso</span>}>
                                                 {(tabDescription === "processos" || tabDescriptionChildren === "emcurso") &&
                                                     <ProcessoEmCurso key={id} />}
@@ -1911,8 +1898,7 @@ const DetalhesEntidade = () => {
                                         )}
                                         {taskEnable(pageAcess, permissoes, "Tabprocessosdespachados") == false ? null : (
                                             <Tab eventKey="despachados" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "Tabprocessosdespachados")
+                                                "icon-tab-casino feather icon-send"
                                             } /> Despachados</span>}>
                                                 {tabDescriptionChildren === "despachados" &&
                                                     <ProcessoFinalizado key={id} />
@@ -1922,8 +1908,7 @@ const DetalhesEntidade = () => {
                                         {taskEnable(pageAcess, permissoes, "Tabprocessosarquivados") == false ? null : (
 
                                             <Tab eventKey="arquivados" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "Tabprocessosarquivados")
+                                                "icon-tab-casino feather icon-archive"
                                             } /> Arquivados</span>}>
                                                 {tabDescriptionChildren === "arquivados" &&
 
@@ -1933,8 +1918,7 @@ const DetalhesEntidade = () => {
                                         {taskEnable(pageAcess, permissoes, "Tabprocessosprescritos") == false ? null : (
 
                                             <Tab eventKey="prescritos" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "Tabprocessosprescritos")
+                                                "icon-tab-casino feather icon-alert-octagon"
                                             } /> Prescritos</span>} >
                                                 {tabDescriptionChildren === "prescritos" &&
                                                     <ProcessoPrescritos key={id} />
@@ -1950,8 +1934,7 @@ const DetalhesEntidade = () => {
 
 
                             <Tab eventKey="casossuspeitos" title={<span> <i className={
-                                "icon-tab-casino " +
-                                taskEnableIcon(pageAcess, permissoes, "Tabparametrizacaocasosuspeito")
+                                "icon-tab-casino feather icon-alert-triangle"
                             } /> Casos Suspeitos</span>} >
                                 {tabDescription === "casossuspeitos" &&
                                     <CasoSuspeito key={id} />}
@@ -1960,8 +1943,7 @@ const DetalhesEntidade = () => {
                         {taskEnable(pageAcess, permissoes, "Tabparametrizacaofinanceiro") == false ? null : (
 
                             <Tab eventKey="financeiros" title={<span> <i className={
-                                "icon-tab-casino " +
-                                taskEnableIcon(pageAcess, permissoes, "Tabparametrizacaofinanceiro")
+                                "icon-tab-casino feather icon-credit-card"
                             } /> Financeiros</span>}>
 
                                 {tabDescription === "financeiros" &&
@@ -1977,8 +1959,7 @@ const DetalhesEntidade = () => {
                                         {taskEnable(pageAcess, permissoes, "TabContrapartida") == false ? null : (
 
                                             <Tab eventKey="contrapartida" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "TabContrapartida")
+                                                "icon-tab-casino feather icon-repeat"
                                             } /> Contrapartida</span>}>
                                                 {(tabDescription === "financeiros" || tabDescriptionChildren === "contrapartida") &&
                                                     <Contrapartida key={id} />}
@@ -1987,8 +1968,7 @@ const DetalhesEntidade = () => {
                                         {taskEnable(pageAcess, permissoes, "TabContribuicoes") == false ? null : (
 
                                             <Tab eventKey="contribuicoes" title={<span> <i className={
-                                                "icon-tab-casino " +
-                                                taskEnableIcon(pageAcess, permissoes, "TabContribuicoes")
+                                                "icon-tab-casino feather icon-trending-up"
                                             } /> Contribuições IGJ</span>}>
                                                 {(tabDescriptionChildren === "contribuicoes") &&
                                                     <Contribuicoes key={id} />}

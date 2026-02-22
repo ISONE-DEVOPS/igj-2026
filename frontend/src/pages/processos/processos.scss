@@ -529,3 +529,51 @@ $transition-base: all 0.2s ease;
     padding: 8px 10px;
   }
 }
+
+// ===================================
+// 7. MODAL HEADER (sem border-bottom)
+// ===================================
+
+.modal-header--processo {
+  border-bottom: none;
+}
+
+// ===================================
+// 8. MODAL TABS
+// ===================================
+
+.processo-modal-tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 16px;
+}
+
+.processo-modal-tab {
+  padding-bottom: 4px;
+  cursor: pointer;
+  border-bottom: 1px solid #E5E5E5;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: $text-secondary;
+  transition: $transition-fast;
+
+  &:hover {
+    color: $text-primary;
+    border-bottom-color: rgba($gold, 0.5);
+  }
+
+  i {
+    margin-right: 5px;
+    font-size: 14px;
+  }
+}
+
+.processo-modal-tab--active {
+  border-bottom: 2px solid $gold;
+  color: $text-primary;
+  font-weight: 600;
+}

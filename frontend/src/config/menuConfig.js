@@ -38,6 +38,7 @@ export const ICON_OVERRIDES = {
   '/processos/exclusao/finalizado': { icon: 'fas fa-flag-checkered', color: '#AB7DF6' },
   '/processos/contraordenacao': { icon: 'fas fa-gavel', color: '#E8575A' },
   '/processos/reclamacao': { icon: 'fas fa-exclamation-circle', color: '#FF8C00' },
+  '/processos/reclamacao/estatisticas': { icon: 'fas fa-chart-bar', color: '#2B7FB9' },
 
   // ── Configuracao: Pessoas ──
   '/configuracao/estadocivil': { icon: 'fas fa-ring', color: '#4680FF' },
