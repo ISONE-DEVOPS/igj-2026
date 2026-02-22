@@ -53,6 +53,26 @@ $border-light: #f1f1f1;
       animation: spin 1s linear infinite;
     }
   }
+
+  .btn-export-pdf {
+    border-radius: 8px;
+    border-color: #e0e0e0;
+    color: $text-secondary;
+    font-size: 13px;
+    transition: all 0.3s ease;
+    min-width: 38px;
+    padding: 6px 10px;
+
+    &:hover {
+      background-color: $igj-gold;
+      border-color: $igj-gold;
+      color: white;
+    }
+
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+  }
 }
 
 @keyframes spin {

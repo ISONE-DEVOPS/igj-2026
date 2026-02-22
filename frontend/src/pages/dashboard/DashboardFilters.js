@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
 import Select from 'react-select';
 
-const DashboardFilters = ({ filtrosOpcoes, filters, onFilterChange, onRefresh, loading, permissions }) => {
+const DashboardFilters = ({ filtrosOpcoes, filters, onFilterChange, onRefresh, loading, permissions, onExportPDF, exporting }) => {
 
     const showEntidadeFilter = permissions?.sections?.filtroEntidade !== false;
 
@@ -63,15 +63,24 @@ const DashboardFilters = ({ filtrosOpcoes, filters, onFilterChange, onRefresh, l
                         />
                     </Col>
                 )}
-                <Col xs={12} md={2} className="mt-2 mt-md-0">
+                <Col xs={12} md={2} className="mt-2 mt-md-0 d-flex" style={{ gap: '8px' }}>
                     <Button
                         variant="outline-secondary"
-                        className="btn-refresh w-100"
+                        className="btn-refresh flex-fill"
                         onClick={onRefresh}
                         disabled={loading}
                     >
                         <i className={`feather icon-refresh-cw ${loading ? 'spin' : ''}`} />
                         {' '}Atualizar
+                    </Button>
+                    <Button
+                        variant="outline-secondary"
+                        className="btn-export-pdf"
+                        onClick={onExportPDF}
+                        disabled={exporting || loading}
+                        title="Exportar Dashboard para PDF"
+                    >
+                        <i className={`feather ${exporting ? 'icon-loader spin' : 'icon-download'}`} />
                     </Button>
                 </Col>
             </Row>

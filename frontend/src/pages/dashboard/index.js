@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Row, Col } from 'react-bootstrap';
 // eslint-disable-next-line import/no-unresolved
 import Chart from 'react-apexcharts/dist/react-apexcharts.esm';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 import KpiCard from '../../components/Widgets/KpiCard';
 import ChartCard from '../../components/Widgets/ChartCard';
@@ -26,6 +28,8 @@ import './dashboard.scss';
 
 const DashAnalytics = () => {
     const [filters, setFilters] = useState({ ano: '', entidadeId: '' });
+    const [exporting, setExporting] = useState(false);
+    const contentRef = useRef(null);
     const { config: permissions, loading: permLoading } = useDashboardPermissions();
     const {
         kpis, financeiro, receitaEntidade, processos, eventos,
@@ -58,6 +62,64 @@ const DashAnalytics = () => {
 
     const isLoading = loading || permLoading;
 
+    const handleExportPDF = useCallback(async () => {
+        if (!contentRef.current) return;
+        setExporting(true);
+        try {
+            const container = contentRef.current;
+            const sections = Array.from(container.children).filter(
+                el => el.offsetHeight > 0
+            );
+
+            const pdf = new jsPDF('l', 'mm', 'a4');
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 10;
+            const headerH = 18;
+
+            // Header on first page
+            pdf.setFontSize(14);
+            pdf.setTextColor(27, 73, 101);
+            pdf.text('SGIGJ - Dashboard', margin, 12);
+            pdf.setFontSize(9);
+            pdf.setTextColor(99, 110, 114);
+            const hoje = new Date().toLocaleDateString('pt-CV', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            pdf.text(`Exportado em ${hoje}`, pageWidth - margin - 40, 12);
+
+            let cursorY = headerH;
+            const availableWidth = pageWidth - margin * 2;
+
+            for (let i = 0; i < sections.length; i++) {
+                const section = sections[i];
+                const canvas = await html2canvas(section, {
+                    scale: 1.5,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#F5F7FA'
+                });
+
+                const imgData = canvas.toDataURL('image/jpeg', 0.85);
+                const ratio = availableWidth / canvas.width;
+                const imgH = canvas.height * ratio;
+
+                // If section doesn't fit, start a new page
+                if (cursorY + imgH > pageHeight - margin && cursorY > headerH + 5) {
+                    pdf.addPage('a4', 'l');
+                    cursorY = margin;
+                }
+
+                pdf.addImage(imgData, 'JPEG', margin, cursorY, availableWidth, imgH);
+                cursorY += imgH + 2;
+            }
+
+            pdf.save(`dashboard-sgigj-${new Date().toISOString().slice(0, 10)}.pdf`);
+        } catch (e) {
+            console.error('Erro ao exportar PDF:', e);
+        } finally {
+            setExporting(false);
+        }
+    }, []);
+
     // Verificar se tem pelo menos 1 KPI visivel
     const hasAnyKpi = s.kpiReceita || s.kpiImpostos || s.kpiProcessos || s.kpiEntidades || s.kpiEventos || s.kpiCasosSuspeitos || s.kpiOrcamento;
 
@@ -71,8 +133,11 @@ const DashAnalytics = () => {
                 onRefresh={refetch}
                 loading={isLoading}
                 permissions={permissions}
+                onExportPDF={handleExportPDF}
+                exporting={exporting}
             />
 
+            <div ref={contentRef}>
             {/* KPIs */}
             {hasAnyKpi && (
                 <Row className="mt-3">
@@ -383,6 +448,7 @@ const DashAnalytics = () => {
                     </Row>
                 </div>
             )}
+            </div>
         </div>
     );
 };
