@@ -202,10 +202,7 @@ const Ajuda = () => {
     }, [activeSection, filteredSections]);
 
     const toggleSubsection = (idx) => {
-        setOpenSubsections(prev => ({
-            ...prev,
-            [idx]: !prev[idx]
-        }));
+        setOpenSubsections(prev => prev[idx] ? {} : { [idx]: true });
     };
 
     // When search changes, auto-select first matching section

@@ -371,16 +371,13 @@ class ImpostoController extends GenericController {
                 textFilter = textFilter + " - " + nameEntidade
             }
 
-            // const logoIgj = Env.get("APP_URL")+"/resources/logoigj.jpg"
-            const logoIgj = "https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-2467355902521149-logoigj.jpg?alt=media&token=0";
-            // const logoMinisterio = Env.get("APP_URL")+"/resources/logominsterio.png"
-            const logoMinisterio = "https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4358817791332590-logominsterio.png?alt=media&token=0"
+            const { IGJ_LOGO_DATA_URI: logoIgj, MINISTERIO_LOGO_DATA_URI: logoMinisterio } = require('./pdfLogo');
 
             const content = `<div >
             <div style="margin:8px 8px 8px 8px;width: 100%;z-index: 2;">
                 <div style="margin-top: 10px;margin-bottom: 40px;">
-                    <img src="${logoMinisterio}" alt="Paris" style="width: 350px;height:80px !important;">
-                    <img src="${logoIgj}" alt="Paris" style="width: 175px;height:100px !important;float:right">
+                    <img src="${logoMinisterio}" alt="IGJ" style="width: 350px;height:80px !important;">
+                    <img src="${logoIgj}" alt="IGJ" style="width: 175px;height:100px !important;float:right">
                 </div>
                 
                 <p>

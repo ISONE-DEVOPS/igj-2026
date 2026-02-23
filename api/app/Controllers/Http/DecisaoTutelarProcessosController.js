@@ -6,6 +6,9 @@ let Database = require('../../utils/DatabaseAuditoria')
 Database = new Database()
 const Model = use('App/Models/DecisaoTutelarProcessos');
 const DatabaseDB = use("Database");
+const GlbnotificacaoFunctions = use('App/Controllers/Http/GlbnotificacaoFunctions');
+const Env = use('Env');
+const moment = require('moment-timezone');
 
 
 class DecisaoTutelarProcessosController extends GenericController {
@@ -75,6 +78,34 @@ class DecisaoTutelarProcessosController extends GenericController {
                         }
 
                     }
+
+                    // Notificar perfis sobre recurso à Tutela
+                    try {
+                        const nomeUtilizador = await functionsDatabase.userIDToNome(request.userID);
+                        const dataHoje = moment().format("DD/MM/YYYY HH:mm");
+                        const processo = await DatabaseDB.table("sgigjprocessoexclusao").where("ID", data.PROCESSO_EXCLUSAO_ID).first();
+                        const codigoProcesso = processo ? processo.CODIGO : '';
+
+                        GlbnotificacaoFunctions.storeToPerfil({
+                            request,
+                            PERFIL_ID: Env.get("PERFIL_INSPECTOR_GERAL", "85c24ffab0137705617aa94b250866471dc2"),
+                            MSG: `Recurso do Processo (Código: ${codigoProcesso}) à Tutela, por ${nomeUtilizador} em ${dataHoje}.`,
+                            TITULO: "Recurso à Tutela",
+                            PESSOA_ID: null,
+                            URL: `/processos/exclusaofinalizado`
+                        });
+                        GlbnotificacaoFunctions.storeToPerfil({
+                            request,
+                            PERFIL_ID: Env.get("PERFIL_INSPECTOR", "f8382845e6dad3fb2d2e14aa45b14f0f85de"),
+                            MSG: `Recurso do Processo (Código: ${codigoProcesso}) à Tutela, por ${nomeUtilizador} em ${dataHoje}.`,
+                            TITULO: "Recurso à Tutela",
+                            PESSOA_ID: null,
+                            URL: `/processos/exclusaofinalizado`
+                        });
+                    } catch (err) {
+                        console.error('Erro ao enviar notificação de recurso tutela:', err);
+                    }
+
                     return (data)
                 }
 

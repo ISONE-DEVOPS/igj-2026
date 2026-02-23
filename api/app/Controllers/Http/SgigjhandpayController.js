@@ -363,11 +363,11 @@ class entity {
       result = result.toJSON()
       let sum = 0
 
-      let logo = "https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0"
+      let logo = require('./pdfLogo').IGJ_LOGO_DATA_URI
       const content = `<div >
               <div style="margin:20px 20px 20px 40px;width: 90%;z-index: 2;">
                   <div style=" margin-bottom: 40px; margin-center: -20px;">
-                      <img src="${logo}" alt="Paris" style="width: 100%;height:70px">
+                      <img src="${logo}" alt="IGJ" style="width: 100%;height:70px">
                   </div>
                   <h2 style="font-size: 12pt !important">Handpay ${textFilter}</h2>
 

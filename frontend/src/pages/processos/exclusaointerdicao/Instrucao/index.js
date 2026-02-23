@@ -24,6 +24,7 @@ import Table from './Table';
 import useAuth from '../../../../hooks/useAuth';
 
 import Listfiles from '../../../../components/Custom/Listfiles'
+import PdfViewer from '../../../../components/Custom/PdfViewer'
 import PecasForm from './pecasprocesuaisform';
 
 
@@ -179,22 +180,23 @@ const Item = ({ item, setinstrucaoitem, uploadlist, instrucaoitem, decisaolist }
                             if (response.data[i].FLAG_NOTA_COMUNICACAO == "3") response.data[i].QUEM = "Entidade Visada"
                         }
 
-                       
-                            if(!itemx.sgigjreldocumento && response.data[i]?.URL_DOC){
+
+                            if(!itemx.sgigjreldocumento){
                                 itemx.sgigjreldocumento = []
                             }
 
-                            itemx.sgigjreldocumento.push({
-                                "DOC_URL":response.data[i]?.URL_DOC,
-                                "sgigjprdocumentotp":{
-                                    "DESIG":"Documento Gerado"
-                                }
-                            })
-                            // console.log("sgigjreldocumento",itemx,[{
-                            //     "DOC_URL":response.data[i]?.URL_DOC
-                            // }])
-                            if (response.data[i]?.sgigjreldocumento.length > 0){}
+                            if(response.data[i]?.URL_DOC){
+                                itemx.sgigjreldocumento.push({
+                                    "DOC_URL":response.data[i]?.URL_DOC,
+                                    "sgigjprdocumentotp":{
+                                        "DESIG":"Documento Gerado"
+                                    }
+                                })
+                            }
+
+                            if (itemx.sgigjreldocumento.length > 0) {
                                 response.data[i].ANEXOS = <React.Fragment><Link to='#' onClick={() => openAnexos(itemx)} ><i className={"feather icon-file"} /></Link></React.Fragment>
+                            }
                       
 
                         response.data[i].action =
@@ -851,17 +853,7 @@ const Item = ({ item, setinstrucaoitem, uploadlist, instrucaoitem, decisaolist }
 
             <Listfiles Open={isVerAnexosOpen} setOpen={setisVerAnexosOpen} list={listaAnexos} />
 
-            <Modal size='xl' show={isjuntadaopen} onHide={() => setisjuntadaopen(false)}>
-
-                <iframe
-                    height={1000}
-                    src={`${mergedPdfUrl}`}
-                    title='pdf-viewer'
-                    width='100%s'
-                ></iframe>
-
-
-            </Modal>
+            <PdfViewer show={isjuntadaopen} onHide={() => setisjuntadaopen(false)} url={mergedPdfUrl} title="Juntada" />
 
             <Interrompido voltar={voltar} INSTRUCAO_ID={item?.sgigjprocessodespacho[0]?.sgigjrelprocessoinstrutor[0]?.sgigjrelprocessoinstrucao[0]?.ID} InterrompidoTipo={InterrompidoTipo} setInterrompidoTipo={setInterrompidoTipo} uploadlist={uploadlist} />
 

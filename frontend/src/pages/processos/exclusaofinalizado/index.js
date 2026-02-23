@@ -38,6 +38,7 @@ import toast from "react-hot-toast";
 import CriarPessoa from "../../../components/Custom/CriarPessoa";
 
 import Listfiles from "../../../components/Custom/Listfiles";
+import PdfViewer from "../../../components/Custom/PdfViewer";
 import JoditEditor from "jodit-react";
 import Instrucao from "../exclusaointerdicao/Instrucao";
 import '../processos.scss';
@@ -2094,18 +2095,7 @@ const ProcessoFinalizado = () => {
             list={lista_detalhesdocumentos}
           />
 
-          <Modal
-            size="xl"
-            show={isjuntadaopen}
-            onHide={() => setisjuntadaopen(false)}
-          >
-            <iframe
-              height={1000}
-              src={`${mergedPdfUrl}`}
-              title="pdf-viewer"
-              width="100%"
-            ></iframe>
-          </Modal>
+          <PdfViewer show={isjuntadaopen} onHide={() => setisjuntadaopen(false)} url={mergedPdfUrl} title="Juntada" />
 
           <Modal
             size="lg"

@@ -251,6 +251,7 @@ $border-light: #E9ECEF;
         font-size: 13px;
         color: $text-secondary;
         line-height: 1.7;
+        white-space: pre-line;
         animation: fadeInContent 0.25s ease-out;
       }
     }

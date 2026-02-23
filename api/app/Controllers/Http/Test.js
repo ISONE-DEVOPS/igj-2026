@@ -16,6 +16,7 @@ moment.locale('pt');
 const User = use('App/Models/Glbuser');
 const Sgigjrelpessoaentidade = use('App/Models/Sgigjrelpessoaentidade');
 const pdfCreater = require('./pdfCreater');
+const { buildOfficialTemplate } = require('./pdfTemplate');
 const Env = use('Env');
 
 class FileController {
@@ -34,17 +35,10 @@ class FileController {
       let Pessoa = await Sgigjrelpessoaentidade.query().with("sgigjpessoa").where("sgigjrelpessoaentidade.ID", user.REL_PESSOA_ENTIDADE_ID).first()
       nameUser = Pessoa ? Pessoa.$relations.sgigjpessoa.$attributes.NOME : ""
     }
-    let content =
-      `<div style="width: 100%; height: 100%; zoom: ${Env.get('ZOOM_PDF', '')};">
-                <div style="margin-bottom: 30px;">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0" alt="IGJ" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 20px;">
-                </div>
+    let content = buildOfficialTemplate(`
                 ${user.ASSINATURA_URL}
 
                 <img src="https://res.klook.com/image/upload/w_750,h_469,c_fill,q_85/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/nabd3lsoifdkrmfifqrn.jpg" style="width: 250px; padding-left: 15%; padding-right: 15%; padding-top: 20px;">
-
-                <div style="padding: 0 40px; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">
-                </div>
 
                 <div style="font-family: 'Times New Roman', serif; font-size: 12pt; text-align: center; margin-top: 40px; position: relative;">
                     <p>Inspetor</p>
@@ -56,14 +50,7 @@ class FileController {
                     })()}
                     <p>_________________________________</p>
                     <p>${nameUser}</p>
-                </div>
-
-                <div style="margin-top: 30px; text-align: center; border-top: 1px solid #999; padding-top: 8px;">
-                    <p style="margin: 0; font-size: 9pt; font-family: 'Times New Roman', serif; color: #555;">
-                        Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A - Telf: 2601877 Achada de Santo António – Praia www.igj.cv
-                    </p>
-                </div>
-          </div>`
+                </div>`)
       // return content
     const xx = await pdfCreater({content, tipo: "aaaaaaaaaaaa.pdf",})
 

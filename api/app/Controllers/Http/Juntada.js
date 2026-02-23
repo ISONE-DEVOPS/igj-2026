@@ -99,7 +99,7 @@ class entity {
             // 5. Upload to Firebase Storage
             const bucket = admin.storage().bucket();
             const blob = bucket.file("juntada-" + Date.now() + "-" + Math.floor(Math.random() * 1000000))
-            const blobStream = blob.createWriteStream();
+            const blobStream = blob.createWriteStream({ contentType: "application/pdf" });
             blobStream.end(file2)
 
             const publicUrl = `https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/${encodeURIComponent(blob.name)}`;

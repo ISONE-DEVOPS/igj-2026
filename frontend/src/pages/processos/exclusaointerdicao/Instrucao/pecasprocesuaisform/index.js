@@ -4,12 +4,14 @@ import { Button, Col, Row } from "react-bootstrap";
 import api from "../../../../../services/api";
 import useAuth from "../../../../../hooks/useAuth";
 import toast from 'react-hot-toast';
+import PdfViewer from '../../../../../components/Custom/PdfViewer';
 
 
 
 export default function PecasForm ({DATA,peca,selected_relinstrucaopeca,pessoalist,documentolist,setdocumentosgeral_lista,item,uploadinstrucaopecaslist,setselected_relinstrucaopeca}) {
     const [documentosgeral_lista_save, setdocumentosgeral_lista_save] = useState(false);
     const [ID_C, setID_C] = useState("");
+    const [isPdfViewerOpen, setIsPdfViewerOpen] = useState(false);
     const [data,setData] = useState({})
     const { popUp_alertaOK } = useAuth();
     const obsRef = useRef()
@@ -118,7 +120,7 @@ export default function PecasForm ({DATA,peca,selected_relinstrucaopeca,pessoali
             {selected_relinstrucaopeca != null && <>
 
             {
-            selected_relinstrucaopeca.URL_DOC != null && <a href={selected_relinstrucaopeca?.URL_DOC + "?alt=media&token=0"} target="_blank" ><Button variant="primary">Abrir DOC Gerado</Button> </a>
+            selected_relinstrucaopeca.URL_DOC != null && <Button variant="primary" onClick={() => setIsPdfViewerOpen(true)}><i className="feather icon-eye" style={{marginRight:"6px"}}/>Ver DOC Gerado</Button>
         }
 
             <Button onClick={() => criarPDF()} variant="primary">Gerar DOC</Button>
@@ -127,6 +129,7 @@ export default function PecasForm ({DATA,peca,selected_relinstrucaopeca,pessoali
                 <Button type="submit" form="itemGO" variant="primary">Guardar</Button>
             </Col>
         </Row>}
+        <PdfViewer show={isPdfViewerOpen} onHide={() => setIsPdfViewerOpen(false)} url={selected_relinstrucaopeca?.URL_DOC} title="Documento Gerado" />
     </form>
 
 }

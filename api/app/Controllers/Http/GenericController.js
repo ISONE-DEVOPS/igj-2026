@@ -5,6 +5,7 @@ let Database = require('../../utils/DatabaseAuditoria')
 Database = new Database()
 const functionsDatabase = require('../functionsDatabase');
 var pdf = require('html-pdf');
+const { replaceLogoInHtml } = require('./pdfLogo');
 class GenericController {
 
     table = "";
@@ -246,10 +247,12 @@ class GenericController {
     }
 
     async toPdf(content) {
+        // Replace Firebase logo URL with embedded base64 data URI
+        content = replaceLogoInHtml(content);
 
         const pdfCreater = async (data) => {
             let promise = new Promise((resolve, reject) => {
-                pdf.create(data, { "format": "A4", "border": { "top": "15mm", "right": "15mm", "bottom": "15mm", "left": "15mm" }, "type": "pdf" }).toBuffer(function (err, buffer) {
+                pdf.create(data, { "format": "A4", "border": { "top": "6mm", "right": "15mm", "bottom": "15mm", "left": "15mm" }, "type": "pdf" }).toBuffer(function (err, buffer) {
                     if (err) {
                         reject(err)
                     }

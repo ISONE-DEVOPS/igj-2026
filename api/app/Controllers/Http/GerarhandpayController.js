@@ -3,6 +3,7 @@ const Database = use("Database");
 const Sgigjpessoa = use("App/Models/Sgigjpessoa");
 const functionsDatabase = require("../functionsDatabase");
 const pdfCreater = require("./pdfCreater");
+const { buildOfficialTemplate } = require('./pdfTemplate');
 const Env = use("Env");
 
 class FileController {
@@ -14,13 +15,7 @@ class FileController {
     const bandeira = "https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-314288625622128-bandeira.jpeg?alt=media&token=0"
 
     const data = {
-      content: `
-      <div style="width: 100%; height: 100%; zoom: ${Env.get('ZOOM_PDF', '')};">
-        <div style="margin-bottom: 30px;">
-          <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0" alt="IGJ" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 20px;">
-        </div>
-
-        <div style="padding: 0 40px; font-family: 'Times New Roman', serif; font-size: 10pt; line-height: 1.6;">
+      content: buildOfficialTemplate(`
           <h1 style="font-family: 'Times New Roman', serif; font-size: 16pt; text-align: center; margin-bottom: 20px;">HANDPAY</h1>
 
           <div style="margin-bottom: 15px; margin-top: 0px;">
@@ -73,22 +68,7 @@ class FileController {
             ${functionsDatabase.convertDateToPT(dataPrint)?.dia}
             de ${functionsDatabase.convertDateToPT(dataPrint)?.mes}
             de ${functionsDatabase.convertDateToPT(dataPrint)?.ano}
-          </p>
-        </div>
-
-        <div>
-          <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-1015068714108032-cverde.PNG?alt=media&token=0" alt=""
-          style="width: 70%; padding-left: 15%; padding-right: 15%; opacity: 0.1; position: fixed; top: 20%;">
-        </div>
-
-        <div style="margin-top: 30px; text-align: center; border-top: 1px solid #999; padding-top: 8px;">
-          <p style="margin: 0; font-size: 9pt; font-family: 'Times New Roman', serif; color: #555;">
-            Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A - Telf: 2601877 Achada de Santo António – Praia www.igj.cv
-          </p>
-        </div>
-        <img src="${bandeira}" style="position: absolute;top: 0;right: 0;width: 10px;height: 100%;">
-      </div>
-      `,
+          </p>`),
       tipo: "handpay.pdf",
     };
 

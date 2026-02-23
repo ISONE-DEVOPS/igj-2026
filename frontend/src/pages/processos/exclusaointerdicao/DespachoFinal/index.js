@@ -11,6 +11,7 @@ import JoditEditor from 'jodit-react';
 import { createDateToInput } from '../../../../functions';
 
 import EscrevaUmTexo from '../../../../Text/EscrevaUmTexo';
+import PdfViewer from '../../../../components/Custom/PdfViewer';
 
 
 export default function ({
@@ -182,30 +183,54 @@ export default function ({
                 
 
             seteditorcontent(`
-            <h4 style="font-weight: 700;text-align: center;margin-top: 10px;margin-bottom: 35px;">DESPACHO/DECISÃO N.º ${response.data.message}<h4>
-                                        
-               
-    <p style="text-align: justify;line-height: 1.5;">Considerando o Relatório Final do Processo de Averiguação Sumária, para o apuramento da veracidade dos factos apresentados pela direção do casino;</p>
-    
-    <p style="text-align: justify;line-height: 1.5;">Atendendo que o averiguado reagiu/não em sua defesa, durante o prazo legal atribuído, para indicar os motivos justificativos da sua reclamação, bem como as testemunhas que pudessem ser ouvidas;</p>
-    
-    <p style="text-align: justify;line-height: 1.5;">Tendo em conta que a acusação apontada pela concessionária de que o comportamento do Sr. ..................................................... se revelou inconveniente, inapropriado e enquadrável dentro dos atos ilícitos administrativos de clientes das concessionárias, ter sido provada;</p>
-    
-    <p style="text-align: justify;line-height: 1.5;">No uso da faculdade conferida pelos n.ºs 10 e 13 do artigo 63.º da Lei 77/VI/2005 de 16 de agosto, valido a decisão tomada pela concessionária de interdição provisória e perante os factos apurados, constantes do Processo folhas 0 a folhas 22, para o qual se remete para todos os efeitos legais, determino a interdição de acesso ao Casino Royal do Sr. ............................ por um período de … meses/anos, a contar da data da ocorrência do facto (.../.../20...);</p>
-    
-    
-    <p style="text-align: justify;line-height: 1.5;">Determino ainda:
-    
-        1. A prestação de informações pela concessionária ao Serviço de Inspeção de Jogos do desfecho da investigação referenciada, relativa a possíveis fraudes ao Grupo de Máquinas em causa. 
-    
-        2. Notifique-se a Direção do Casino Royal e o averiguado do Despacho da Decisão Final
-    
-        3. Deve a Direção do Casino dar de imediato conhecimento à receção do mesmo, devendo esta, bem como o Diretor Geral do casino estarem cientes das suas responsabilidades se permitirem o acesso do referido frequentador ao espaço confinado ao jogo;
-    
-        4. CUMPRA-SE
-    </p>
-    
-    <p style="text-align: justify;line-height: 1.5;">Praia, ......... de .......... de 20.....</p>
+    <p style="margin: 0; font-family: 'Times New Roman', serif; text-align: center;"><b><span style="font-size: 16pt; font-family: 'Times New Roman', serif;">DESPACHO/DECISÃO N.º ${response.data.message}</span></b></p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">Considerando o Relatório Final do Processo de _______________________________, para o apuramento da veracidade dos factos apresentados pelo/a ___________________________________;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">&nbsp;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">Atendendo que o averiguado _________________________________________________________________________________________________________________________________________________;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">&nbsp;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">Tendo em conta que a acusação apontada pelo/a _______________________________ de que o comportamento do Sr. _______________________________ se revelou inconveniente, inapropriado e enquadrável dentro dos atos ilícitos administrativos de clientes das concessionárias, ter sido provada;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">&nbsp;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">No uso da faculdade conferida pelos n.ºs _____ e _____ do artigo _____.º da Lei _____/_____/_____ de _____ de __________, valido a decisão tomada pela concessionária de interdição provisória e perante os factos apurados, constantes do Processo folhas __________ a folhas __________, para o qual se remete para todos os efeitos legais, determino a interdição de acesso ao Casino Royal do Sr. _______________________________ por um período de __________ meses/anos, a contar da data da ocorrência do facto (____/____________/202___);</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">&nbsp;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;"><b>Determino ainda:</b></p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">&nbsp;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">___________________________________________________________________________________________________________________________________________________________________________.</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">&nbsp;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">Notifique-se a Direção do Casino Royal e o averiguado do Despacho da Decisão Final</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">&nbsp;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">Deve a Direção do Casino dar de imediato conhecimento à receção do mesmo, devendo esta, bem como o Diretor Geral do casino estarem cientes das suas responsabilidades se permitirem o acesso do referido frequentador ao espaço confinado ao jogo;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt;">CUMPRA-SE</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt;">Praia, IGJ _____ de _______________ de 202___</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6;">&nbsp;</p>
+
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: center;">O Inspetor Geral</p>
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: center;">____________________________</p>
+    <p style="margin: 0; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: center;">/José Augusto Cardoso/</p>
     `)
                 parecerEdit = value
 
@@ -683,17 +708,7 @@ export default function ({
                 </Modal.Footer>
             </Modal>
 
-            <Modal size='xl' show={isjuntadaopen} onHide={() => setisjuntadaopen(false)}>
-
-                <iframe
-                    height={1000}
-                    src={`${mergedPdfUrl}`}
-                    title='pdf-viewer'
-                    width='100%'
-                ></iframe>
-
-
-            </Modal>
+            <PdfViewer show={isjuntadaopen} onHide={() => setisjuntadaopen(false)} url={mergedPdfUrl} title="Juntada" />
 
         </>
 

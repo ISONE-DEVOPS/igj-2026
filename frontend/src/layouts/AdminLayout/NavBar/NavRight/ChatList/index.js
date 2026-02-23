@@ -20,6 +20,9 @@ const ChatList = ({ listOpen, closed}) => {
         <React.Fragment>
             <div className={listClass.join(' ')}>
                 <div className="h-list-header">
+                    <h6 style={{ margin: '0 0 10px 0', fontWeight: 600, color: '#4680FF' }}>
+                        <i className="fas fa-users" style={{ marginRight: 8 }} />Utilizadores Online
+                    </h6>
                     <div className="input-group">
                         <FormControl onChange={event=>setsearch(event.target.value)} type="text" id="search-friends" placeholder="Procurar utilizadores . . ." />
                     </div>

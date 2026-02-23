@@ -33,6 +33,9 @@ Route.get('/resources/:fileName', async ({ params, response }) => {
 
 Route.post('/sessions', 'SessionsController.store')
 
+// Regenerate all PDFs (sandbox only - desativado para produção)
+// Route.post('/regenerate-pdfs', 'RegeneratePdfController.regenerateAll');
+
 Route.group(() => {
 
   Route.resource("glbuser", "GlbuserController").apiOnly();
@@ -124,7 +127,7 @@ Route.group(() => {
   Route.resource("sgigjexclusaoreclamacao", "SgigjexclusaoreclamacaoController").apiOnly();
   Route.get("export-pdf/sgigjexclusaoreclamacao", "SgigjexclusaoreclamacaoController.exportPdf");
   Route.get("export-csv/sgigjexclusaoreclamacao", "SgigjexclusaoreclamacaoController.exportCsv");
-  Route.get("reclamacao/estatisticas", "ReclamacaoEstatisticasController.index");
+  Route.get("estatisticas", "EstatisticasController.index");
   Route.resource("sgigjrelprocessoinstrucao", "SgigjrelprocessoinstrucaoController").apiOnly();
   Route.resource("sgigjrelprocessoinstrutor", "SgigjrelprocessoinstrutorController").apiOnly();
   Route.resource("sgigjrelreclamacaopeca", "SgigjrelreclamacaopecaController").apiOnly();

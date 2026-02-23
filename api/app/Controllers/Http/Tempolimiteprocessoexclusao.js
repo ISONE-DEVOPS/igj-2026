@@ -78,11 +78,31 @@ class entity {
       .orderBy("DT_REGISTO", "desc")
       .fetch();
 
-    // Enviar notificações para processos com prazo a expirar
-    const prazolimiteJSON = prazolimite.toJSON();
-    const hoje = moment().tz(Env.get("GMT", ""));
+    // Query para contra-ordenações com prazo
+    const prazocontraordenacao = await Model.query()
+    .with('criadoPor.sgigjrelpessoaentidade.sgigjpessoa')
+      .where('TIPO', 'C')
+      .where('ESTADO', 1)
+      .whereHas("sgigjprocessodespacho", (builder) => {
+        builder.where("DATA", ">", dataagora);
+      })
+      .whereHas(
+        "sgigjprocessodespacho.sgigjrelprocessoinstrutor.sgigjrelprocessoinstrucao",
+        (builder) => {
+          builder.whereNull("RELATORIO_FINAL");
+        }
+      )
+      .with("sgigjprocessodespacho")
+      .with("sgigjpessoa")
+      .orderBy("DT_REGISTO", "desc")
+      .fetch();
 
-    for (const processo of prazolimiteJSON) {
+    // Enviar notificações para processos com prazo a expirar
+    const hoje = moment().tz(Env.get("GMT", ""));
+    const hojeStr = hoje.format("YYYY-MM-DD");
+
+    // Função auxiliar para enviar notificações de prazo
+    async function enviarNotificacaoPrazo(processo, url, titulo) {
       if (processo.sgigjprocessodespacho && processo.sgigjprocessodespacho.length > 0) {
         const despacho = processo.sgigjprocessodespacho[0];
         if (despacho.DATA && despacho.PRAZO) {
@@ -91,12 +111,10 @@ class entity {
           const diasRestantes = prazoFim.diff(hoje, "days");
 
           if (diasRestantes >= 0 && diasRestantes <= 10) {
-            // Verificar se já foi enviada notificação hoje para este processo
-            const hojeStr = hoje.format("YYYY-MM-DD");
             const jaNotificado = await DatabaseDB
               .table("glbnotificacao")
-              .where("URL", "/processos/exclusaointerdicao")
-              .where("TITULO", "Prazo do Processo")
+              .where("URL", url)
+              .where("TITULO", titulo)
               .whereRaw("MSG LIKE ?", [`%${processo.CODIGO}%`])
               .whereRaw("DATE(DT_REGISTO) = ?", [hojeStr])
               .limit(1);
@@ -108,18 +126,18 @@ class entity {
                 request,
                 PERFIL_ID: Env.get("PERFIL_INSPECTOR_GERAL", "85c24ffab0137705617aa94b250866471dc2"),
                 MSG: msg,
-                TITULO: "Prazo do Processo",
+                TITULO: titulo,
                 PESSOA_ID: null,
-                URL: "/processos/exclusaointerdicao"
+                URL: url
               });
 
               GlbnotificacaoFunctions.storeToPerfil({
                 request,
                 PERFIL_ID: Env.get("PERFIL_INSPECTOR", "f8382845e6dad3fb2d2e14aa45b14f0f85de"),
                 MSG: msg,
-                TITULO: "Prazo do Processo",
+                TITULO: titulo,
                 PESSOA_ID: null,
-                URL: "/processos/exclusaointerdicao"
+                URL: url
               });
             }
           }
@@ -127,9 +145,22 @@ class entity {
       }
     }
 
+    // Notificações para exclusão interdição
+    const prazolimiteJSON = prazolimite.toJSON();
+    for (const processo of prazolimiteJSON) {
+      await enviarNotificacaoPrazo(processo, "/processos/exclusaointerdicao", "Prazo do Processo");
+    }
+
+    // Notificações para contra-ordenação
+    const prazocontraordenacaoJSON = prazocontraordenacao.toJSON();
+    for (const processo of prazocontraordenacaoJSON) {
+      await enviarNotificacaoPrazo(processo, "/processos/contraordenacao", "Prazo da Contra-Ordenação");
+    }
+
     return {
       prazolimite,
       prazovisado,
+      prazocontraordenacao,
     };
 
     //}

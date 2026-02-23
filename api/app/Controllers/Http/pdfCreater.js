@@ -9,6 +9,7 @@ const getStream = use('get-stream')
 
 var pdf = require('html-pdf');
 const puppeteer = require("puppeteer");
+const { replaceLogoInHtml } = require('./pdfLogo');
 
 
 
@@ -18,6 +19,9 @@ const pdfCreater = async (data) => {
 
     // pdf.create(data.content, { "format": "A4", "border": "0", "type": "pdf" }).toBuffer(function (err, buffer) {
     try {
+      // Replace Firebase logo URL with embedded base64 data URI
+      const htmlContent = replaceLogoInHtml(data.content);
+
       browser = await puppeteer.launch({
         headless: true,
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -29,15 +33,15 @@ const pdfCreater = async (data) => {
       await page.setViewport({ width: 794, height: 1123 });
 
       // Load HTML
-      await page.setContent(data.content, {
+      await page.setContent(htmlContent, {
         waitUntil: "networkidle0",
       });
 
-      // Create PDF buffer - formato A4 com margens normais
+      // Create PDF buffer - formato A4 com margens padrão dos modelos oficiais IGJ
       const buffer = await page.pdf({
         format: "A4",
         printBackground: true,
-        margin: { top: '15mm', right: '15mm', bottom: '15mm', left: '15mm' },
+        margin: { top: '6mm', right: '15mm', bottom: '15mm', left: '15mm' },
       });
 
       await browser.close();

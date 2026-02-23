@@ -9,6 +9,7 @@ const functionsDatabase = require("../../functionsDatabase");
 const GlbnotificacaoFunctions = require('../GlbnotificacaoFunctions');
 
 const pdfCreater = require("../pdfCreater");
+const { buildOfficialTemplate } = require('../../pdfTemplate');
 const Env = use("Env");
 const moment = require("moment");
 
@@ -37,20 +38,7 @@ const store = async ({ params, request, response }) => {
     // Gerar PDF do Termo de Encerramento
     if (body.DESPACHO) {
       const pdftxt = {
-        content: `
-          <div style="width: 100%; height: 100%; zoom: ${Env.get("ZOOM_PDF", "")};">
-            <div style="margin-bottom: 30px;">
-              <img src="https://firebasestorage.googleapis.com/v0/b/igj-sgigj.firebasestorage.app/o/-4034664764483451-sdfsdf.png?alt=media&token=0" alt="IGJ" style="width: 70%; padding-left: 15%; padding-right: 15%; padding-top: 20px;">
-            </div>
-            <div style="padding: 0 40px; font-family: 'Times New Roman', serif; font-size: 12pt; text-align: justify; line-height: 1.6;">
-              ${body.DESPACHO}
-            </div>
-            <div style="margin-top: 30px; text-align: center; border-top: 1px solid #999; padding-top: 8px;">
-              <p style="margin: 0; font-size: 9pt; font-family: 'Times New Roman', serif; color: #555;">
-                Rua Largo da Europa, Prédio BCA 2º Andar C.P. 57 A - Telf: 2601877 Achada de Santo António – Praia www.igj.cv
-              </p>
-            </div>
-          </div>`,
+        content: buildOfficialTemplate(body.DESPACHO),
         tipo: "termo_encerramento.pdf",
       };
 

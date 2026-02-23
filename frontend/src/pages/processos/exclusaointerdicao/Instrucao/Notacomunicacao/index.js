@@ -9,6 +9,7 @@ import { visado, entidadedecisora, entidadevisada } from './textogerador';
 import useAuth from '../../../../../hooks/useAuth';
 
 import api from '../../../../../services/api';
+import PdfViewer from '../../../../../components/Custom/PdfViewer';
 
 const Item = ({
 
@@ -26,7 +27,7 @@ const Item = ({
 
 
     const [QUEM, setQUEM] = useState("");
-
+    const [isPdfViewerOpen, setIsPdfViewerOpen] = useState(false);
 
     const { user, popUp_alertaOK } = useAuth();
 
@@ -353,7 +354,7 @@ const Item = ({
                     {selected_relinstrucaopeca != null && <>
 
                         {
-                            selected_relinstrucaopeca.URL_DOC != null && <a href={selected_relinstrucaopeca?.URL_DOC + "?alt=media&token=0"} target="_blank" ><Button variant="primary">Abrir DOC Gerado</Button> </a>
+                            selected_relinstrucaopeca.URL_DOC != null && <Button variant="primary" onClick={() => setIsPdfViewerOpen(true)}><i className="feather icon-eye" style={{marginRight:"6px"}}/>Ver DOC Gerado</Button>
                         }
 
                         <Button onClick={() => criarPDF()} variant="primary">Gerar DOC</Button>
@@ -368,6 +369,7 @@ const Item = ({
 
 
             </Row>
+            <PdfViewer show={isPdfViewerOpen} onHide={() => setIsPdfViewerOpen(false)} url={selected_relinstrucaopeca?.URL_DOC} title="Documento Gerado" />
         </form>
 
     )

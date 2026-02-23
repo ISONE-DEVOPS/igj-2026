@@ -227,7 +227,7 @@ function injectAjudaMenu(menuData) {
     }
     var ajudaItem = {
       id: 'ajuda-manual',
-      title: 'Ajuda',
+      title: 'Manual do Sistema',
       type: 'item',
       icon: 'fas fa-question-circle',
       iconColor: '#4680FF',
@@ -242,10 +242,72 @@ function injectAjudaMenu(menuData) {
   return menuData;
 }
 
+function renameAjudaMenu(menuData) {
+  if (!menuData || !menuData.items) return menuData;
+  function walk(items) {
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].title && items[i].title.toLowerCase().trim() === 'ajuda') {
+        items[i].title = 'Manual do Sistema';
+      }
+      if (items[i].children) walk(items[i].children);
+    }
+  }
+  walk(menuData.items);
+  return menuData;
+}
+
+function reorganizeCasinoMenu(menuData) {
+  if (!menuData || !menuData.items) return menuData;
+
+  // 1. Encontrar e remover "Casino Individual" da sua posição atual
+  var casinoIndividual = null;
+  function removeFromTree(items) {
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].title && items[i].title.toLowerCase().trim() === 'casino individual') {
+        casinoIndividual = items.splice(i, 1)[0];
+        return true;
+      }
+      if (items[i].children && removeFromTree(items[i].children)) return true;
+    }
+    return false;
+  }
+  removeFromTree(menuData.items);
+
+  // 2. Se encontrou, renomear para "Registrar" e inserir no "Casinos" collapse
+  if (casinoIndividual) {
+    casinoIndividual.title = 'Registrar';
+    casinoIndividual.icon = 'fas fa-plus-circle';
+    casinoIndividual.iconColor = '#d4a843';
+
+    function findCasinosCollapse(items) {
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].title && items[i].title.toLowerCase().trim() === 'casinos' && items[i].type === 'collapse') {
+          return items[i];
+        }
+        if (items[i].children) {
+          var found = findCasinosCollapse(items[i].children);
+          if (found) return found;
+        }
+      }
+      return null;
+    }
+
+    var casinoCollapse = findCasinosCollapse(menuData.items);
+    if (casinoCollapse) {
+      if (!casinoCollapse.children) casinoCollapse.children = [];
+      casinoCollapse.children.unshift(casinoIndividual);
+    }
+  }
+
+  return menuData;
+}
+
 function transformMenus(menuData) {
   applyIconOverrides(menuData.items);
   groupConfiguracoes(menuData);
+  renameAjudaMenu(menuData);
   injectAjudaMenu(menuData);
+  reorganizeCasinoMenu(menuData);
   return menuData;
 }
 
@@ -280,9 +342,13 @@ async function injectDynamicCasinoMenus(menuData) {
       });
 
       var dynamicChildren = casinos.map(function(casino) {
+        // Retirar a palavra "Casino" dos submenus (ex: "Casino Royal" → "Royal")
+        var casinoTitle = casino.DESIG || '';
+        casinoTitle = casinoTitle.replace(/^Casino\s+/i, '').trim();
+        if (!casinoTitle) casinoTitle = casino.DESIG;
         return {
           id: 'casino-' + casino.ID,
-          title: casino.DESIG,
+          title: casinoTitle,
           type: 'item',
           url: '/entidades/entidades/detalhes/' + casino.ID,
           icon: 'fas fa-dice',

@@ -21,7 +21,8 @@ Os testes abrangem a totalidade dos módulos do sistema:
 - Configuração
 - Entidades
 - Eventos
-- Processos
+- Processos (Autoexclusão, Handpay, Exclusão, Reclamações, Contra-Ordenação, Estatísticas)
+- Manual do Sistema
 - Funcionalidades Transversais (notificações, exportações, ficheiros)
 
 ### 1.2 Pré-requisitos
@@ -457,85 +458,269 @@ Para cada teste, preencher:
 
 ### 8.7 Reclamações
 
+#### 8.7.1 Listagem e Navegação
+
 | # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
 |---|--------------|--------|-------------------|-----------|-------------|
-| 8.7.1 | Listar reclamações | 1. Navegar para Processos > Reclamação | Lista de reclamações apresentada | | |
-| 8.7.2 | Criar reclamação | 1. Clicar em "Novo" 2. Preencher dados da reclamação 3. Guardar | Reclamação criada com REF | | |
-| 8.7.3 | Editar reclamação | 1. Selecionar reclamação 2. Alterar dados 3. Guardar | Reclamação atualizada | | |
-| 8.7.4 | Eliminar reclamação | 1. Selecionar reclamação 2. Eliminar | Reclamação eliminada | | |
-| 8.7.5 | Adicionar peça processual | 1. Na reclamação, adicionar peça 2. Guardar | Peça adicionada | | |
-| 8.7.6 | Estatísticas de reclamações | 1. Navegar para Reclamação > Estatísticas | Gráficos estatísticos apresentados (tendência anual, distribuição mensal, reclamações por entidade) | | |
-| 8.7.7 | Exportar CSV/PDF | 1. Clicar no botão de exportação | Ficheiro gerado corretamente | | |
+| 8.7.1.1 | Listar reclamações | 1. Navegar para Processos > Reclamação | Lista de reclamações apresentada com colunas: Código, Processo, Visado, Entidade, Data, Ações | | |
+| 8.7.1.2 | Pesquisa global | 1. Inserir texto no campo de pesquisa | Resultados filtrados em tempo real por todas as colunas | | |
+| 8.7.1.3 | Paginação | 1. Alterar número de registos por página (5, 10, 20, 30, 40, 50) 2. Navegar entre páginas | Paginação funciona corretamente; indicador de página atualizado | | |
+| 8.7.1.4 | Navegação de páginas | 1. Usar botões Primeira/Anterior/Seguinte/Última página 2. Usar campo "Ir para página" | Navegação correta entre as páginas | | |
+
+#### 8.7.2 Operações CRUD
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.7.2.1 | Criar reclamação | 1. Clicar em "Novo" 2. Preencher dados (processo associado, entidade, visado, data, observações) 3. Guardar | Reclamação criada com código gerado automaticamente | | |
+| 8.7.2.2 | Editar reclamação | 1. Selecionar reclamação 2. Alterar dados 3. Guardar | Reclamação atualizada com sucesso | | |
+| 8.7.2.3 | Eliminar reclamação | 1. Selecionar reclamação 2. Clicar em "Eliminar" 3. Confirmar na caixa de diálogo | Reclamação eliminada; lista atualizada | | |
+
+#### 8.7.3 Detalhes e Peças Processuais
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.7.3.1 | Visualizar detalhes | 1. Clicar no ícone de visualização (olho) de uma reclamação | Modal apresenta: Código, Data, Processo, Entidade, Visado, Registado por | | |
+| 8.7.3.2 | Verificar observações | 1. No modal de detalhes, verificar secção de observações | Observações apresentadas quando existem | | |
+| 8.7.3.3 | Verificar peças processuais | 1. No modal de detalhes, verificar tabela de peças processuais | Lista de peças processuais associadas à reclamação apresentada | | |
+| 8.7.3.4 | Adicionar peça processual | 1. Na reclamação, adicionar nova peça processual 2. Preencher designação 3. Guardar | Peça processual adicionada e visível na lista | | |
+
+#### 8.7.4 Exportações
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.7.4.1 | Exportar PDF | 1. Clicar no botão de exportação PDF | PDF aberto em novo separador com dados das reclamações; notificação de sucesso | | |
+| 8.7.4.2 | Exportar CSV | 1. Clicar no botão de exportação CSV | Ficheiro `reclamacoes.csv` descarregado automaticamente; notificação de sucesso | | |
 
 ### 8.8 Contra-Ordenação
 
+#### 8.8.1 Listagem e Navegação
+
 | # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
 |---|--------------|--------|-------------------|-----------|-------------|
-| 8.8.1 | Listar contra-ordenações | 1. Navegar para Processos > Contra-Ordenação | Lista de processos de contra-ordenação | | |
-| 8.8.2 | Criar contra-ordenação | 1. Clicar em "Novo" 2. Preencher dados (infração, coima) 3. Guardar | Processo criado | | |
-| 8.8.3 | Editar contra-ordenação | 1. Selecionar processo 2. Alterar dados 3. Guardar | Processo atualizado | | |
-| 8.8.4 | Registar despacho | 1. No processo, registar despacho/decisão 2. Guardar | Despacho registado | | |
-| 8.8.5 | Exportar CSV | 1. Clicar no botão de exportação | Ficheiro gerado | | |
+| 8.8.1.1 | Listar contra-ordenações | 1. Navegar para Processos > Contra-Ordenação | Lista de processos apresentada com colunas: Estado, Referência, Despacho, Entidade Decisora, Visado, Data, Ações | | |
+| 8.8.1.2 | Filtrar por ano | 1. Selecionar um ano no filtro dropdown | Lista filtrada pelos processos do ano selecionado | | |
+| 8.8.1.3 | Pesquisa global | 1. Inserir texto no campo de pesquisa | Resultados filtrados em tempo real por todas as colunas | | |
+| 8.8.1.4 | Indicadores de estado | 1. Verificar as etiquetas de estado na coluna "Estado" | Estados apresentados com cores corretas: Pendente (cinza), Despachado (verde), Relatório Final (laranja), Decisão Final (azul) | | |
+| 8.8.1.5 | Paginação | 1. Alterar registos por página (5, 10, 20, 30, 40, 50) 2. Navegar entre páginas 3. Usar campo "Ir para página" | Paginação funcional; indicador de página correto | | |
+
+#### 8.8.2 Visualização de Detalhes (Modal)
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.8.2.1 | Separador Dados Gerais | 1. Clicar no ícone de visualização (olho) 2. Verificar separador "Dados Gerais" | Informações apresentadas: Referência, Data, Entidade, Visado, Origem, Registado por | | |
+| 8.8.2.2 | Separador Despacho | 1. No modal, clicar no separador "Despacho" | Informações do despacho: Data, Referência, Prazo (dias), Instrutor, Observações, link para documento | | |
+| 8.8.2.3 | Separador Instrução/Peças | 1. No modal, clicar no separador "Instrução/Peças" | Tabela de peças processuais: Peça Processual, Data, Documentos com links de download | | |
+| 8.8.2.4 | Download de documento do despacho | 1. No separador Despacho, clicar no link do documento | Documento descarregado corretamente | | |
+| 8.8.2.5 | Download de documento de peça | 1. No separador Instrução/Peças, clicar no link de um documento | Documento da peça processual descarregado | | |
+
+#### 8.8.3 Operações
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.8.3.1 | Editar contra-ordenação | 1. Clicar no ícone de edição (lápis) | Redirecionamento para a página de edição do processo de exclusão/interdição com dados pré-preenchidos | | |
+| 8.8.3.2 | Eliminar contra-ordenação | 1. Clicar no ícone de eliminar (lixeira) 2. Confirmar na caixa de diálogo | Processo eliminado; lista atualizada | | |
+| 8.8.3.3 | Verificar permissões de ações | 1. Fazer login com perfil sem permissão de edição/eliminação 2. Verificar botões de ação | Ações não autorizadas não são apresentadas | | |
+
+### 8.9 Estatísticas
+
+#### 8.9.1 Carregamento e Filtros
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.9.1.1 | Aceder à página de estatísticas | 1. Navegar para Processos > Reclamação > Estatísticas | Página carrega com KPIs e gráficos visíveis | | |
+| 8.9.1.2 | Filtrar por ano | 1. Selecionar um ano específico no filtro dropdown | Todos os KPIs e gráficos atualizam com dados do ano selecionado | | |
+| 8.9.1.3 | Ver todos os anos | 1. Selecionar "Todos os anos" no filtro | Dados apresentados sem filtro de ano | | |
+| 8.9.1.4 | Botão de atualizar | 1. Clicar no botão de atualização (refresh) | Dados recarregados; indicador de carregamento apresentado durante a operação | | |
+| 8.9.1.5 | Controlo de acesso | 1. Fazer login com perfil sem permissão para estatísticas | Página apresenta mensagem de acesso restrito com ícone de cadeado | | |
+
+#### 8.9.2 Indicadores (KPIs)
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.9.2.1 | KPI - Reclamações | 1. Verificar o cartão "Reclamações" | Número total de reclamações apresentado corretamente | | |
+| 8.9.2.2 | KPI - Contra-ordenações | 1. Verificar o cartão "Contra-ordenações" | Número total de contra-ordenações apresentado | | |
+| 8.9.2.3 | KPI - Pessoas Registadas | 1. Verificar o cartão "Pessoas Registadas" | Número total de pessoas registadas apresentado | | |
+| 8.9.2.4 | KPI - Documentos | 1. Verificar o cartão "Documentos" | Número total de documentos apresentado | | |
+| 8.9.2.5 | KPI - Total Auto-exclusões | 1. Verificar o cartão "Total Auto-exclusões" | Número total de auto-exclusões apresentado | | |
+| 8.9.2.6 | KPI - Total Handpays | 1. Verificar o cartão "Total Handpays" | Número total de handpays apresentado | | |
+| 8.9.2.7 | KPI - Valor Total Handpay | 1. Verificar o cartão "Valor Total Handpay" | Valor total em formato monetário (CVE) apresentado | | |
+| 8.9.2.8 | KPI - Valor Médio Handpay | 1. Verificar o cartão "Valor Médio Handpay" | Valor médio em formato monetário (CVE) apresentado | | |
+
+#### 8.9.3 Gráficos - Reclamações
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.9.3.1 | Evolução mensal de reclamações | 1. Verificar o gráfico de barras "Evolução Mensal" na secção Reclamações | Gráfico de barras com tendência mensal; meses no eixo X, contagem no eixo Y | | |
+| 8.9.3.2 | Top entidades por reclamações | 1. Verificar o gráfico "Top Entidades" | Gráfico de barras com as 10 entidades com mais reclamações | | |
+
+#### 8.9.4 Gráficos - Contra-ordenações e Infrações
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.9.4.1 | Evolução mensal de contra-ordenações | 1. Verificar o gráfico de barras "Evolução Mensal" na secção Contra-ordenações | Gráfico com tendência mensal de contra-ordenações | | |
+| 8.9.4.2 | Tipos de infração | 1. Verificar o gráfico donut "Tipos de Infração" | Gráfico donut com distribuição por tipo de infração; percentagens visíveis | | |
+
+#### 8.9.5 Gráficos - Pessoas e Documentos
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.9.5.1 | Pessoas por entidade | 1. Verificar o gráfico "Pessoas por Entidade" | Gráfico de barras com entidades no eixo e contagem de pessoas | | |
+| 8.9.5.2 | Categorias profissionais | 1. Verificar o gráfico donut "Categorias Profissionais" | Distribuição por categoria profissional com percentagens | | |
+| 8.9.5.3 | Volume mensal de documentos | 1. Verificar o gráfico de área "Volume Mensal" | Gráfico de área com volume mensal de documentos | | |
+| 8.9.5.4 | Tipos de documento | 1. Verificar o gráfico "Tipos de Documento" | Gráfico de barras com os tipos de documento mais frequentes | | |
+
+#### 8.9.6 Gráficos - Auto-exclusão e Handpay
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.9.6.1 | Evolução mensal de auto-exclusões | 1. Verificar o gráfico "Evolução Mensal" na secção Auto-exclusão | Gráfico de barras com tendência mensal | | |
+| 8.9.6.2 | Motivos de exclusão | 1. Verificar o gráfico donut "Motivos" | Distribuição dos motivos de exclusão com percentagens | | |
+| 8.9.6.3 | Evolução mensal de handpay | 1. Verificar o gráfico "Evolução Mensal" na secção Handpay | Gráfico de barras com valores mensais de handpay | | |
+| 8.9.6.4 | Top pessoas por handpay | 1. Verificar o gráfico "Top Pessoas" | Gráfico de barras com as pessoas com maior valor de handpay | | |
+
+#### 8.9.7 Gráficos - Despachos e Atividade
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.9.7.1 | Despachos por mês | 1. Verificar o gráfico "Despachos por Mês" | Gráfico de barras com contagem mensal de despachos | | |
+| 8.9.7.2 | Atividade por módulo | 1. Verificar o gráfico "Atividade por Módulo" | Gráfico de barras com os módulos mais ativos (baseado em auditoria) | | |
+
+#### 8.9.8 Interação com Gráficos
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.9.8.1 | Tooltips nos gráficos | 1. Passar o rato sobre barras/secções dos gráficos | Tooltip apresenta informação contextual (valor, período, etc.) | | |
+| 8.9.8.2 | Animações | 1. Carregar a página ou alterar filtro de ano | Gráficos apresentam animação suave de carregamento | | |
+
+#### 8.9.9 Exportação PDF
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 8.9.9.1 | Exportar estatísticas para PDF | 1. Clicar no botão de exportação PDF | Ficheiro PDF gerado em formato paisagem (A4) com nome `estatisticas-sgigj-DD-MM-AAAA.pdf` | | |
+| 8.9.9.2 | Conteúdo do PDF | 1. Abrir o PDF exportado | PDF contém: cabeçalho com título e data, todos os KPIs e gráficos com qualidade legível, paginação automática | | |
 
 ---
 
-## 9. Notificações
+## 9. Manual do Sistema
+
+### 9.1 Acesso e Navegação
 
 | # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
 |---|--------------|--------|-------------------|-----------|-------------|
-| 9.1 | Receber notificação | 1. Executar uma ação que gera notificação (ex.: despacho) 2. Verificar se a notificação aparece em tempo real | Notificação recebida no ícone de notificações | | |
-| 9.2 | Listar notificações | 1. Navegar para a página de notificações | Lista de notificações apresentada | | |
-| 9.3 | Marcar como lida | 1. Selecionar uma notificação 2. Marcar como lida | Notificação marcada como lida; contador atualizado | | |
-| 9.4 | Ver detalhes da notificação | 1. Clicar numa notificação | Detalhes da notificação apresentados | | |
+| 9.1.1 | Aceder ao manual | 1. Navegar para o menu Manual do Sistema | Página do manual carrega com título "Manual do Sistema SGIGJ", barra de pesquisa e menu lateral de módulos | | |
+| 9.1.2 | Menu lateral de módulos | 1. Verificar o painel lateral esquerdo | Lista de todos os módulos apresentada com ícones coloridos e nomes | | |
+| 9.1.3 | Navegar entre secções | 1. Clicar em diferentes módulos no menu lateral | Conteúdo do painel principal atualiza para o módulo selecionado; módulo ativo destacado | | |
+| 9.1.4 | Expandir subsecções | 1. Clicar no título de uma subsecção (acordeão) | Subsecção expande mostrando o conteúdo; ícone de seta roda | | |
+| 9.1.5 | Colapsar subsecções | 1. Clicar novamente no título de uma subsecção expandida | Subsecção colapsa; ícone de seta volta à posição original | | |
+
+### 9.2 Pesquisa
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 9.2.1 | Pesquisar por termo | 1. Inserir um termo de pesquisa na barra de pesquisa (ex.: "processo") | Módulos filtrados no menu lateral; primeiro resultado selecionado automaticamente; subsecções relevantes destacadas com borda colorida | | |
+| 9.2.2 | Pesquisa sem resultados | 1. Inserir um termo inexistente (ex.: "xyzabc") | Mensagem "Nenhum resultado" apresentada | | |
+| 9.2.3 | Limpar pesquisa | 1. Apagar o texto da barra de pesquisa | Todos os módulos voltam a aparecer no menu lateral | | |
+
+### 9.3 Conteúdo dos Módulos
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 9.3.1 | Secção: Acesso ao Sistema | 1. Selecionar "Acesso ao Sistema" | Instruções sobre login, ecrã de bloqueio e logout apresentadas | | |
+| 9.3.2 | Secção: Dashboard | 1. Selecionar "Dashboard" | Instruções sobre KPIs, filtros, gráficos e visualizações | | |
+| 9.3.3 | Secção: Entidades | 1. Selecionar "Entidades" | Instruções sobre gestão de entidades, bancas, máquinas, equipamentos, grupos, colaboradores, pessoas e sub-módulo IGJ | | |
+| 9.3.4 | Secção: Eventos | 1. Selecionar "Eventos" | Instruções sobre pedidos de eventos, aprovação/recusa e decisões | | |
+| 9.3.5 | Secção: Processos | 1. Selecionar "Processos" | Instruções sobre auto-exclusão, handpay, exclusão/interdição, reclamações e contra-ordenações | | |
+| 9.3.6 | Secção: Configuração | 1. Selecionar "Configuração" | Instruções sobre as 35+ tabelas paramétricas | | |
+| 9.3.7 | Secção: Administração | 1. Selecionar "Administração" | Instruções sobre utilizadores, perfis, permissões, menus e ações | | |
+| 9.3.8 | Secção: Módulo Financeiro | 1. Selecionar "Módulo Financeiro" | Instruções sobre contrapartidas, contribuições, impostos, prémios e orçamento | | |
+| 9.3.9 | Secção: Casos Suspeitos | 1. Selecionar "Casos Suspeitos" | Instruções sobre gestão e reporte de casos suspeitos | | |
+| 9.3.10 | Secção: Notificações | 1. Selecionar "Notificações" | Instruções sobre notificações do sistema, email e configuração | | |
+| 9.3.11 | Secção: Funcionalidades Transversais | 1. Selecionar "Funcionalidades Transversais" | Instruções sobre pesquisa, exportação, ordenação, paginação, upload, editor e auditoria | | |
+| 9.3.12 | Secção: Perfis e Permissões | 1. Selecionar "Perfis e Permissões" | Descrição dos perfis, ações por página e comportamento do sistema | | |
+| 9.3.13 | Secção: Perguntas Frequentes | 1. Selecionar "Perguntas Frequentes" | FAQ com respostas sobre acessos, processos, entidades e notificações | | |
+| 9.3.14 | Secção: Glossário | 1. Selecionar "Glossário" | Lista de termos técnicos com definições (20+ termos) | | |
+| 9.3.15 | Secção: Contactos e Suporte | 1. Selecionar "Contactos e Suporte" | Informações de contacto e canais de suporte apresentados | | |
+
+### 9.4 Secções de Administrador
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 9.4.1 | Visibilidade para administradores | 1. Fazer login como administrador 2. Aceder ao menu Manual do Sistema | Secções adicionais visíveis: "Arquitetura do Sistema" e "Relatório Técnico" com badge "Admin" | | |
+| 9.4.2 | Ocultação para utilizadores normais | 1. Fazer login como utilizador normal 2. Aceder ao menu Manual do Sistema | Secções "Arquitetura do Sistema" e "Relatório Técnico" não são visíveis | | |
+| 9.4.3 | Arquitetura do Sistema | 1. Como administrador, selecionar "Arquitetura do Sistema" | Diagrama interativo da arquitetura apresentado com: componentes (Firebase, Cloud Run, Cloud SQL), estatísticas do código, stack tecnológica | | |
+| 9.4.4 | Relatório Técnico | 1. Como administrador, selecionar "Relatório Técnico" | Relatório técnico completo com: sumário executivo, métricas, módulos, segurança, base de dados e infraestrutura | | |
+
+### 9.5 Apresentação de Conteúdo
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 9.5.1 | Renderização de tabelas | 1. Navegar para uma secção que contenha tabelas (ex.: Relatório Técnico > Métricas) | Tabelas renderizadas corretamente com cabeçalhos e dados formatados | | |
+| 9.5.2 | Renderização de passos | 1. Navegar para uma secção com passos sequenciais (ex.: ciclo de vida de processos) | Passos numerados com linhas de ligação e descrições | | |
+| 9.5.3 | Renderização de KPIs | 1. Navegar para uma secção com KPIs (ex.: Dashboard analítico) | Cartões de KPI com bordas coloridas e formatação | | |
+| 9.5.4 | Renderização de listas | 1. Navegar para uma secção com listas (ex.: funcionalidades dos módulos) | Listas com bullets e texto formatado (negrito na primeira parte) | | |
+| 9.5.5 | Renderização de grupos | 1. Navegar para uma secção com grupos (ex.: modelos da base de dados) | Grupos organizados com etiquetas coloridas | | |
+| 9.5.6 | Renderização de diagramas | 1. Navegar para uma secção com diagrama (ex.: Arquitetura) | Diagrama apresentado com ícones e texto dentro de caixa estilizada | | |
+| 9.5.7 | Rodapé | 1. Verificar o rodapé da página do manual | Texto "SGIGJ - Sistema Integrado de Gestao da Inspecao Geral de Jogos | v2.0" visível | | |
 
 ---
 
-## 10. Funcionalidades Transversais
-
-### 10.1 Gestão de Ficheiros
+## 10. Notificações
 
 | # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
 |---|--------------|--------|-------------------|-----------|-------------|
-| 10.1.1 | Upload de ficheiro | 1. Em qualquer módulo com anexos, clicar em "Anexar" 2. Selecionar ficheiro 3. Confirmar | Ficheiro carregado com sucesso | | |
-| 10.1.2 | Download de ficheiro | 1. Clicar num ficheiro anexado | Ficheiro descarregado corretamente | | |
-| 10.1.3 | Tipos de ficheiro suportados | 1. Testar upload de PDF, imagem, documento Office | Todos os tipos suportados são aceites | | |
-
-### 10.2 Exportações
-
-| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
-|---|--------------|--------|-------------------|-----------|-------------|
-| 10.2.1 | Exportação CSV | 1. Em qualquer módulo com exportação, clicar em "CSV" | Ficheiro CSV gerado com dados corretos e formatação adequada | | |
-| 10.2.2 | Exportação PDF | 1. Em qualquer módulo com exportação, clicar em "PDF" | Ficheiro PDF gerado com layout legível e dados corretos | | |
-
-### 10.3 Pesquisa e Filtros
-
-| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
-|---|--------------|--------|-------------------|-----------|-------------|
-| 10.3.1 | Pesquisa global por texto | 1. Em qualquer listagem, utilizar o campo de pesquisa 2. Inserir texto | Resultados filtrados conforme o texto inserido | | |
-| 10.3.2 | Filtros combinados | 1. Aplicar múltiplos filtros simultaneamente | Resultados refletem todos os filtros aplicados | | |
-| 10.3.3 | Limpar filtros | 1. Após aplicar filtros, clicar em "Limpar" ou remover filtros | Lista retorna ao estado completo | | |
-
-### 10.4 Geração de Referências
-
-| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
-|---|--------------|--------|-------------------|-----------|-------------|
-| 10.4.1 | Geração automática de REF | 1. Criar um novo registo que gere REF (processo, handpay) | REF gerada no formato AAAA.NNNN (ex.: 2026.0001) | | |
-| 10.4.2 | Sequência de REFs | 1. Criar vários registos consecutivos | REFs incrementadas sequencialmente | | |
-
-### 10.5 Responsividade e Usabilidade
-
-| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
-|---|--------------|--------|-------------------|-----------|-------------|
-| 10.5.1 | Navegação por menus | 1. Navegar por todos os menus e submenus | Todos os menus funcionam e direcionam para as páginas corretas | | |
-| 10.5.2 | Mensagens de feedback | 1. Executar operações (criar, editar, eliminar) | Mensagens de sucesso/erro apresentadas ao utilizador | | |
-| 10.5.3 | Validação de formulários | 1. Tentar guardar formulários com campos obrigatórios vazios | Mensagens de validação apresentadas; formulário não submetido | | |
-| 10.5.4 | Carregamento de páginas | 1. Navegar entre diferentes módulos | Páginas carregam sem erros no console do navegador | | |
+| 10.1 | Receber notificação | 1. Executar uma ação que gera notificação (ex.: despacho) 2. Verificar se a notificação aparece em tempo real | Notificação recebida no ícone de notificações | | |
+| 10.2 | Listar notificações | 1. Navegar para a página de notificações | Lista de notificações apresentada | | |
+| 10.3 | Marcar como lida | 1. Selecionar uma notificação 2. Marcar como lida | Notificação marcada como lida; contador atualizado | | |
+| 10.4 | Ver detalhes da notificação | 1. Clicar numa notificação | Detalhes da notificação apresentados | | |
 
 ---
 
-## 11. Resumo de Execução
+## 11. Funcionalidades Transversais
 
-### 11.1 Resultados Globais
+### 11.1 Gestão de Ficheiros
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 11.1.1 | Upload de ficheiro | 1. Em qualquer módulo com anexos, clicar em "Anexar" 2. Selecionar ficheiro 3. Confirmar | Ficheiro carregado com sucesso | | |
+| 11.1.2 | Download de ficheiro | 1. Clicar num ficheiro anexado | Ficheiro descarregado corretamente | | |
+| 11.1.3 | Tipos de ficheiro suportados | 1. Testar upload de PDF, imagem, documento Office | Todos os tipos suportados são aceites | | |
+
+### 11.2 Exportações
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 11.2.1 | Exportação CSV | 1. Em qualquer módulo com exportação, clicar em "CSV" | Ficheiro CSV gerado com dados corretos e formatação adequada | | |
+| 11.2.2 | Exportação PDF | 1. Em qualquer módulo com exportação, clicar em "PDF" | Ficheiro PDF gerado com layout legível e dados corretos | | |
+
+### 11.3 Pesquisa e Filtros
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 11.3.1 | Pesquisa global por texto | 1. Em qualquer listagem, utilizar o campo de pesquisa 2. Inserir texto | Resultados filtrados conforme o texto inserido | | |
+| 11.3.2 | Filtros combinados | 1. Aplicar múltiplos filtros simultaneamente | Resultados refletem todos os filtros aplicados | | |
+| 11.3.3 | Limpar filtros | 1. Após aplicar filtros, clicar em "Limpar" ou remover filtros | Lista retorna ao estado completo | | |
+
+### 11.4 Geração de Referências
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 11.4.1 | Geração automática de REF | 1. Criar um novo registo que gere REF (processo, handpay) | REF gerada no formato AAAA.NNNN (ex.: 2026.0001) | | |
+| 11.4.2 | Sequência de REFs | 1. Criar vários registos consecutivos | REFs incrementadas sequencialmente | | |
+
+### 11.5 Responsividade e Usabilidade
+
+| # | Caso de Teste | Passos | Resultado Esperado | Resultado | Observações |
+|---|--------------|--------|-------------------|-----------|-------------|
+| 11.5.1 | Navegação por menus | 1. Navegar por todos os menus e submenus | Todos os menus funcionam e direcionam para as páginas corretas | | |
+| 11.5.2 | Mensagens de feedback | 1. Executar operações (criar, editar, eliminar) | Mensagens de sucesso/erro apresentadas ao utilizador | | |
+| 11.5.3 | Validação de formulários | 1. Tentar guardar formulários com campos obrigatórios vazios | Mensagens de validação apresentadas; formulário não submetido | | |
+| 11.5.4 | Carregamento de páginas | 1. Navegar entre diferentes módulos | Páginas carregam sem erros no console do navegador | | |
+
+---
+
+## 12. Resumo de Execução
+
+### 12.1 Resultados Globais
 
 | Módulo | Total de Testes | OK | NOK | N/A |
 |--------|:-:|:-:|:-:|:-:|
@@ -549,12 +734,21 @@ Para cada teste, preencher:
 | Configuração - Geral | 4 | | | |
 | Entidades | 42 | | | |
 | Eventos | 11 | | | |
-| Processos | 32 | | | |
+| Processos - Autoexclusão | 6 | | | |
+| Processos - Handpay | 7 | | | |
+| Processos - Exclusão (Interdição/Finalizados/Prescritos/Arquivados) | 20 | | | |
+| Processos - Reclamações | 13 | | | |
+| Processos - Contra-Ordenação | 13 | | | |
+| Processos - Estatísticas | 27 | | | |
+| Manual do Sistema - Navegação e Pesquisa | 8 | | | |
+| Manual do Sistema - Conteúdo dos Módulos | 15 | | | |
+| Manual do Sistema - Secções de Administrador | 4 | | | |
+| Manual do Sistema - Apresentação de Conteúdo | 7 | | | |
 | Notificações | 4 | | | |
 | Funcionalidades Transversais | 10 | | | |
-| **TOTAL** | **172** | | | |
+| **TOTAL** | **260** | | | |
 
-### 11.2 Registo de Anomalias
+### 12.2 Registo de Anomalias
 
 | # | Módulo | Teste # | Descrição da Anomalia | Severidade (Alta/Média/Baixa) | Data | Estado |
 |---|--------|---------|-----------------------|------------------------------|------|--------|
@@ -562,7 +756,7 @@ Para cada teste, preencher:
 | | | | | | | |
 | | | | | | | |
 
-### 11.3 Classificação de Severidade
+### 12.3 Classificação de Severidade
 
 | Severidade | Descrição |
 |------------|-----------|
@@ -572,7 +766,7 @@ Para cada teste, preencher:
 
 ---
 
-## 12. Critérios de Aceitação
+## 13. Critérios de Aceitação
 
 O sistema será considerado **aceite** quando:
 
@@ -580,11 +774,11 @@ O sistema será considerado **aceite** quando:
 2. **95% dos testes totais** apresentem resultado **OK** ou **N/A**
 3. Todas as anomalias de **severidade alta** estejam resolvidas
 4. Todas as anomalias de **severidade média** tenham um plano de resolução acordado
-5. O cliente assine o **Termo de Aceitação** (secção 13)
+5. O cliente assine o **Termo de Aceitação** (secção 14)
 
 ---
 
-## 13. Termo de Aceitação
+## 14. Termo de Aceitação
 
 Declaro que os testes de aceitação do sistema SGIGJ foram realizados conforme o plano descrito neste documento e que:
 
