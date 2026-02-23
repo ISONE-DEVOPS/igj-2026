@@ -431,8 +431,7 @@ const relatorioTecnicoSection = {
     title: 'Relatório Técnico',
     icon: 'fas fa-file-alt',
     color: '#1B4965',
-    adminOnly: true,
-    description: 'Relatório técnico detalhado do Sistema Integrado de Gestão da Inspeção Geral de Jogos (SGIGJ). Documento confidencial — acesso restrito ao Administrador.',
+    description: 'Relatório técnico detalhado do Sistema Integrado de Gestão da Inspeção Geral de Jogos (SGIGJ).',
     subsections: [
         {
             title: 'Sumário Executivo',

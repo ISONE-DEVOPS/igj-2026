@@ -171,12 +171,12 @@ const Ajuda = () => {
     const isAdmin = user && user.glbperfil && user.glbperfil.DESIG &&
         user.glbperfil.DESIG.toLowerCase().includes('admin');
 
-    // Juntar secções: manual + arquitetura + relatório técnico (se Admin)
+    // Juntar secções: manual + relatório técnico (todos) + arquitetura (só Admin)
     const allSections = useMemo(() => {
         if (isAdmin) {
-            return [...manualSections, arquiteturaSection, relatorioTecnicoSection];
+            return [...manualSections, relatorioTecnicoSection, arquiteturaSection];
         }
-        return manualSections;
+        return [...manualSections, relatorioTecnicoSection];
     }, [isAdmin]);
 
     // Filter sections by search term

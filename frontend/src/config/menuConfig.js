@@ -39,6 +39,7 @@ export const ICON_OVERRIDES = {
   '/processos/contraordenacao': { icon: 'fas fa-gavel', color: '#E8575A' },
   '/processos/reclamacao': { icon: 'fas fa-exclamation-circle', color: '#FF8C00' },
   '/processos/reclamacao/estatisticas': { icon: 'fas fa-chart-bar', color: '#2B7FB9' },
+  '/relatorios': { icon: 'fas fa-poll', color: '#AB7DF6' },
 
   // ── Configuracao: Pessoas ──
   '/configuracao/estadocivil': { icon: 'fas fa-ring', color: '#4680FF' },
@@ -125,6 +126,8 @@ export const COLLAPSE_OVERRIDES = {
   'nivel': { icon: 'fas fa-layer-group', color: '#4680FF' },
   'predefinições': { icon: 'fas fa-cog', color: '#69CEC6' },
   'predefinicoes': { icon: 'fas fa-cog', color: '#69CEC6' },
+  'relatorios': { icon: 'fas fa-poll', color: '#AB7DF6' },
+  'relatórios': { icon: 'fas fa-poll', color: '#AB7DF6' },
   'ajuda': { icon: 'fas fa-question-circle', color: '#4680FF' },
   'manual do sistema': { icon: 'fas fa-book', color: '#4680FF' },
   'casino individual': { icon: 'fas fa-plus-circle', color: '#d4a843' },

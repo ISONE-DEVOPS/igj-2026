@@ -256,15 +256,15 @@ const Notificacoes = () => {
                                                     Processos com prazo a vencer nos próximos 10 dias. Clique numa linha para abrir o processo.
                                                 </small>
                                             </div>
-                                            <Table hover responsive style={{ fontSize: '13px' }}>
+                                            <Table hover responsive style={{ fontSize: '13px', tableLayout: 'fixed' }}>
                                                 <thead style={{ background: '#F5F7FA' }}>
                                                     <tr>
-                                                        <th>Tipo</th>
-                                                        <th>Código</th>
-                                                        <th>Visado</th>
-                                                        <th>Prazo Total</th>
-                                                        <th>Data Despacho</th>
-                                                        <th>Dias Restantes</th>
+                                                        <th style={{ width: '15%', textAlign: 'center' }}>Tipo</th>
+                                                        <th style={{ width: '15%', textAlign: 'center' }}>Código</th>
+                                                        <th style={{ width: '25%', textAlign: 'left' }}>Visado</th>
+                                                        <th style={{ width: '13%', textAlign: 'center' }}>Prazo Total</th>
+                                                        <th style={{ width: '15%', textAlign: 'center' }}>Data Despacho</th>
+                                                        <th style={{ width: '17%', textAlign: 'center' }}>Dias Restantes</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -274,16 +274,16 @@ const Notificacoes = () => {
                                                             onClick={() => history.push(p.url)}
                                                             style={{ cursor: 'pointer', background: getRowColor(p.diasRestantes) }}
                                                         >
-                                                            <td>
+                                                            <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
                                                                 <Badge style={{ backgroundColor: getTipoBadgeColor(p.tipo), color: '#fff', fontSize: '11px', padding: '4px 8px' }}>
                                                                     {getTipoLabel(p.tipo)}
                                                                 </Badge>
                                                             </td>
-                                                            <td style={{ fontWeight: 600 }}>{p.CODIGO}</td>
-                                                            <td>{p.VISADO}</td>
-                                                            <td>{p.PRAZO} dias</td>
-                                                            <td>{p.dataDespacho}</td>
-                                                            <td>
+                                                            <td style={{ fontWeight: 600, textAlign: 'center', verticalAlign: 'middle' }}>{p.CODIGO}</td>
+                                                            <td style={{ textAlign: 'left', verticalAlign: 'middle' }}>{p.VISADO}</td>
+                                                            <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{p.PRAZO} dias</td>
+                                                            <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{p.dataDespacho}</td>
+                                                            <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
                                                                 <Badge variant={getBadgeVariant(p.diasRestantes)} style={{ fontSize: '12px', padding: '4px 10px' }}>
                                                                     {p.diasRestantes <= 0 ? 'Vencido' : p.diasRestantes + ' dias'}
                                                                 </Badge>

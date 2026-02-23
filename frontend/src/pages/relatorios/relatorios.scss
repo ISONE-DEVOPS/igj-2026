@@ -1,0 +1,245 @@
+.relatorios-page {
+  .stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    h4 {
+      color: #1B4965;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .stats-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  }
+
+  .filter-select {
+    min-width: 140px;
+  }
+
+  .filter-select-mes {
+    min-width: 120px;
+  }
+
+  .relatorios-tabs {
+    .nav-link {
+      font-weight: 500;
+      color: #636E72;
+
+      &.active {
+        color: #1B4965;
+        font-weight: 600;
+      }
+
+      i {
+        margin-right: 0.4rem;
+      }
+    }
+  }
+
+  .kpi-card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .kpi-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #636E72;
+      font-weight: 600;
+    }
+
+    .kpi-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1B4965;
+    }
+
+    .kpi-icon {
+      font-size: 1.5rem;
+      opacity: 0.8;
+    }
+
+    .kpi-subtitle {
+      font-size: 0.75rem;
+      color: #636E72;
+    }
+  }
+
+  .chart-card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+
+    .chart-card-header {
+      background: transparent;
+      border-bottom: 1px solid #f1f1f1;
+      padding: 1rem 1.25rem 0.75rem;
+    }
+
+    .chart-card-title {
+      color: #1B4965;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .chart-card-subtitle {
+      color: #636E72;
+    }
+
+    .chart-card-body {
+      padding: 0.75rem;
+    }
+  }
+
+  .stats-section {
+    margin-bottom: 1rem;
+
+    .section-title {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #1B4965;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 2px solid #e9ecef;
+    }
+  }
+
+  // Tabelas de relatorio
+  .report-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: #fff;
+  }
+
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    min-width: 600px;
+
+    thead {
+      th {
+        background-color: #2B7FB9;
+        color: #fff;
+        padding: 0.6rem 0.8rem;
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.78rem;
+        white-space: nowrap;
+        border: 1px solid #2570a5;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background-color: #f8f9fa;
+        }
+
+        &:hover {
+          background-color: #eef5fb;
+        }
+
+        &.total-row {
+          background-color: #d6e9f5 !important;
+          font-weight: 700;
+
+          td {
+            border-top: 2px solid #2B7FB9;
+          }
+        }
+
+        &.variacao-row {
+          background-color: #fff9e6;
+          font-style: italic;
+          font-size: 0.76rem;
+        }
+
+        &.section-header-row {
+          background-color: #e9ecef;
+          font-weight: 600;
+
+          td {
+            padding: 0.5rem 0.8rem;
+            color: #1B4965;
+          }
+        }
+      }
+
+      td {
+        padding: 0.5rem 0.8rem;
+        text-align: right;
+        border: 1px solid #e9ecef;
+        white-space: nowrap;
+
+        &:first-child {
+          text-align: left;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .variacao-positive {
+    color: #27ae60;
+  }
+
+  .variacao-negative {
+    color: #e74c3c;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #636E72;
+
+    i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  .table-loading {
+    text-align: center;
+    padding: 2rem;
+    color: #636E72;
+
+    i {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+}
