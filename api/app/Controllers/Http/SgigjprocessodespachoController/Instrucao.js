@@ -13,7 +13,7 @@ const Sgigjrelprocessoinstrucao = use('App/Models/Sgigjrelprocessoinstrucao');
 const functionsDatabase = require('../../functionsDatabase');
 
 const pdfCreater = require('../pdfCreater');
-const { buildOfficialTemplate } = require('../../pdfTemplate');
+const { buildOfficialTemplate } = require('../pdfTemplate');
 
 const Env = use('Env')
 const moment = require("moment");

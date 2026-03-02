@@ -9,7 +9,7 @@ const functionsDatabase = require("../../functionsDatabase");
 const GlbnotificacaoFunctions = require('../GlbnotificacaoFunctions');
 
 const pdfCreater = require("../pdfCreater");
-const { buildOfficialTemplate } = require('../../pdfTemplate');
+const { buildOfficialTemplate } = require('../pdfTemplate');
 const Env = use("Env");
 const moment = require("moment");
 

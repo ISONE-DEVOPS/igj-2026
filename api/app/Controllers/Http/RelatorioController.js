@@ -3,6 +3,14 @@
 let DatabaseDB = use("Database")
 const functionsDatabase = require('../functionsDatabase')
 
+const MONTH_MAP = {
+  '01': 'Janeiro', '02': 'Fevereiro', '03': 'Março', '04': 'Abril',
+  '05': 'Maio', '06': 'Junho', '07': 'Julho', '08': 'Agosto',
+  '09': 'Setembro', '10': 'Outubro', '11': 'Novembro', '12': 'Dezembro'
+}
+
+const MONTH_ORDER = "'Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'"
+
 class RelatorioController {
 
   async index({ request, response }) {
@@ -31,7 +39,10 @@ class RelatorioController {
       let impostosMensalWhere = 'i.ESTADO = 1'
       if (entidadeId) impostosMensalWhere += ` AND i.ENTIDADE_ID = '${entidadeId}'`
       if (anoInt) impostosMensalWhere += ` AND i.ANO = ${anoInt}`
-      if (mesStr) impostosMensalWhere += ` AND i.MES = '${mesStr}'`
+      if (mesStr) {
+        const mesNome = MONTH_MAP[mesStr] || mesStr
+        impostosMensalWhere += ` AND i.MES = '${mesNome}'`
+      }
 
       const [impostosMensal] = await DatabaseDB.raw(
         `SELECT i.ANO as ano, i.MES as mes,
@@ -47,7 +58,7 @@ class RelatorioController {
          INNER JOIN sgigjentidade e ON i.ENTIDADE_ID = e.ID
          WHERE ${impostosMensalWhere}
          GROUP BY i.ANO, i.MES, e.ID, e.DESIG
-         ORDER BY i.ANO, CAST(i.MES AS UNSIGNED)`
+         ORDER BY i.ANO, FIELD(i.MES, ${MONTH_ORDER})`
       )
 
       // ── Impostos Anual (Resumo com variacao %) ──

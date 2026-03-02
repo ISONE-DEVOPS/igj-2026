@@ -17,7 +17,7 @@ const functionsDatabase = require('../../functionsDatabase');
 const GlbnotificacaoFunctions = require('../GlbnotificacaoFunctions');
 
 const pdfCreater = require('../pdfCreater');
-const { buildOfficialTemplate } = require('../../pdfTemplate');
+const { buildOfficialTemplate } = require('../pdfTemplate');
 
 const Env = use('Env')
 
@@ -94,6 +94,7 @@ const newlist = {
 
 
 const store = async ({ params, request, response, auth }) => {
+ try {
 
   const allowedMethod = await functionsDatabase.allowed("sgigjprocessoautoexclusao", "Despacho", request.userID, "");
 
@@ -159,6 +160,20 @@ const store = async ({ params, request, response, auth }) => {
           despacho = despacho.replace(/margin: 0in 17px 0in 0in;/gm, "margin: 0in 0px 0in 0in;")
         }
 
+
+        // Adicionar bloco de assinatura e carimbo ao despacho
+        const assinaturaBlock = `
+          <div style="margin-top: 50px; text-align: center; font-family: 'Times New Roman', serif; font-size: 12pt; position: relative;">
+            <p style="margin-bottom: 5px;">O Inspetor Geral</p>
+            <div style="position: relative; display: inline-block;">
+              <img src="${assinaturaIGJ}" style="width: 180px; height: auto; position: absolute; top: -25px; left: 50%; transform: translateX(-50%);" />
+              <img src="${assinatura}" style="width: 200px; height: auto; position: absolute; top: -15px; left: 50%; transform: translateX(-50%);" />
+            </div>
+            <p style="margin-top: 60px;">_________________________________</p>
+            <p>${nameUser}</p>
+          </div>
+        `
+        despacho = (despacho || '') + assinaturaBlock
 
         const pdftxt = {
           content: buildOfficialTemplate(despacho),
@@ -228,8 +243,8 @@ const store = async ({ params, request, response, auth }) => {
         if (newE === 1) {
 
           // Sync autoexclusão REF with despacho REFERENCIA (format: ANO.NNNN)
-          if (data.REFERENCIA) {
-            const ano = new Date().getFullYear()
+          if (data.REFERENCIA && autoExclusao.length > 0) {
+            const ano = new Date(autoExclusao[0].DT_REGISTO).getFullYear()
             const refPadded = String(parseInt(data.REFERENCIA)).padStart(4, '0')
             await Database.table("sgigjprocessoautoexclusao")
               .where('ID', data.PROCESSO_AUTOEXCLUSAO_ID)
@@ -297,8 +312,8 @@ const store = async ({ params, request, response, auth }) => {
       if (newE[0] === 0) {
 
         // Sync autoexclusão REF with despacho REFERENCIA (format: ANO.NNNN)
-        if (data.REFERENCIA) {
-          const ano = new Date().getFullYear()
+        if (data.REFERENCIA && autoExclusao.length > 0) {
+          const ano = new Date(autoExclusao[0].DT_REGISTO).getFullYear()
           const refPadded = String(parseInt(data.REFERENCIA)).padStart(4, '0')
           await Database.table("sgigjprocessoautoexclusao")
             .where('ID', data.PROCESSO_AUTOEXCLUSAO_ID)
@@ -322,10 +337,15 @@ const store = async ({ params, request, response, auth }) => {
 
     } else return response.status(400).json(validation)
 
-
   }
 
   else return response.status(400).json({ status: "405Error", entity: table, message: "create not allwed", code: "4051" })
+
+ } catch (err) {
+    console.log('=== DESPACHO AUTOEXCLUSAO ERROR ===', err.message)
+    console.log('=== DESPACHO AUTOEXCLUSAO STACK ===', err.stack)
+    return response.status(500).json({ status: "error", message: err.message, stack: err.stack })
+ }
 
 }
 

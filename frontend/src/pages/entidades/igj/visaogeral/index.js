@@ -251,21 +251,23 @@ function Table({ columns, data, modalOpen, listProjetos, uploadlist, years }) {
                 <thead>
                     {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render('Header')}
-                                    {/* Add a sort direction indicator */}
-                                    <span>
-                                        {column.isSorted
-                                            ? column.isSortedDesc
-                                                ? <span className='feather icon-arrow-down text-muted float-right' />
-                                                : <span className='feather icon-arrow-up text-muted float-right' />
-                                            : ''}
-                                    </span>
-                                </th>
-                            ))}
+                            {headerGroup.headers.map(column => {
+                                const isCentered = column.centered;
+                                return (
+                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}
+                                        className={isCentered ? 'text-center' : 'text-right'}
+                                    >
+                                        {column.render('Header')}
+                                        <span>
+                                            {column.isSorted
+                                                ? column.isSortedDesc
+                                                    ? <span className='feather icon-arrow-down text-muted float-right ml-1' />
+                                                    : <span className='feather icon-arrow-up text-muted float-right ml-1' />
+                                                : ''}
+                                        </span>
+                                    </th>
+                                );
+                            })}
                         </tr>
                     ))}
                 </thead>
@@ -278,29 +280,28 @@ function Table({ columns, data, modalOpen, listProjetos, uploadlist, years }) {
                                     {row.cells.map(cell => {
                                         const isCentered = cell.column.centered;
                                         return (
-                                            <td  {...cell.getCellProps()} className={isCentered ? 'text-center' : 'text-right'}>{cell.render('Cell')}</td>
+                                            <td {...cell.getCellProps()} className={isCentered ? 'text-center' : 'text-right'}>{cell.render('Cell')}</td>
                                         )
                                     })}
                                 </tr>
                             )
                         }
                     )}
-                    <tr>
-                        <td className="merged-cell font-weight-bold" colspan="1">Total</td>
-                        <td className='font-weight-bold text-right'>{formatCurrency(total_PrémioInicial)}</td>
-                        <td className='font-weight-bold text-right'>{formatCurrency(total_PrémioSubsequente)}</td>
-                        <td className='font-weight-bold text-right text-right'>{formatCurrency(total_ReceitaBruto)}</td>
-                        <td className='font-weight-bold text-right text-right'>{formatCurrency(total_Imposto)}</td>
-                        <td className='font-weight-bold text-right'>{formatCurrency(total_Contrapartida)}</td>
-                        <td className='font-weight-bold text-right'>{formatCurrency(total_Contribuicoes)}</td>
-                        <td className='font-weight-bold text-right'>{formatCurrency(total_TotalRecibo)}</td>
-
-                    </tr>
-                    {/* <div style={{ width: '100px', height: '100px', backgroundColor: "red" }}
-                        className=''>
-
-                    </div> */}
                 </tbody>
+                {data.length > 0 && (
+                    <tfoot>
+                        <tr className="visaogeral-total-row">
+                            <td className="font-weight-bold text-center">Total</td>
+                            <td className='font-weight-bold text-right'>{formatCurrency(total_PrémioInicial)}</td>
+                            <td className='font-weight-bold text-right'>{formatCurrency(total_PrémioSubsequente)}</td>
+                            <td className='font-weight-bold text-right'>{formatCurrency(total_ReceitaBruto)}</td>
+                            <td className='font-weight-bold text-right'>{formatCurrency(total_Imposto)}</td>
+                            <td className='font-weight-bold text-right'>{formatCurrency(total_Contrapartida)}</td>
+                            <td className='font-weight-bold text-right'>{formatCurrency(total_Contribuicoes)}</td>
+                            <td className='font-weight-bold text-right'>{formatCurrency(total_TotalRecibo)}</td>
+                        </tr>
+                    </tfoot>
+                )}
             </BTable>
             <Row className='justify-content-between'>
                 <Col>
@@ -352,7 +353,7 @@ const VisaoGeral = () => {
     const columns = React.useMemo(
         () => [
             {
-                Header: 'Ano.',
+                Header: 'Ano',
                 accessor: 'ANO',
                 centered: true
             },
@@ -376,24 +377,21 @@ const VisaoGeral = () => {
                 accessor: 'Imposto',
                 centered: false
             },
-
             {
                 Header: 'Contrapartida',
                 accessor: 'Contrapartida',
                 centered: false
             },
-
             {
                 Header: 'Contribuições IGJ',
                 accessor: 'ContribuicoesIGJ',
                 centered: false
-            }, {
+            },
+            {
                 Header: 'Total Recibo',
                 accessor: 'TotalRecibo',
                 centered: false
             },
-
-
         ],
         []
     );
@@ -1043,6 +1041,9 @@ const VisaoGeral = () => {
             <Row>
                 <Col sm={12}>
                     <Card>
+                        <Card.Header>
+                            <h5 className="mb-0"><i className="fas fa-chart-pie mr-2" style={{ color: '#C5A55A' }} />IGJ - Visão Geral Financeira</h5>
+                        </Card.Header>
                         <Card.Body>
                             <Table listProjetos={listProjetos} columns={columns} data={newdata} modalOpen={openHandler} uploadlist={uploadlist} years={years} />
                         </Card.Body>

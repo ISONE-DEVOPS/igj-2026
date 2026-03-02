@@ -209,6 +209,7 @@ class entity {
         .with('sgigjprocessoexclusao.sgigjentidade')
         .with('sgigjrelpessoaentidade.sgigjpessoa')
         .with('sgigjrelprocessoinstrucao')
+        .with('sgigjrelreclamacaopeca', (builder) => { builder.orderBy('DT_REGISTO', 'asc') })
         .with('sgigjrelreclamacaopeca.sgigjprpecasprocessual')
         .where(data).where('ESTADO', 1).orderBy('DT_REGISTO', 'desc').fetch()
 
@@ -249,6 +250,7 @@ class entity {
           .with('sgigjprocessoexclusao.sgigjentidade')
           .with('sgigjrelpessoaentidade.sgigjpessoa')
           .with('sgigjrelprocessoinstrucao')
+          .with('sgigjrelreclamacaopeca', (builder) => { builder.orderBy('DT_REGISTO', 'asc') })
           .with('sgigjrelreclamacaopeca.sgigjprpecasprocessual')
           .where('ID', '' + params.id)
           .fetch()

@@ -100,6 +100,7 @@ function Table({ uploadList, columns, listAno,data, modalOpen }) {
     setActiveStatuses([]);
     setFilterDateDe("");
     setFilterDateAte("");
+    setGlobalFilter("");
   }
 
   const {

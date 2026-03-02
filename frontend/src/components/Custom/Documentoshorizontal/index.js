@@ -259,6 +259,10 @@ const Documentos = ({ documentolist, list, save, item, onSendData,hidden, requir
                 novosdocumentos[i].anexo.file
               );
 
+              if (!img.status || !img.file) {
+                popUp_alertaOK("Erro ao carregar ficheiro. Tente novamente.");
+                continue;
+              }
               anexofile = img.file.data;
             }
 
@@ -278,6 +282,7 @@ const Documentos = ({ documentolist, list, save, item, onSendData,hidden, requir
               const response2 = await api.post("/sgigjreldocumento", upload2);
             } catch (err) {
               console.error(err.response);
+              popUp_alertaOK("Erro ao guardar documento. Tente novamente.");
             }
           }
         }

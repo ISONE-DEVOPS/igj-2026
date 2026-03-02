@@ -41,6 +41,7 @@ Route.group(() => {
   Route.resource("glbuser", "GlbuserController").apiOnly();
   Route.resource("glbnotificacao", "GlbnotificacaoController").apiOnly();
   Route.get('lido', 'GlbnotificacaoController.lido');
+  Route.put('glbnotificacao/:id/lido', 'GlbnotificacaoController.lidoOne');
 
   Route.get("/sgigjprocessoautoexclusao/exportPdf", "SgigjprocessoautoexclusaoController.exportPdf")
 
@@ -89,6 +90,8 @@ Route.group(() => {
   Route.get("export-csv/sgigjentidademaquina", "SgigjentidademaquinaController.exportCsv");
   Route.get("export-pdf/sgigjrelpessoaentidade", "SgigjrelpessoaentidadeController.exportPdf");
   Route.get("export-csv/sgigjrelpessoaentidade", "SgigjrelpessoaentidadeController.exportCsv");
+  Route.get("export-csv/sgigjpessoa", "SgigjpessoaController.exportCsv");
+  Route.get("export-csv/sgigjentidade", "SgigjentidadeController.exportCsv");
   Route.get("export-csv/sgigjhandpay", "SgigjhandpayController.exportCsv")
   Route.get("export-csv/sgigjprocessoautoexclusao", "SgigjprocessoautoexclusaoController.exportCsv")
 
@@ -137,6 +140,7 @@ Route.group(() => {
   Route.resource("sigjprcampo", "SigjprcampoController").apiOnly();
 
   Route.get('/despacho-desicao/referencia', 'DespachoDesicaoReferenciaController.index')
+  Route.get('/despacho-autoexclusao/referencia', 'DespachoAutoexclusaoReferenciaController.index')
   Route.put('/sgigjrelprocessoinstrucaocontraordenacao/:id/despacho', 'SgigjprocessodespachoController.Instrucaocontraordenacao')
   Route.put('/sgigjprocessoexclusao/:id/despachofinal', 'SgigjprocessodespachoController.Despachofinal')
   Route.put('/sgigjprocessoautoexclusao/:id/despacho', 'SgigjprocessodespachoController.Autoexclusao')
@@ -160,6 +164,7 @@ Route.group(() => {
   Route.resource("sgigjinfracaocoima", "SgigjinfracaocoimaController").apiOnly();
 
   Route.resource("sgigjentidadecasino", "EntidadeCasinoController").apiOnly();
+  Route.get("export-csv/sgigjentidadecasino", "EntidadeCasinoController.exportCsv");
   Route.post('gerarpedidoaotoexclusao', 'GerarpedidoaotoexclusaoController.post');
   Route.post('upload', 'FileController.upload');
   Route.post('gerarhandpay', 'GerarhandpayController.post');
@@ -172,6 +177,7 @@ Route.group(() => {
   Route.resource("meiospagamento", "MeioPagamentoController").apiOnly();
   Route.get("export-csv/contrapartida", "ContrapartidaController.exportCsv");
   Route.get("export-pdf/contrapartida", "ContrapartidaController.exportPdf");
+  Route.get("export-csv/contrapartidapagamento", "ContrapartidaPagamentoController.exportCsv");
 
 
   Route.resource("contribuicoes", "ContribuicoeController").apiOnly();

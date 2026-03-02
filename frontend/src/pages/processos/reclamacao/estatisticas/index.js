@@ -74,6 +74,61 @@ const EstatisticasSGIGJ = () => {
     const handpayPessoaChart = data ? getHandpayPessoaOptions(data.handpay?.porPessoa) : null;
     const auditModuloChart = data ? getAuditoriaModuloOptions(data.auditoria?.porModulo) : null;
 
+    const handleExportCSV = useCallback(() => {
+        if (!data) return;
+        const rows = [];
+        rows.push(['Categoria', 'Indicador', 'Valor']);
+
+        // KPIs
+        rows.push(['KPI', 'Reclamacoes', data.kpis?.reclamacoes || 0]);
+        rows.push(['KPI', 'Contra-ordenacoes', data.kpis?.contraordenacoes || 0]);
+        rows.push(['KPI', 'Autoexclusoes', data.kpis?.autoexclusoes || 0]);
+        rows.push(['KPI', 'Handpay', data.kpis?.handpay || 0]);
+        rows.push(['KPI', 'Pessoas', data.kpis?.pessoas || 0]);
+        rows.push(['KPI', 'Documentos', data.kpis?.documentos || 0]);
+        rows.push(['KPI', 'Despachos', data.kpis?.despachos || 0]);
+        rows.push(['KPI', 'Auditoria', data.kpis?.auditoria || 0]);
+
+        // Reclamações por mês
+        if (data.reclamacoes?.porMes) {
+            data.reclamacoes.porMes.forEach(item => {
+                rows.push(['Reclamacoes por Mes', item.mes || item.MES, item.total || item.TOTAL]);
+            });
+        }
+        // Autoexclusão por mês
+        if (data.autoexclusao?.porMes) {
+            data.autoexclusao.porMes.forEach(item => {
+                rows.push(['Autoexclusao por Mes', item.mes || item.MES, item.total || item.TOTAL]);
+            });
+        }
+        // Handpay por mês
+        if (data.handpay?.porMes) {
+            data.handpay.porMes.forEach(item => {
+                rows.push(['Handpay por Mes', item.mes || item.MES, item.total || item.TOTAL]);
+            });
+        }
+
+        const escapeCsv = (val) => {
+            if (val === null || val === undefined) return '';
+            const str = String(val);
+            if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                return '"' + str.replace(/"/g, '""') + '"';
+            }
+            return str;
+        };
+
+        const csvContent = '\uFEFF' + rows.map(row => row.map(escapeCsv).join(',')).join('\r\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const hoje = new Date().toLocaleDateString('pt-CV', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        link.href = url;
+        link.setAttribute('download', `estatisticas-sgigj-${hoje.replace(/\//g, '-')}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    }, [data]);
+
     const handleExportPDF = useCallback(async () => {
         if (!contentRef.current) return;
         setExporting(true);
@@ -167,6 +222,9 @@ const EstatisticasSGIGJ = () => {
                     </Button>
                     <Button variant="outline-primary" size="sm" onClick={handleExportPDF} disabled={exporting || loading}>
                         <i className="fas fa-file-pdf" /> {exporting ? 'A exportar...' : 'PDF'}
+                    </Button>
+                    <Button variant="outline-success" size="sm" onClick={handleExportCSV} disabled={!data || loading}>
+                        <i className="fas fa-file-csv" /> CSV
                     </Button>
                 </div>
             </div>
@@ -393,7 +451,7 @@ const EstatisticasSGIGJ = () => {
                             </ChartCard>
                         </Col>
                         <Col lg={5} className="mb-3">
-                            <ChartCard title="Top Pessoas" subtitle="Maiores valores de handpay" loading={loading}>
+                            <ChartCard title="Top 10 Beneficiários de Handpay" subtitle="Pessoas com maior volume de handpay" loading={loading}>
                                 {handpayPessoaChart ? (
                                     <Chart options={handpayPessoaChart.options} series={handpayPessoaChart.series} type="bar" height={320} width="100%" />
                                 ) : (

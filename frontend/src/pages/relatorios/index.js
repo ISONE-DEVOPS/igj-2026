@@ -42,6 +42,7 @@ const RelatoriosSGIGJ = () => {
     const [activeTab, setActiveTab] = useState('tabelas');
     const [exporting, setExporting] = useState(false);
     const contentRef = useRef(null);
+    const kpiRef = useRef(null);
 
     const anos = Array.from({ length: new Date().getFullYear() - 2014 + 1 }, (_, i) => 2014 + i);
     const meses = [
@@ -87,49 +88,102 @@ const RelatoriosSGIGJ = () => {
     const contribuicoesChart = data ? getContribuicoesOptions(data.contribuicoes) : null;
 
     const handleExportPDF = useCallback(async () => {
-        if (!contentRef.current) return;
         setExporting(true);
         try {
-            const container = contentRef.current;
-            const sections = Array.from(container.children).filter(el => el.offsetHeight > 0);
-
             const pdf = new jsPDF('l', 'mm', 'a4');
             const pageWidth = pdf.internal.pageSize.getWidth();
             const pageHeight = pdf.internal.pageSize.getHeight();
-            const margin = 10;
-            const headerH = 18;
-
-            pdf.setFontSize(14);
-            pdf.setTextColor(27, 73, 101);
-            pdf.text('Relatorios SGIGJ', margin, 12);
-            pdf.setFontSize(9);
-            pdf.setTextColor(99, 110, 114);
+            const margin = 12;
+            const headerH = 26;
+            const footerH = 12;
             const hoje = new Date().toLocaleDateString('pt-CV', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            pdf.text(`Exportado em ${hoje}`, pageWidth - margin - 40, 12);
 
-            let cursorY = headerH;
+            const entidadeNome = entidadeFiltro
+                ? (data?.entidades || []).find(e => e.ID === entidadeFiltro)?.DESIG || ''
+                : 'Todas as entidades';
+            const anoNome = anoFiltro || 'Todos os anos';
+            const mesNome = mesFiltro
+                ? (meses.find(m => m.value === mesFiltro)?.label || '')
+                : 'Todos os meses';
+            const filtrosText = `${entidadeNome}  |  ${anoNome}  |  ${mesNome}`;
+            const tabName = activeTab === 'tabelas' ? 'Tabelas' : 'Graficos';
+
+            let pageNum = 0;
+            const addPageHeaderFooter = () => {
+                pageNum++;
+                // Gold accent bar
+                pdf.setFillColor(197, 165, 90);
+                pdf.rect(margin, 6, pageWidth - margin * 2, 1.2, 'F');
+                // Title
+                pdf.setFontSize(16);
+                pdf.setFont(undefined, 'bold');
+                pdf.setTextColor(27, 73, 101);
+                pdf.text('Relatorios SGIGJ', margin, 15);
+                // Filters
+                pdf.setFontSize(9);
+                pdf.setFont(undefined, 'normal');
+                pdf.setTextColor(99, 110, 114);
+                pdf.text(filtrosText, margin, 21);
+                // Date + tab
+                pdf.text(`${tabName}  |  ${hoje}`, pageWidth - margin, 15, { align: 'right' });
+                // Header separator
+                pdf.setDrawColor(230, 230, 230);
+                pdf.setLineWidth(0.3);
+                pdf.line(margin, headerH - 2, pageWidth - margin, headerH - 2);
+                // Footer
+                pdf.setDrawColor(220, 220, 220);
+                pdf.line(margin, pageHeight - footerH + 2, pageWidth - margin, pageHeight - footerH + 2);
+                pdf.setFontSize(7);
+                pdf.setTextColor(170, 170, 170);
+                pdf.text('IGJ - Inspeccao Geral do Jogo de Cabo Verde', margin, pageHeight - 5);
+                pdf.text(`Pagina ${pageNum}`, pageWidth - margin, pageHeight - 5, { align: 'right' });
+            };
+
             const availableWidth = pageWidth - margin * 2;
+            const maxContentH = pageHeight - headerH - footerH - 2;
 
-            for (let i = 0; i < sections.length; i++) {
-                const section = sections[i];
-                const canvas = await html2canvas(section, {
-                    scale: 1.5,
+            addPageHeaderFooter();
+            let cursorY = headerH;
+
+            const addElement = async (element) => {
+                const canvas = await html2canvas(element, {
+                    scale: 2,
                     useCORS: true,
                     logging: false,
-                    backgroundColor: '#F5F7FA'
+                    backgroundColor: '#ffffff'
                 });
-
-                const imgData = canvas.toDataURL('image/jpeg', 0.85);
+                const imgData = canvas.toDataURL('image/png');
                 const ratio = availableWidth / canvas.width;
                 const imgH = canvas.height * ratio;
 
-                if (cursorY + imgH > pageHeight - margin && cursorY > headerH + 5) {
+                if (cursorY + imgH > pageHeight - footerH - 2 && cursorY > headerH + 2) {
                     pdf.addPage('a4', 'l');
-                    cursorY = margin;
+                    addPageHeaderFooter();
+                    cursorY = headerH;
                 }
 
-                pdf.addImage(imgData, 'JPEG', margin, cursorY, availableWidth, imgH);
-                cursorY += imgH + 2;
+                if (imgH > maxContentH) {
+                    const scale = maxContentH / imgH;
+                    const scaledW = availableWidth * scale;
+                    pdf.addImage(imgData, 'PNG', margin + (availableWidth - scaledW) / 2, cursorY, scaledW, maxContentH);
+                    cursorY += maxContentH + 3;
+                } else {
+                    pdf.addImage(imgData, 'PNG', margin, cursorY, availableWidth, imgH);
+                    cursorY += imgH + 3;
+                }
+            };
+
+            // KPI cards
+            if (kpiRef.current) {
+                await addElement(kpiRef.current);
+            }
+
+            // Stats sections from active tab only
+            if (contentRef.current) {
+                const sections = contentRef.current.querySelectorAll('.tab-pane.active .stats-section');
+                for (const section of sections) {
+                    await addElement(section);
+                }
             }
 
             pdf.save(`relatorios-sgigj-${hoje.replace(/\//g, '-')}.pdf`);
@@ -137,7 +191,7 @@ const RelatoriosSGIGJ = () => {
             console.error('Erro ao exportar PDF:', error);
         }
         setExporting(false);
-    }, []);
+    }, [data, entidadeFiltro, anoFiltro, mesFiltro, activeTab]);
 
     if (!pageEnable(pageAcess, permissoes)) {
         return (
@@ -208,7 +262,7 @@ const RelatoriosSGIGJ = () => {
             </div>
 
             {/* KPIs */}
-            <Row className="mb-3">
+            <Row ref={kpiRef} className="mb-3">
                 <Col lg={3} sm={6} className="mb-3">
                     <KpiCard
                         title="Receita Bruta Total"

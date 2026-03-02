@@ -131,7 +131,7 @@ export const COLLAPSE_OVERRIDES = {
   'ajuda': { icon: 'fas fa-question-circle', color: '#4680FF' },
   'manual do sistema': { icon: 'fas fa-book', color: '#4680FF' },
   'casino individual': { icon: 'fas fa-plus-circle', color: '#d4a843' },
-  'registrar': { icon: 'fas fa-plus-circle', color: '#d4a843' },
+  'operadores do jogo': { icon: 'fas fa-plus-circle', color: '#d4a843' },
 };
 
 // Mapa de titulo → { icon, color } para grupos (section headers)
@@ -163,8 +163,8 @@ export const CONFIGURACOES_SUBGROUPS = [
   },
   {
     id: 'config-sub-entidades',
-    title: 'Entidades',
-    icon: 'fas fa-building',
+    title: 'Equipamentos',
+    icon: 'fas fa-hdd',
     iconColor: '#FC6180',
     urls: [
       '/configuracao/tipoentidade',

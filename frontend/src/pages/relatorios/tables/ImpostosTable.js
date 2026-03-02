@@ -7,6 +7,15 @@ const formatCurrency = (val) => {
 
 const MONTH_NAMES = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
 
+const MONTH_NAME_TO_KEY = {
+    'Janeiro': '01', 'Fevereiro': '02', 'Março': '03', 'Marco': '03',
+    'Abril': '04', 'Maio': '05', 'Junho': '06',
+    'Julho': '07', 'Agosto': '08', 'Setembro': '09',
+    'Outubro': '10', 'Novembro': '11', 'Dezembro': '12'
+};
+
+const getMesKey = (mes) => MONTH_NAME_TO_KEY[mes] || String(mes).padStart(2, '0');
+
 const ImpostosTable = ({ data, loading }) => {
     if (loading) {
         return (
@@ -35,8 +44,8 @@ const ImpostosTable = ({ data, loading }) => {
         const mesKey = String(m).padStart(2, '0');
         mesData[mesKey] = {};
         anos.forEach(ano => {
-            const row = data.find(d => d.ano === ano && String(d.mes).padStart(2, '0') === mesKey);
-            mesData[mesKey][ano] = row ? row.bruto : 0;
+            const rows = data.filter(d => d.ano === ano && getMesKey(d.mes) === mesKey);
+            mesData[mesKey][ano] = rows.reduce((sum, r) => sum + (r.bruto || 0), 0);
         });
     }
 

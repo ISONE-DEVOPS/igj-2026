@@ -4,6 +4,7 @@ const controller = "Sgigjprocessoexclusao";
 
 const table = controller.toLowerCase();
 const Model = use("App/Models/" + controller);
+const ModelAutoexclusao = use("App/Models/Sgigjprocessoautoexclusao");
 
 const functionsDatabase = require("../functionsDatabase");
 const GlbnotificacaoFunctions = require('./GlbnotificacaoFunctions');
@@ -97,6 +98,19 @@ class entity {
       .orderBy("DT_REGISTO", "desc")
       .fetch();
 
+    // Query para autoexclusões com prazo a expirar nos próximos 10 dias
+    const dataHoje = moment().tz(Env.get("GMT", "")).format("YYYY-MM-DD");
+    const data10dias = moment().tz(Env.get("GMT", "")).add(10, "days").format("YYYY-MM-DD");
+
+    const prazoautoexclusao = await ModelAutoexclusao.query()
+      .with('sgigjpessoa')
+      .with('sgigjentidade')
+      .where('ESTADO', 1)
+      .where('DT_FIM', '>=', dataHoje)
+      .where('DT_FIM', '<=', data10dias)
+      .orderBy("DT_FIM", "asc")
+      .fetch();
+
     // Enviar notificações para processos com prazo a expirar
     const hoje = moment().tz(Env.get("GMT", ""));
     const hojeStr = hoje.format("YYYY-MM-DD");
@@ -157,10 +171,52 @@ class entity {
       await enviarNotificacaoPrazo(processo, "/processos/contraordenacao", "Prazo da Contra-Ordenação");
     }
 
+    // Notificações para autoexclusão a expirar
+    const prazoautoexclusaoJSON = prazoautoexclusao.toJSON();
+    for (const processo of prazoautoexclusaoJSON) {
+      const dtFim = moment(processo.DT_FIM);
+      const diasRestantes = dtFim.diff(hoje, "days");
+
+      if (diasRestantes >= 0 && diasRestantes <= 10) {
+        const jaNotificado = await DatabaseDB
+          .table("glbnotificacao")
+          .where("URL", "/processos/autoexclusao")
+          .where("TITULO", "Prazo da Auto-Exclusão")
+          .whereRaw("MSG LIKE ?", [`%${processo.CODIGO}%`])
+          .whereRaw("DATE(DT_REGISTO) = ?", [hojeStr])
+          .limit(1);
+
+        if (jaNotificado.length === 0) {
+          const msg = `O processo de auto-exclusão (Código: ${processo.CODIGO}) expira em ${diasRestantes} dia(s).`;
+
+          GlbnotificacaoFunctions.storeToPerfil({
+            request,
+            PERFIL_ID: Env.get("PERFIL_INSPECTOR_GERAL", "85c24ffab0137705617aa94b250866471dc2"),
+            MSG: msg,
+            TITULO: "Prazo da Auto-Exclusão",
+            PESSOA_ID: null,
+            URL: "/processos/autoexclusao",
+            EXTRA: JSON.stringify({ IdAutoexclusao: processo.ID })
+          });
+
+          GlbnotificacaoFunctions.storeToPerfil({
+            request,
+            PERFIL_ID: Env.get("PERFIL_INSPECTOR", "f8382845e6dad3fb2d2e14aa45b14f0f85de"),
+            MSG: msg,
+            TITULO: "Prazo da Auto-Exclusão",
+            PESSOA_ID: null,
+            URL: "/processos/autoexclusao",
+            EXTRA: JSON.stringify({ IdAutoexclusao: processo.ID })
+          });
+        }
+      }
+    }
+
     return {
       prazolimite,
       prazovisado,
       prazocontraordenacao,
+      prazoautoexclusao,
     };
 
     //}

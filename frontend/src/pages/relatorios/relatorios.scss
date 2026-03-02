@@ -141,14 +141,14 @@
 
     thead {
       th {
-        background-color: #2B7FB9;
+        background-color: #C5A55A;
         color: #fff;
         padding: 0.6rem 0.8rem;
         text-align: center;
         font-weight: 600;
         font-size: 0.78rem;
         white-space: nowrap;
-        border: 1px solid #2570a5;
+        border: 1px solid #b8963e;
       }
     }
 
@@ -159,15 +159,15 @@
         }
 
         &:hover {
-          background-color: #eef5fb;
+          background-color: #faf6eb;
         }
 
         &.total-row {
-          background-color: #d6e9f5 !important;
+          background-color: #f5eed6 !important;
           font-weight: 700;
 
           td {
-            border-top: 2px solid #2B7FB9;
+            border-top: 2px solid #C5A55A;
           }
         }
 

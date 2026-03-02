@@ -205,7 +205,7 @@ const Ajuda = () => {
         setOpenSubsections(prev => prev[idx] ? {} : { [idx]: true });
     };
 
-    // When search changes, auto-select first matching section
+    // When search changes, auto-select first matching section and expand matching subsections
     const handleSearch = (value) => {
         setSearchTerm(value);
         if (value.trim()) {
@@ -217,7 +217,21 @@ const Ajuda = () => {
                     sub.title.toLowerCase().includes(term) || sub.content.toLowerCase().includes(term)
                 ))
             );
-            if (match) setActiveSection(match.id);
+            if (match) {
+                setActiveSection(match.id);
+                // Auto-expand matching subsections
+                if (match.subsections) {
+                    const expanded = {};
+                    match.subsections.forEach((sub, idx) => {
+                        if (sub.title.toLowerCase().includes(term) || sub.content.toLowerCase().includes(term)) {
+                            expanded[idx] = true;
+                        }
+                    });
+                    setOpenSubsections(expanded);
+                }
+            }
+        } else {
+            setOpenSubsections({});
         }
     };
 

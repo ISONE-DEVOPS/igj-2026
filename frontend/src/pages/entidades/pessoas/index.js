@@ -750,6 +750,7 @@ const Customers = () => {
                         } catch (err) {
 
                             console.error(err.response)
+                            popUp_alertaOK("Erro ao guardar documento. Tente novamente.")
 
                         }
 

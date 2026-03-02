@@ -133,6 +133,29 @@ const Notificacoes = () => {
                     }
                 }
 
+                // Processar prazoautoexclusao (auto-exclusão a expirar)
+                if (response.data.prazoautoexclusao) {
+                    for (let i = 0; i < response.data.prazoautoexclusao.length; i++) {
+                        const element = response.data.prazoautoexclusao[i]
+                        if (element.DT_FIM) {
+                            const dtFim = moment(element.DT_FIM)
+                            const diasRestantes = dtFim.diff(dataagora, "days")
+                            if (diasRestantes >= 0 && diasRestantes <= 10) {
+                                newlist.push({
+                                    ID: element.ID,
+                                    CODIGO: element.CODIGO,
+                                    VISADO: element?.sgigjpessoa?.NOME || '',
+                                    PRAZO: element.NUM_DIAS || '',
+                                    dataDespacho: moment(element.DT_FIM).format("DD/MM/YYYY"),
+                                    diasRestantes: diasRestantes,
+                                    tipo: 'A',
+                                    url: '/processos/autoexclusao'
+                                })
+                            }
+                        }
+                    }
+                }
+
                 // Processar prazovisado (reclamação)
                 if (response.data.prazovisado) {
                     for (let i = 0; i < response.data.prazovisado.length; i++) {
@@ -187,6 +210,7 @@ const Notificacoes = () => {
         if (tipo === 'I') return 'Interdição'
         if (tipo === 'C') return 'Contra-Ordenação'
         if (tipo === 'V') return 'Visado'
+        if (tipo === 'A') return 'Auto-Exclusão'
         return tipo
     }
 
@@ -194,8 +218,19 @@ const Notificacoes = () => {
         if (tipo === 'I') return '#AB7DF6'
         if (tipo === 'C') return '#E8575A'
         if (tipo === 'V') return '#FF8C00'
-        return '#4680FF'
+        if (tipo === 'A') return '#4680FF'
+        return '#69CEC6'
     }
+
+    const markAsRead = async (id) => {
+        try {
+            await api.put('/glbnotificacao/' + id + '/lido');
+            uploadlistnotificacao();
+            uploadlist();
+        } catch (err) {
+            console.error(err.response);
+        }
+    };
 
     const removeNotification = async (idx) => {
         let res = true;
@@ -308,16 +343,18 @@ const Notificacoes = () => {
                                     ) : (
                                         newdata.map(e => (
                                             <ListGroup as='ul' bsPrefix=' ' className="feed-blog pl-0" key={e.ID}>
-                                                <ListGroup.Item as='li' bsPrefix=' ' className={e.sgigjrelnotificacaovizualizado.length > 0 ? "diactive-feed" : ""}>
-                                                    <span onClick={() => { closeNotificationAndSetIDToLocalStorage(e.EXTRA, e.URL) }} style={{ color: "#555", cursor: 'pointer' }} >
+                                                <ListGroup.Item as='li' bsPrefix=' ' className={e.sgigjrelnotificacaovizualizado.length > 0 ? "diactive-feed" : ""} style={e.LIDO === 0 ? { borderLeft: '3px solid #4680FF' } : { borderLeft: '3px solid transparent', opacity: 0.7 }}>
+                                                    <span onClick={() => { markAsRead(e.ID); closeNotificationAndSetIDToLocalStorage(e.EXTRA, e.URL) }} style={{ color: "#555", cursor: 'pointer' }} >
                                                         <div className="feed-user-img">
                                                             <img style={{ width: "40px", height: "40px" }} src={getUrlPhoto(e)} className="img-radius wid-40" alt="User Profile" />
                                                         </div>
                                                         <p style={{ top: "-12px", position: "absolute" }} >
                                                             <b>{e?.sgigjpessoa?.NOME}</b> <small style={{ marginLeft: "10px" }} className="text-muted">{timerMaker2(e.DT_REGISTO, time)}</small>
+                                                            {e.LIDO === 0 && <Badge variant="primary" style={{ marginLeft: 6, fontSize: '9px', padding: '2px 5px' }}>Nova</Badge>}
                                                             <br />{(e.MSG)}</p>
                                                     </span>
                                                     <div style={{ cursor: "pointer", right: "0px", position: "absolute" }} className='text-right'>
+                                                        {e.LIDO === 0 && <a title="Marcar como lida" className="text-primary" style={{ marginRight: 8 }} onClick={(ev) => { ev.stopPropagation(); markAsRead(e.ID); }}><i className="feather icon-check"></i></a>}
                                                         <a title="Eliminar" className="text-danger" onClick={() => removeItem(e.ID)}><i className="feather icon-trash-2"></i></a>
                                                     </div>
                                                 </ListGroup.Item>

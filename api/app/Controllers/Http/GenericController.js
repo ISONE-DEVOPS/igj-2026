@@ -235,14 +235,23 @@ class GenericController {
             return ""
         }
 
-        let header = hasHeader ? Object.keys(data[0]).join(",") + "\r\n" : ""
+        const escapeCsvValue = (val) => {
+            if (val === null || val === undefined) return ""
+            const str = String(val)
+            if (str.includes(",") || str.includes('"') || str.includes("\n") || str.includes("\r")) {
+                return '"' + str.replace(/"/g, '""') + '"'
+            }
+            return str
+        }
+
+        let header = hasHeader ? Object.keys(data[0]).map(escapeCsvValue).join(",") + "\r\n" : ""
         let body = ""
 
         data.forEach(element => {
-            body += Object.values(element).join(",") + "\r\n"
+            body += Object.values(element).map(escapeCsvValue).join(",") + "\r\n"
         });
 
-        return header + body
+        return "\uFEFF" + header + body
 
     }
 

@@ -22,8 +22,52 @@ const functionsDatabase = require('../functionsDatabase');
 
 class entity {
 
+  toCsv(data, hasHeader = true) {
+    if (data.length == 0) return ""
+    const escapeCsvValue = (val) => {
+      if (val === null || val === undefined) return ""
+      const str = String(val)
+      if (str.includes(",") || str.includes('"') || str.includes("\n") || str.includes("\r")) {
+        return '"' + str.replace(/"/g, '""') + '"'
+      }
+      return str
+    }
+    let header = hasHeader ? Object.keys(data[0]).map(escapeCsvValue).join(",") + "\r\n" : ""
+    let body = ""
+    data.forEach(element => {
+      body += Object.values(element).map(escapeCsvValue).join(",") + "\r\n"
+    });
+    return "\uFEFF" + header + body
+  }
 
+  async exportCsv({ request, response }) {
+    const allowedMethod = await functionsDatabase.allowed(table, "index", request.userID, "");
+    if (allowedMethod) {
+      var result = await Model.query()
+        .with('sgigjprgenero')
+        .with('nacionalidade')
+        .where('ESTADO', 1)
+        .orderBy('DT_REGISTO', 'desc')
+        .fetch()
 
+      result = result.toJSON()
+      let dataResult = result.map(element => ({
+        "Código": element.CODIGO || "",
+        "Nome": element.NOME || "",
+        "NIF": element.NIF || "",
+        "Género": element.sgigjprgenero ? element.sgigjprgenero.GENERO : "",
+        "Nacionalidade": element.nacionalidade ? element.nacionalidade.NACIONALIDADE : "",
+        "Data Nascimento": element.DT_NASCIMENTO ? element.DT_NASCIMENTO.substring(0, 10) : "",
+        "Data Registo": element.DT_REGISTO ? element.DT_REGISTO.substring(0, 10) : "",
+      }))
+
+      let dataCsv = this.toCsv(dataResult)
+      response.header('Content-type', 'text/csv')
+      response.header('Content-Disposition', 'attachment; filename="pessoas.csv"')
+      return response.send(dataCsv)
+    }
+    return response.status(405).json({ status: "405Error", entity: table, message: "export not allowed", code: "4054" })
+  }
 
 
 

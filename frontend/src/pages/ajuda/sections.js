@@ -72,10 +72,10 @@ const manualSections = [
     },
     {
         id: 'entidades',
-        title: 'Entidades',
+        title: 'Operadores do Jogo',
         icon: 'fas fa-building',
         color: '#93BE52',
-        description: 'Gestão de todas as entidades (empresas de jogo, casinos), pessoas singulares e a organização interna da IGJ.',
+        description: 'Gestão de todos os operadores do jogo (casinos, bancas, máquinas, equipamentos), pessoas singulares e a organização interna da IGJ.',
         subsections: [
             {
                 title: 'Lista de Entidades',
@@ -215,7 +215,7 @@ const manualSections = [
         subsections: [
             {
                 title: 'Gestão de Utilizadores',
-                content: 'Caminho: Administração > Utilizadores (/administracao/utilizador)\n\nA página apresenta a lista de todos os utilizadores numa tabela com: Foto, Nome, Utilizador, Perfil, Estado e Ações.\n\nConsultar: Caixa de pesquisa para filtrar. Seletor Mostrar para entradas por página. Paginação e ordenação por cabeçalhos.\n\nCriar Utilizador:\n1. Clique em Adicionar (ícone +).\n2. Preencha: Foto Perfil, Notificações (interruptor), Nome, Utilizador, Perfil e Password.\n3. Clique em Guardar.\n\nEditar: Ícone de edição na coluna Ações. Altere os campos (exceto código) e Guardar.\n\nAtivar/Desativar: Interruptor na coluna Estado.\n\nEliminar: Ícone de eliminação (vermelho) e confirmar.\n\nVisualizar: Ícone de visualização para modo somente leitura.'
+                content: 'Caminho: Administração > Utilizadores (/administracao/utilizador)\n\nA página apresenta a lista de todos os utilizadores numa tabela com: Foto, Nome, Utilizador, Perfil, Estado e Ações.\n\nConsultar: Caixa de pesquisa para filtrar. Seletor Mostrar para entradas por página. Paginação e ordenação por cabeçalhos.\n\nCriar Utilizador:\n1. Clique em Adicionar (ícone +).\n2. Preencha: Foto Perfil, Notificações (interruptor), Nome, Utilizador, Perfil e Password.\n3. Clique em Guardar.\n\nEditar: Ícone de edição na coluna Ações. Altere os campos (exceto código) e Guardar.\n\nAtivar/Desativar: Interruptor na coluna Estado. A alteração é imediata e afeta o acesso do utilizador.\n\nEliminar: Ícone de eliminação (vermelho) e confirmar. Nota: Utilizadores associados a processos são desativados (não eliminados).\n\nVisualizar: Ícone de visualização para modo somente leitura.\n\nHistórico de Alterações: Todas as alterações aos utilizadores ficam registadas na Auditoria (Entidade > Auditoria), incluindo quem alterou, quando e que campos foram modificados.'
             },
             {
                 title: 'Gestão de Perfis',
@@ -277,11 +277,15 @@ const manualSections = [
             },
             {
                 title: 'Registar Caso Suspeito',
-                content: '1. Clique em Adicionar.\n2. Preencha: Pessoa envolvida, Descrição da atividade suspeita, Data da ocorrência, Valor envolvido e Documentos de suporte.\n3. Clique em Guardar.'
+                content: '1. Clique em Adicionar.\n2. Preencha: Pessoa envolvida, Descrição da atividade suspeita, Data da ocorrência, Valor envolvido e Documentos de suporte.\n3. Clique em Guardar.\n\nEditar: Clique no ícone de edição do caso, altere os dados e Guardar.\n\nEliminar: Clique no ícone de eliminação (vermelho) e confirme a remoção.'
             },
             {
                 title: 'Gerar Comunicado',
-                content: '1. Abra o caso suspeito pretendido.\n2. Clique em Gerar Comunicado.\n3. O sistema gera automaticamente o documento de comunicação em PDF.\n\nExportação: Lista exportável em PDF ou CSV.'
+                content: '1. Abra o caso suspeito pretendido.\n2. Clique em Gerar Comunicado.\n3. O sistema gera automaticamente o documento de comunicação em PDF, seguindo o modelo oficial.\n\nExportação: Lista exportável em PDF ou CSV.\n\nNota: Os comunicados gerados ficam registados e podem ser consultados a qualquer momento nos detalhes do caso.'
+            },
+            {
+                title: 'Análise e Acompanhamento',
+                content: 'A gestão de casos suspeitos envolve:\n\n• Monitorização contínua das atividades dos frequentadores.\n• Registo de todas as ocorrências com documentação de suporte.\n• Cruzamento de dados com processos de exclusão e handpay.\n• Comunicação às autoridades competentes quando necessário.\n\nO sistema mantém um histórico completo de cada caso, incluindo todas as alterações e documentos associados.'
             }
         ]
     },
@@ -301,8 +305,74 @@ const manualSections = [
                 content: '1. Clique no ícone de sino no cabeçalho para ver as mais recentes.\n2. Para ver todas, aceda a /notificacoes.\n3. A lista apresenta: Foto do remetente, Mensagem, Data/hora e Link para o registo.\n4. Clique numa notificação para aceder ao registo relacionado.\n\nAs notificações são automaticamente marcadas como lidas quando consultadas.'
             },
             {
+                title: 'Alertas de Prazo',
+                content: 'Caminho: Notificações > Alertas de Prazos (/notificacoes)\n\nO separador Alertas de Prazos apresenta os processos cujo prazo de decisão está a vencer nos próximos 10 dias.\n\nA tabela apresenta: Tipo (Interdição, Contra-Ordenação ou Visado), Código do processo, Visado, Prazo Total (dias), Data do Despacho e Dias Restantes.\n\nCódigo de cores:\n• Verde — Mais de 7 dias restantes.\n• Amarelo — Entre 4 e 7 dias restantes.\n• Vermelho — 3 dias ou menos / Vencido.\n\nClique numa linha para abrir diretamente o processo correspondente.\n\nQuando não existem prazos a vencer, o sistema apresenta a mensagem "Sem prazos a vencer nos próximos 10 dias".'
+            },
+            {
                 title: 'Configurar Notificações',
                 content: 'Na edição do seu perfil de utilizador, ative ou desative a receção de notificações através do interruptor Notificações.'
+            }
+        ]
+    },
+    {
+        id: 'estatisticas',
+        title: 'Estatísticas',
+        icon: 'fas fa-chart-bar',
+        color: '#2B7FB9',
+        description: 'Painel analítico com indicadores-chave, gráficos e métricas detalhadas sobre reclamações, contra-ordenações, pessoas, documentos, auto-exclusão, handpay e atividade do sistema.',
+        subsections: [
+            {
+                title: 'Visão Geral',
+                content: 'Caminho: Estatísticas (/processos/reclamacao/estatisticas)\n\nA página de Estatísticas apresenta uma visão consolidada dos dados do sistema, organizada em secções temáticas com KPIs e gráficos.\n\nFiltros: Ano (todos os anos ou ano específico).\nAtualizar: Botão para recarregar os dados.\nExportar: Botão PDF para exportar toda a página em formato PDF.'
+            },
+            {
+                title: 'Indicadores-Chave (KPIs)',
+                content: 'No topo da página são apresentados 4 cartões de KPI:\n\n• Reclamações — Total de reclamações registadas.\n• Contra-ordenações — Total de processos de contra-ordenação.\n• Pessoas Registadas — Número de pessoas no sistema.\n• Documentos — Total de documentos registados.'
+            },
+            {
+                title: 'Reclamações',
+                content: '• Evolução Mensal — Gráfico de barras com o número de reclamações por mês.\n• Top Entidades — Gráfico de barras com as entidades que acumulam mais reclamações.'
+            },
+            {
+                title: 'Contra-ordenações e Infrações',
+                content: '• Evolução Mensal — Gráfico de barras com contra-ordenações por mês.\n• Tipos de Infração — Gráfico circular (donut) com a distribuição por tipo de infração.'
+            },
+            {
+                title: 'Pessoas e Documentos',
+                content: 'Pessoas:\n• Pessoas por Entidade — Gráfico de barras com as entidades com mais pessoas associadas.\n• Categorias Profissionais — Gráfico circular com a distribuição por categoria.\n\nDocumentos:\n• Volume Mensal — Gráfico de área com documentos registados por mês.\n• Tipos de Documento — Gráfico de barras com os tipos mais frequentes.'
+            },
+            {
+                title: 'Auto-exclusão e Handpay',
+                content: 'Auto-exclusão:\n• KPI: Total de auto-exclusões.\n• Evolução Mensal — Gráfico de barras por mês.\n• Motivos — Gráfico circular com a distribuição por motivo.\n\nHandpay:\n• KPIs: Total de handpays, Valor Total (CVE) e Valor Médio.\n• Evolução Mensal — Gráfico de barras com valores por mês.\n• Top Pessoas — Gráfico de barras com os maiores valores de handpay.'
+            },
+            {
+                title: 'Despachos e Atividade',
+                content: '• Despachos por Mês — Gráfico de barras com a evolução mensal de despachos emitidos.\n• Atividade por Módulo — Gráfico de barras com os módulos do sistema que registam mais atividade.'
+            }
+        ]
+    },
+    {
+        id: 'relatorios',
+        title: 'Relatórios',
+        icon: 'fas fa-poll',
+        color: '#AB7DF6',
+        description: 'Relatórios financeiros detalhados com tabelas e gráficos sobre obrigações fiscais, impostos, contrapartidas e contribuições.',
+        subsections: [
+            {
+                title: 'Visão Geral',
+                content: 'Caminho: Relatórios (/relatorios)\n\nA página de Relatórios apresenta dados financeiros consolidados com KPIs, tabelas detalhadas e gráficos comparativos.\n\nFiltros: Entidade, Ano e Mês.\nAtualizar: Botão para recarregar os dados.\nExportar: Botão PDF para exportar toda a página em formato PDF.'
+            },
+            {
+                title: 'Indicadores-Chave (KPIs)',
+                content: 'No topo da página são apresentados 4 cartões de KPI financeiros:\n\n• Receita Bruta Total — Soma de toda a receita bruta (CVE).\n• Total Impostos — Soma de todos os impostos cobrados (CVE).\n• Total Contrapartidas — Soma das contrapartidas devidas (CVE).\n• Total Contribuições — Soma das contribuições fiscais (CVE).'
+            },
+            {
+                title: 'Separador Tabelas',
+                content: 'O separador Tabelas apresenta quatro tabelas detalhadas:\n\n1. Obrigações Fiscais — Receita bruta mensal por entidade.\n2. Impostos Anuais — Resumo anual de impostos por entidade.\n3. Contrapartidas — Valores de contrapartidas (Artigo 48 e 49) por entidade.\n4. Contribuições Fiscais — Contribuições por entidade e período.\n\nTodas as tabelas apresentam totais automáticos e podem ser filtradas pelos filtros globais.'
+            },
+            {
+                title: 'Separador Gráficos',
+                content: 'O separador Gráficos apresenta visualizações interativas:\n\nObrigações Fiscais:\n• Receita Bruta Mensal — Gráfico de barras comparativo por ano.\n• Receita Acumulada — Gráfico de linhas com a progressão anual.\n\nImpostos Anuais:\n• Receita Bruta Anual — Gráfico de barras com evolução por ano.\n• Variação Anual — Gráfico de barras com a percentagem de crescimento.\n\nContrapartidas:\n• Contrapartidas por Entidade — Gráfico de barras com evolução anual.\n\nContribuições:\n• Contribuições por Entidade — Gráfico de barras com evolução anual.'
             }
         ]
     },
@@ -319,7 +389,7 @@ const manualSections = [
             },
             {
                 title: 'Exportação de Dados',
-                content: 'PDF: Localize o seletor de download, selecione PDF. O ficheiro abre numa nova janela.\n\nExcel/CSV: Selecione Excel ou CSV no seletor. O ficheiro é descarregado automaticamente.\n\nNota: Os ficheiros refletem os filtros ativos no momento da exportação.'
+                content: 'PDF: Localize o seletor de download ou botão PDF, selecione PDF. O documento é gerado com o logótipo oficial da IGJ, cabeçalho e formatação institucional. Em listas, inclui todos os registos filtrados.\n\nCSV/Excel: Selecione Excel ou CSV no seletor. O ficheiro é descarregado automaticamente no formato CSV (compatível com Excel, LibreOffice e outros). Os dados são exportados com codificação UTF-8 para suportar caracteres especiais.\n\nEstatísticas: Na página de estatísticas, utilize os botões PDF (exporta toda a página com gráficos) ou CSV (exporta os dados tabulares).\n\nNota: Os ficheiros refletem os filtros ativos no momento da exportação. Certifique-se de que os filtros desejados estão aplicados antes de exportar.'
             },
             {
                 title: 'Ordenação e Paginação',
@@ -352,11 +422,15 @@ const manualSections = [
             },
             {
                 title: 'Ações por Página',
-                content: 'Para cada funcionalidade, um perfil pode ter:\n\n• Ler — Visualizar registos.\n• Criar — Adicionar novos registos.\n• Editar — Alterar registos existentes.\n• Eliminar — Remover registos.\n• Atribuir — Atribuir permissões (apenas na página de Permissões).'
+                content: 'Para cada funcionalidade, um perfil pode ter:\n\n• Ler — Visualizar registos e listas.\n• Criar — Adicionar novos registos (botão Adicionar visível).\n• Editar — Alterar registos existentes (ícone de edição visível).\n• Eliminar — Remover registos (ícone de eliminação visível).\n• Atribuir — Atribuir permissões (apenas na página de Permissões).\n\nAções especiais em processos:\n• Despacho — Emitir despachos em processos de exclusão.\n• Instruir — Conduzir a fase de instrução.\n• Parecer — Emitir pareceres em eventos.\n• Aceitar — Aceitar ou rejeitar pareceres.'
             },
             {
                 title: 'Comportamento do Sistema',
-                content: '• Sem permissão para uma página: redirecionamento automático para a página principal.\n• Botões de ação (Adicionar, Editar, Eliminar) só visíveis com a permissão correspondente.\n• As secções do Dashboard são apresentadas conforme as permissões do perfil.'
+                content: '• Sem permissão para uma página: redirecionamento automático para a página principal.\n• Botões de ação (Adicionar, Editar, Eliminar) só visíveis com a permissão correspondente.\n• As secções do Dashboard são apresentadas conforme as permissões do perfil.\n• Alterações de permissão são aplicadas imediatamente — o utilizador verá as mudanças no próximo carregamento de página.\n• A auditoria regista todas as alterações de permissões para rastreabilidade.'
+            },
+            {
+                title: 'Configurar Permissões',
+                content: 'Para alterar as permissões de um perfil:\n\n1. Aceda a Administração > Permissões.\n2. Selecione o Perfil no seletor no topo da página.\n3. O sistema apresenta a árvore de menus com caixas de seleção.\n4. Marque/desmarque as caixas para ativar/desativar o acesso.\n5. A alteração é guardada automaticamente.\n\nPara adicionar novas ações a um menu:\n1. Aceda a Administração > Ações Menu.\n2. Selecione o menu e adicione as ações necessárias.\n3. Volte a Permissões e atribua as novas ações ao perfil.'
             }
         ]
     },
@@ -558,7 +632,7 @@ const relatorioTecnicoSection = {
             groups: [
                 {
                     label: 'Entidades e Recursos',
-                    items: ['Tipos de Entidade', 'Tipos de Banca', 'Classificação de Equipamentos', 'Tipos de Equipamento', 'Tipos de Máquina', 'Tipologias']
+                    items: ['Tipos de Entidade', 'Tipos de Banca', 'Classificação', 'Tipos de Equipamento', 'Tipos de Máquina', 'Tipologias']
                 },
                 {
                     label: 'Pessoas',

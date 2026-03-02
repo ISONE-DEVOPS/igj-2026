@@ -559,65 +559,27 @@ const Autoexclusao = ({ activeValue }) => {
 
 
 
-  const workSheetName = 'Worksheet-1';
   const saveExcel = async () => {
     try {
-
-      const fileName = "lista_autoexclusao";
-
-      // creating one worksheet in workbook
-      const worksheet = workbook.addWorksheet(workSheetName);
-
-      // add worksheet columns
-      // each columns contains header and its mapping key from data
-      worksheet.columns = columns2;
-
-      // updated the font for first row.
-      worksheet.getRow(1).font = { bold: true };
-
-      // loop through all of the columns and set the alignment with width.
-      worksheet.columns.forEach(column => {
-        column.width = column.header.length + 5;
-        column.alignment = { horizontal: 'center' };
+      setIsLoading(true);
+      const response = await api.get("/export-csv/sgigjprocessoautoexclusao", {
+        responseType: "blob",
       });
-
-      // loop through data and add each one to worksheet
-      data.forEach(singleData => {
-        worksheet.addRow(singleData);
-      });
-
-      // loop through all of the rows and set the outline style.
-      worksheet.eachRow({ includeEmpty: false }, row => {
-        // store each cell to currentCell
-        const currentCell = row._cells;
-
-        // loop through currentCell to apply border only for the non-empty cell of excel
-        currentCell.forEach(singleCell => {
-          // store the cell address i.e. A1, A2, A3, B1, B2, B3, ...
-          const cellAddress = singleCell._address;
-
-          // apply border
-          worksheet.getCell(cellAddress).border = {
-            top: { style: 'thin' },
-            left: { style: 'thin' },
-            bottom: { style: 'thin' },
-            right: { style: 'thin' }
-          };
-        });
-      });
-
-      // write the content using writeBuffer
-      const buf = await workbook.xlsx.writeBuffer();
-
-      // download the processed file
-      saveAs(new Blob([buf]), `${fileName}.xlsx`);
-
+      if (response.status == "200") {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "lista_autoexclusao.csv");
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        toast.success("CSV exportado com sucesso!", { duration: 4000 });
+      }
     } catch (error) {
-      console.error('<<<ERRROR>>>', error);
-      console.error('Something Went Wrong', error.message);
+      console.error(error);
+      toast.error("Erro ao exportar CSV", { duration: 4000 });
     } finally {
-      // removing worksheet's instance to create new one
-      workbook.removeWorksheet(workSheetName);
+      setIsLoading(false);
     }
   };
   function formatDate(date) {
@@ -1011,47 +973,45 @@ const Autoexclusao = ({ activeValue }) => {
       const response = await api.get("/sgigjprocessoautoexclusao/" + idx.id);
       if (response.status == "200") {
         if (response.data.length > 0) {
-          if (response.data[0].sgigjprocessodespacho.length > 0) {
+          const item = response.data[0];
+
+          if (item.sgigjprocessodespacho && item.sgigjprocessodespacho.length > 0) {
             newitemler.processodespacho =
-              response.data[0].sgigjprocessodespacho[0].URL_DOC_GERADO;
+              item.sgigjprocessodespacho[0].URL_DOC_GERADO;
           }
 
           let doclist = [];
-          if (response.data[0].sgigjreldocumento.length > 0) {
+          if (item.sgigjreldocumento && item.sgigjreldocumento.length > 0) {
             for (
               let ix = 0;
-              ix < response.data[0].sgigjreldocumento.length;
+              ix < item.sgigjreldocumento.length;
               ix++
             ) {
               doclist.push({
-                id: response.data[0].sgigjreldocumento[ix].ID,
-                nome: response.data[0].sgigjreldocumento[ix].sgigjprdocumentotp
-                  .DESIG,
-                url: response.data[0].sgigjreldocumento[ix].DOC_URL,
+                id: item.sgigjreldocumento[ix].ID,
+                nome: item.sgigjreldocumento[ix].sgigjprdocumentotp
+                  ? item.sgigjreldocumento[ix].sgigjprdocumentotp.DESIG
+                  : "",
+                url: item.sgigjreldocumento[ix].DOC_URL,
               });
             }
           }
 
-          if (response.data[0].criado_por && response.data[0].criado_por.sgigjrelpessoaentidade) {
-            let personThatCreateTheAutoexclusion = listOfPerson.find(person => person.ID === response.data[0].criado_por.sgigjrelpessoaentidade.PESSOA_ID)
+          if (item.criado_por && item.criado_por.sgigjrelpessoaentidade) {
+            let personThatCreateTheAutoexclusion = listOfPerson.find(person => person.ID === item.criado_por.sgigjrelpessoaentidade.PESSOA_ID)
             setCreateBy(personThatCreateTheAutoexclusion ? personThatCreateTheAutoexclusion.NOME : "N/D")
           } else {
             setCreateBy("N/D")
           }
           setVerOpen(true);
-          // setIsEditarOpen(false);
-          // setisDepachoopen(false);
-          // setIsOpen(false);
-          console.log(imgprev)
 
           newitemler.doclist = doclist;
 
-          console.log(newitemler);
           setitemSelected(newitemler);
         }
       }
     } catch (err) {
-      console.error(err.response);
+      console.error("openVerHandler error:", err.message || err);
     }
   };
   function selectedImg(preview) {
@@ -1984,6 +1944,17 @@ const Autoexclusao = ({ activeValue }) => {
             );
 
             parecerEdit = response.data[0].sgigjprocessodespacho[0].DESPACHO;
+          } else {
+            // Buscar próxima referência sequencial automaticamente
+            setCODIGO_D(response.data[0].REF);
+            try {
+              const refResponse = await api.get("/despacho-autoexclusao/referencia?autoexclusaoId=" + idx.id);
+              if (refResponse.status == "200") {
+                setREFERENCIA_D(refResponse.data.nextRef.toString());
+              }
+            } catch (refErr) {
+              console.error(refErr.response);
+            }
           }
         }
 
@@ -2034,19 +2005,20 @@ const Autoexclusao = ({ activeValue }) => {
       );
 
       if (response.status == "200") {
-        toast.success('Despasho Guardado!', { duration: 4000 })
-
         localStorage.setItem("showAlert", false)
 
-        uploadlist();
-      }
-      if (despachotipo === "CONCLUIR") {
-        setIsLoading(false)
-        setisDepachoopen(false);
-      } else {
-        toast.success('Todos os dados foram atualizadas com sucesso!', { duration: 4000 })
-        setIsLoading(false)
-
+        if (despachotipo === "CONCLUIR") {
+          setIsLoading(false)
+          setisDepachoopen(false);
+          await uploadlist();
+          setTimeout(() => {
+            alert("Despacho gerado com sucesso!");
+          }, 300);
+        } else {
+          await uploadlist();
+          toast.success('Despacho guardado com sucesso!', { duration: 4000 })
+          setIsLoading(false)
+        }
       }
 
     } catch (err) {
@@ -3686,13 +3658,11 @@ const Autoexclusao = ({ activeValue }) => {
                         Referência <span style={{ color: "red" }}>*</span>
                       </label>
                       <input
+                        disabled
                         type="number"
-                        onChange={(event) => {
-                          setREFERENCIA_D(event.target.value);
-                        }}
-                        defaultValue={REFERENCIA_D}
+                        value={REFERENCIA_D}
                         className="form-control"
-                        placeholder="Referência..."
+                        placeholder="Referência (automática)..."
                         required
                       />
                     </div>

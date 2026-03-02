@@ -103,14 +103,12 @@ const Table = ({ columns, data, entity, modalOpen, permissoes, pageAcess }) => {
                     {page.map(
                         (row, i) => {
                             prepareRow(row);
-                            console.log(entity)
 
                             return (
 
                                 <tr {...row.getRowProps()}>
 
                                     {row.cells.map(cell => {
-                                        console.log(cell)
                                         const isCentered = cell.column.centered;
 
                                         return (

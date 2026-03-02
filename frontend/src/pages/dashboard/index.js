@@ -251,7 +251,7 @@ const DashAnalytics = () => {
                             </ChartCard>
                         </Col>
                         <Col lg={5} className="mb-3">
-                            <ChartCard title="Composição da Receita" subtitle="Distribuição por categoria" loading={isLoading}>
+                            <ChartCard title="Receita para o Estado" subtitle="Distribuição por categoria" loading={isLoading}>
                                 {revenueComposition ? (
                                     <Chart options={revenueComposition.options} series={revenueComposition.series} type="donut" height={320} width="100%" />
                                 ) : (
@@ -323,7 +323,7 @@ const DashAnalytics = () => {
                             </ChartCard>
                         </Col>
                         <Col lg={5} className="mb-3">
-                            <ChartCard title="Status dos Processos" subtitle="Distribuição por estado" loading={isLoading}>
+                            <ChartCard title="Estado dos Processos Instruídos" subtitle="Distribuição por estado" loading={isLoading}>
                                 {processStatus ? (
                                     <Chart options={processStatus.options} series={processStatus.series} type="radialBar" height={320} width="100%" />
                                 ) : (

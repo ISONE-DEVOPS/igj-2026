@@ -641,12 +641,12 @@ const Contribuicoes = () => {
         event.preventDefault();
         setIsLoading(true)
         const upload = {
-            // DT_EMISSAO_DUC: dataemissao,
+            DT_EMISSAO_DUC: dataemissao,
             ENTIDADE_ID: id_params == 0 ? ENTIDADE_ID : id_params,
             ANO: parseInt(ANO),
             MES: MES,
             VALOR: BRUTO,
-            // DUC: DUC,
+            DUC: DUC,
         }
 
         console.log(upload)
@@ -779,12 +779,12 @@ const Contribuicoes = () => {
         setIsLoading(true)
 
         const upload = {
-            // DT_EMISSAO_DUC: dataemissao,
+            DT_EMISSAO_DUC: dataemissao,
             ENTIDADE_ID: id_params == 0 ? ENTIDADE_ID : id_params,
             ANO: ANO,
             MES: MES,
             VALOR: BRUTO,
-            // DUC: DUC,
+            DUC: DUC,
         }
 
         if (ANO.toString().length !== 4) {
@@ -1062,7 +1062,7 @@ const Contribuicoes = () => {
                                     </Col>
 
 
-                                    {/* <Col sm={6}>
+                                    <Col sm={6}>
 
 
                                         <div className="form-group fill">
@@ -1072,15 +1072,22 @@ const Contribuicoes = () => {
                                             <input
                                                 type="date"
                                                 onChange={(event) => {
-                                                    setDataConfirmacao(event.target.value);
+                                                    setDataEmissao(event.target.value);
                                                 }}
-                                                defaultValue={dataconfirmacao} className="form-control"
+                                                defaultValue={""} className="form-control"
                                                 placeholder="Data..."
                                                 required
                                             />
                                         </div>
 
-                                    </Col> */}
+                                    </Col>
+
+                                    <Col sm={6}>
+                                        <div className="form-group fill">
+                                            <label className="floating-label" htmlFor="Name">Número do DUC <span style={{ color: "red" }} >*</span></label>
+                                            <input type="number" onChange={event => { setDUC(event.target.value) }} defaultValue={""} className="form-control" placeholder="Número do DUC ..." required />
+                                        </div>
+                                    </Col>
 
                                     {/* <Col sm={6}>
                                         <div className="form-group fill">
@@ -1207,12 +1214,12 @@ const Contribuicoes = () => {
                                     </Col>
 
 
-                                    {/* <Col sm={6}>
+                                    <Col sm={6}>
 
 
                                         <div className="form-group fill">
                                             <label className="floating-label" htmlFor="Name">
-                                                Data Emissao De DUC  <span style={{ color: "red" }}>*</span>
+                                                Data Emissão DUC  <span style={{ color: "red" }}>*</span>
                                             </label>
                                             <input
                                                 onChange={(event) => {
@@ -1235,7 +1242,7 @@ const Contribuicoes = () => {
                                             <input defaultValue={itemSelected.DUC} type="number" onChange={event => { setDUC(event.target.value) }} className="form-control" placeholder="Número do DUC ..." required />
 
                                         </div>
-                                    </Col> */}
+                                    </Col>
 
                                 </Row>
 

@@ -101,6 +101,20 @@ class entity {
     };
   }
 
+  async lidoOne({ params, request, response }) {
+    const DatabaseDB = use("Database");
+    await DatabaseDB.table(table)
+      .where("ID", params.id)
+      .where("ESTADO", 1)
+      .update({ LIDO: 1 })
+    return {
+      status: "ok",
+      entity: table + "." + params.id,
+      message: "lido",
+      code: "888",
+    };
+  }
+
   async destroy({ params, response, request }) {
     const newE = await Database.table(table)
       .where("ID", "" + params.id)

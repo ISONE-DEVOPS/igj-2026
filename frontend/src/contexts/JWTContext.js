@@ -273,9 +273,9 @@ function reorganizeCasinoMenu(menuData) {
   }
   removeFromTree(menuData.items);
 
-  // 2. Se encontrou, renomear para "Registrar" e inserir no "Casinos" collapse
+  // 2. Se encontrou, renomear para "Operadores do Jogo" e inserir no "Casinos" collapse
   if (casinoIndividual) {
-    casinoIndividual.title = 'Registrar';
+    casinoIndividual.title = 'Operadores do Jogo';
     casinoIndividual.icon = 'fas fa-plus-circle';
     casinoIndividual.iconColor = '#d4a843';
 

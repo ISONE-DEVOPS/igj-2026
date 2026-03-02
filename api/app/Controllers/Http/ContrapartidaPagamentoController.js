@@ -197,6 +197,34 @@ class ContrapartidaPagamentoController extends GenericController {
         }
         else return response.status(403).json({ status: "403Error", entity: this.table, message: "show not allwed", code: "4053" })
     }
+    async exportCsv({ request, response }) {
+        const allowedMethod = await functionsDatabase.allowed(this.table, "index", request.userID, "");
+        if (allowedMethod || true) {
+            var result = await Model.query()
+                .orderBy('DT_REGISTO', 'desc')
+                .with('contrapartida')
+                .with('banco')
+                .with('meiopagamento')
+                .where('ESTADO', 1)
+                .fetch()
+
+            result = result.toJSON()
+            let dataResult = result.map(element => ({
+                "Contrapartida": element.contrapartida ? element.contrapartida.DESIG : "",
+                "Valor": element.VALOR || "",
+                "Banco": element.banco ? element.banco.BANCO : "",
+                "Meio Pagamento": element.meiopagamento ? element.meiopagamento.MEIO_PAGAMENTO : "",
+                "Data Pagamento": element.DT_PAGAMENTO ? element.DT_PAGAMENTO.substring(0, 10) : "",
+                "Data Registo": element.DT_REGISTO ? element.DT_REGISTO.substring(0, 10) : "",
+            }))
+
+            let dataCsv = this.toCsv(dataResult)
+            response.header('Content-type', 'text/csv')
+            response.header('Content-Disposition', 'attachment; filename="contrapartida_pagamentos.csv"')
+            return response.send(dataCsv)
+        }
+        return response.status(405).json({ status: "405Error", entity: this.table, message: "export not allowed", code: "4054" })
+    }
 }
 
 

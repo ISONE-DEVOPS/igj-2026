@@ -70,14 +70,19 @@ $transition-smooth: all 0.3s ease;
 
 
 // ─── 4. Tabelas ───────────────────────────────────────────
+// Cor principal do site (dourado institucional IGJ)
+$site-gold: #C5A55A;
+$site-gold-dark: #b8963e;
+
 .card-body .table {
   margin-bottom: 0;
 
+  // Cabeçalhos dourados - estilo do site
   thead th {
-    background: $bg-light;
-    border-bottom: 2px solid $border-light;
+    background: $site-gold !important;
+    color: #fff !important;
+    border-bottom: 2px solid $site-gold-dark;
     border-top: none;
-    color: $text-secondary;
     font-size: 11.5px;
     font-weight: 600;
     text-transform: uppercase;
@@ -101,14 +106,14 @@ $transition-smooth: all 0.3s ease;
     transition: background-color $transition-fast;
   }
 
-  // Override striped com tom azul subtil
+  // Override striped com tom dourado subtil
   &.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba($primary-blue, 0.018);
+    background-color: rgba($site-gold, 0.04);
   }
 
-  // Hover suave
+  // Hover suave dourado
   &.table-hover tbody tr:hover {
-    background-color: rgba($primary-blue, 0.045) !important;
+    background-color: rgba($site-gold, 0.08) !important;
   }
 
   // Remover borda externa para integrar com card
@@ -116,8 +121,8 @@ $transition-smooth: all 0.3s ease;
     border: none;
 
     thead th {
-      border-left: none;
-      border-right: none;
+      border-left: 1px solid rgba(255, 255, 255, 0.2);
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
 
       &:first-child { border-left: none; }
       &:last-child { border-right: none; }
@@ -129,11 +134,24 @@ $transition-smooth: all 0.3s ease;
     }
   }
 
-  // Ícones de sort
+  // Ícones de sort - brancos no fundo dourado
   th span .feather {
-    color: $primary-blue;
-    opacity: 0.7;
+    color: rgba(255, 255, 255, 0.8) !important;
     font-size: 12px;
+  }
+
+  // Linha de totais (tfoot)
+  tfoot tr {
+    background: rgba($site-gold, 0.08);
+    border-top: 2px solid $site-gold;
+
+    td {
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: $text-primary;
+      border-color: $border-light;
+    }
   }
 }
 
@@ -855,3 +873,5 @@ div[role="status"][style*="position: fixed"] {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   }
 }
+
+

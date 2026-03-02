@@ -207,10 +207,11 @@ const Customers = () => {
         centered: true
       },
 
-      // {
-      //   Header: "Tipo de Entidade",
-      //   accessor: "PRENTIDADE",
-      // },
+      {
+        Header: "Tipo de Entidade",
+        accessor: "PRENTIDADE",
+        centered: true
+      },
 
       {
         Header: "Localidade",

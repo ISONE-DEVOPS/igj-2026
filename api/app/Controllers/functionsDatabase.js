@@ -869,7 +869,8 @@ const createREF = async (table) => {
   const year = new Date().getFullYear();
   let lastRecord = await Database.from(table)
   .whereRaw('YEAR(DT_REGISTO) = ?', [year])
-  .orderBy('DT_REGISTO', 'desc')
+  .whereNotNull('REF')
+  .orderBy('REF', 'desc')
   .first()
 
   let increment = 0;
@@ -878,12 +879,12 @@ const createREF = async (table) => {
     try {
       increment = parseInt(lastRecord.REF.split('.')[1], 10)
     } catch (error) {
-      
+
     }
   }
 
   increment = increment + 1
-  
+
   const formattedIncrement = String(increment).padStart(4, '0'); // Format to 4 digits
   return `${year}.${formattedIncrement}`;
 };

@@ -6,7 +6,7 @@ import Select from 'react-select';
 
 import { Link } from 'react-router-dom';
 
-// import { GlobalFilter } from './GlobalFilter';
+import { GlobalFilter } from '../../../components/Custom/Table/GlobalFilter';
 
 import { useTable, useSortBy, usePagination, useGlobalFilter } from "react-table";
 
@@ -89,7 +89,7 @@ function Table({ columns, data, modalOpen }) {
                     entradas
                 </Col>
                 <Col className='d-flex justify-content-end'>
-                    {/* <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} /> */}
+                    <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
                     {taskEnable(pageAcess, permissoes, "Criar") == false ? null :
                         <Button variant="primary" className="btn-sm btn-round has-ripple ml-2" onClick={modalOpen} ><i className="feather icon-plus" /> Adicionar</Button>
                     }

@@ -316,7 +316,7 @@ class entity {
 
       // }
 
-      result = await result.orderBy("sgigjprocessoautoexclusao.CODIGO", "desc")
+      result = await result.orderBy("sgigjprocessoautoexclusao.DT_REGISTO", "desc")
         .fetch()
 
 
@@ -329,7 +329,7 @@ class entity {
         .with("sgigjprocessodespacho")
         .whereIn("NUM_DIAS", [90, 30, 5, 0])
         .where("ESTADO", "1")
-        .orderBy("sgigjprocessoautoexclusao.CODIGO", "desc")
+        .orderBy("sgigjprocessoautoexclusao.DT_REGISTO", "desc")
         .fetch()
 
 
@@ -432,7 +432,7 @@ class entity {
       }
 
       result = await result.where(data).where("sgigjprocessoautoexclusao.ESTADO", "1")
-        .orderBy("sgigjprocessoautoexclusao.CODIGO", "desc")
+        .orderBy("sgigjprocessoautoexclusao.DT_REGISTO", "desc")
         .fetch();
 
       result = result.toJSON()
@@ -583,7 +583,7 @@ class entity {
       }
 
       result = await result.where(data).where("ESTADO", "1")
-        .orderBy("sgigjprocessoautoexclusao.CODIGO", "desc")
+        .orderBy("sgigjprocessoautoexclusao.DT_REGISTO", "desc")
         .fetch();
 
       result = result.toJSON()
