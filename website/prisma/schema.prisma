@@ -1,0 +1,242 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// UTILIZADORES & AUTENTICAÇÃO
+// ============================================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  password      String
+  role          UserRole  @default(EDITOR)
+  avatar        String?
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+}
+
+// ============================================================
+// PÁGINAS ESTÁTICAS (Quem somos, Missão, Organograma, etc.)
+// ============================================================
+
+model Page {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
+  content     String      @db.LongText
+  excerpt     String?     @db.Text
+  coverImage  String?
+  published   Boolean     @default(false)
+  order       Int         @default(0)
+  parentId    String?
+  parent      Page?       @relation("PageChildren", fields: [parentId], references: [id])
+  children    Page[]      @relation("PageChildren")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("pages")
+}
+
+// ============================================================
+// NOTÍCIAS
+// ============================================================
+
+model News {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
+  content     String      @db.LongText
+  excerpt     String?     @db.Text
+  coverImage  String?
+  published   Boolean     @default(false)
+  featured    Boolean     @default(false)
+  publishedAt DateTime?
+  categoryId  String?
+  category    NewsCategory? @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([publishedAt])
+  @@map("news")
+}
+
+model NewsCategory {
+  id    String @id @default(cuid())
+  name  String @unique
+  slug  String @unique
+  news  News[]
+
+  @@map("news_categories")
+}
+
+// ============================================================
+// LEGISLAÇÃO
+// ============================================================
+
+model Legislation {
+  id          String           @id @default(cuid())
+  title       String
+  slug        String           @unique
+  description String?          @db.Text
+  fileUrl     String?
+  type        LegislationType
+  number      String?
+  publishDate DateTime?
+  published   Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([type])
+  @@index([publishDate])
+  @@map("legislation")
+}
+
+enum LegislationType {
+  LEI
+  DECRETO_LEI
+  REGULAMENTO
+  PORTARIA
+  RESOLUCAO
+  DESPACHO
+  OUTRO
+}
+
+// ============================================================
+// PUBLICAÇÕES (Relatórios, Regulamentos, Brochuras)
+// ============================================================
+
+model Publication {
+  id          String          @id @default(cuid())
+  title       String
+  slug        String          @unique
+  description String?         @db.Text
+  coverImage  String?
+  fileUrl     String?
+  type        PublicationType
+  published   Boolean         @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([type])
+  @@map("publications")
+}
+
+enum PublicationType {
+  RELATORIO
+  REGULAMENTO
+  BROCHURA
+  OUTRO
+}
+
+// ============================================================
+// GALERIA DE FOTOS
+// ============================================================
+
+model Gallery {
+  id          String         @id @default(cuid())
+  title       String
+  slug        String         @unique
+  description String?        @db.Text
+  coverImage  String?
+  published   Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  photos      GalleryPhoto[]
+
+  @@map("galleries")
+}
+
+model GalleryPhoto {
+  id        String   @id @default(cuid())
+  url       String
+  caption   String?
+  order     Int      @default(0)
+  galleryId String
+  gallery   Gallery  @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("gallery_photos")
+}
+
+// ============================================================
+// ZONAS DE JOGO
+// ============================================================
+
+model GamingZone {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  island      String
+  description String?  @db.Text
+  address     String?
+  image       String?
+  published   Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("gaming_zones")
+}
+
+// ============================================================
+// SLIDES DA HOMEPAGE
+// ============================================================
+
+model Slide {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String?
+  image       String
+  link        String?
+  active      Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("slides")
+}
+
+// ============================================================
+// CONFIGURAÇÕES DO SITE
+// ============================================================
+
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @db.Text
+  label String?
+
+  @@map("site_settings")
+}
+
+// ============================================================
+// MEDIA / FICHEIROS
+// ============================================================
+
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String
+  mimeType  String
+  size      Int
+  alt       String?
+  createdAt DateTime @default(now())
+
+  @@map("media")
+}
