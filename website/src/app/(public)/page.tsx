@@ -3,8 +3,51 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { HeroSlider } from "@/components/public/HeroSlider";
 
+const defaultContent = {
+  pilares: {
+    subtitle: "Os Nossos Pilares",
+    title: "Valores que nos Orientam",
+    items: [
+      { title: "Credibilidade", description: "Actuação transparente e responsável na regulação do sector de jogos" },
+      { title: "Transparência", description: "Processos claros e informação acessível a todos os cidadãos" },
+      { title: "Confiança", description: "Relação de confiança com operadores e público em geral" },
+      { title: "Tranquilidade", description: "Ambiente saudável para o desenvolvimento da actividade do jogo" },
+    ],
+  },
+  sobre: {
+    subtitle: "Sobre Nós",
+    title: "Quem Somos",
+    text1: "A Inspecção-Geral de Jogos, abreviadamente IGJ, é um Serviço Central de Inspecção e Controlo da Actividade de Jogos, dotado de Autonomia Funcional, Administrativa e Financeira, directamente dependente do Ministro do Turismo, Investimentos e Desenvolvimento Empresarial.",
+    text2: "A nossa visão é o desenvolvimento da actividade do jogo baseado numa fiscalização e controlo apertados de modo que essa actividade seja desenvolvida em ambiente saudável, com grande importância na contribuição e na formação do PIB.",
+    stats: [
+      { label: "Ilhas com Zonas de Jogo", value: "5" },
+      { label: "Anos de Regulação", value: "20+" },
+      { label: "Casinos Regulados", value: "3+" },
+      { label: "Legislação Vigente", value: "auto" },
+    ],
+  },
+  cta: {
+    title: "Consulte a Legislação",
+    text: "Aceda ao enquadramento legal da actividade de jogos em Cabo Verde. Toda a legislação disponível para consulta.",
+  },
+};
+
+const pilarIcons = [
+  "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+  "M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z",
+  "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z",
+  "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
+];
+
+const pilarColors = [
+  "from-blue-500 to-blue-600",
+  "from-emerald-500 to-emerald-600",
+  "from-amber-500 to-amber-600",
+  "from-violet-500 to-violet-600",
+];
+
 async function getHomeData() {
-  const [slides, news, zones, legislationCount] = await Promise.all([
+  const [slides, news, zones, legislationCount, homeSetting] = await Promise.all([
     prisma.slide.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
     prisma.news.findMany({
       where: { published: true },
@@ -17,12 +60,23 @@ async function getHomeData() {
       orderBy: { order: "asc" },
     }),
     prisma.legislation.count({ where: { published: true } }),
+    prisma.siteSetting.findUnique({ where: { key: "homepage_content" } }),
   ]);
-  return { slides, news, zones, legislationCount };
+
+  let homeContent = defaultContent;
+  if (homeSetting?.value) {
+    try {
+      homeContent = { ...defaultContent, ...JSON.parse(homeSetting.value) };
+    } catch {
+      // use defaults
+    }
+  }
+
+  return { slides, news, zones, legislationCount, homeContent };
 }
 
 export default async function HomePage() {
-  const { slides, news, zones, legislationCount } = await getHomeData();
+  const { slides, news, zones, legislationCount, homeContent } = await getHomeData();
 
   return (
     <>
@@ -33,43 +87,18 @@ export default async function HomePage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <p className="text-gold-600 font-semibold text-sm uppercase tracking-wider mb-2">Os Nossos Pilares</p>
-            <h2 className="text-3xl font-bold text-navy-800">Valores que nos Orientam</h2>
+            <p className="text-gold-600 font-semibold text-sm uppercase tracking-wider mb-2">{homeContent.pilares.subtitle}</p>
+            <h2 className="text-3xl font-bold text-navy-800">{homeContent.pilares.title}</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                title: "Credibilidade",
-                description: "Actuação transparente e responsável na regulação do sector de jogos",
-                icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
-                color: "from-blue-500 to-blue-600",
-              },
-              {
-                title: "Transparência",
-                description: "Processos claros e informação acessível a todos os cidadãos",
-                icon: "M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z",
-                color: "from-emerald-500 to-emerald-600",
-              },
-              {
-                title: "Confiança",
-                description: "Relação de confiança com operadores e público em geral",
-                icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z",
-                color: "from-amber-500 to-amber-600",
-              },
-              {
-                title: "Tranquilidade",
-                description: "Ambiente saudável para o desenvolvimento da actividade do jogo",
-                icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
-                color: "from-violet-500 to-violet-600",
-              },
-            ].map((item, i) => (
+            {homeContent.pilares.items.map((item, i) => (
               <div
-                key={item.title}
+                key={i}
                 className="group relative p-7 rounded-2xl bg-white border border-gray-100 hover:border-gold-200 hover:shadow-xl transition-all duration-300"
               >
-                <div className={`w-14 h-14 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`w-14 h-14 bg-gradient-to-br ${pilarColors[i] || pilarColors[0]} rounded-xl flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                   <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={item.icon} />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={pilarIcons[i] || pilarIcons[0]} />
                   </svg>
                 </div>
                 <h3 className="text-lg font-bold text-navy-800 mb-2">{item.title}</h3>
@@ -85,20 +114,10 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <p className="text-gold-600 font-semibold text-sm uppercase tracking-wider mb-2">Sobre Nós</p>
-              <h2 className="text-3xl font-bold text-navy-800 mb-6">Quem Somos</h2>
-              <p className="text-gray-600 mb-4 leading-relaxed">
-                A Inspecção-Geral de Jogos, abreviadamente IGJ, é um Serviço Central de
-                Inspecção e Controlo da Actividade de Jogos, dotado de Autonomia Funcional,
-                Administrativa e Financeira, directamente dependente do Ministro do Turismo,
-                Investimentos e Desenvolvimento Empresarial.
-              </p>
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                A nossa visão é o desenvolvimento da actividade do jogo baseado numa
-                fiscalização e controlo apertados de modo que essa actividade seja
-                desenvolvida em ambiente saudável, com grande importância na contribuição
-                e na formação do PIB.
-              </p>
+              <p className="text-gold-600 font-semibold text-sm uppercase tracking-wider mb-2">{homeContent.sobre.subtitle}</p>
+              <h2 className="text-3xl font-bold text-navy-800 mb-6">{homeContent.sobre.title}</h2>
+              <p className="text-gray-600 mb-4 leading-relaxed">{homeContent.sobre.text1}</p>
+              <p className="text-gray-600 mb-8 leading-relaxed">{homeContent.sobre.text2}</p>
               <Link
                 href="/sobre"
                 className="inline-flex items-center gap-2 text-gold-600 font-semibold hover:text-gold-700 group"
@@ -113,17 +132,17 @@ export default async function HomePage() {
               <div className="absolute -inset-4 bg-gradient-to-br from-gold-200/40 to-gold-100/20 rounded-3xl blur-xl" />
               <div className="relative bg-white rounded-2xl p-10 shadow-sm border border-gold-100">
                 <div className="grid grid-cols-2 gap-8">
-                  {[
-                    { label: "Ilhas com Zonas de Jogo", value: "5" },
-                    { label: "Anos de Regulação", value: "20+" },
-                    { label: "Casinos Regulados", value: "3+" },
-                    { label: "Legislação Vigente", value: legislationCount > 0 ? String(legislationCount) : "10+" },
-                  ].map((stat) => (
-                    <div key={stat.label} className="text-center">
-                      <p className="text-4xl font-bold text-navy-800 mb-1">{stat.value}</p>
-                      <p className="text-sm text-gray-500">{stat.label}</p>
-                    </div>
-                  ))}
+                  {homeContent.sobre.stats.map((stat, i) => {
+                    const displayValue = stat.value === "auto"
+                      ? (legislationCount > 0 ? String(legislationCount) : "10+")
+                      : stat.value;
+                    return (
+                      <div key={i} className="text-center">
+                        <p className="text-4xl font-bold text-navy-800 mb-1">{displayValue}</p>
+                        <p className="text-sm text-gray-500">{stat.label}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -222,10 +241,8 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-white">
-              <h2 className="text-2xl lg:text-3xl font-bold mb-2">Consulte a Legislação</h2>
-              <p className="text-gold-100 max-w-lg">
-                Aceda ao enquadramento legal da actividade de jogos em Cabo Verde. Toda a legislação disponível para consulta.
-              </p>
+              <h2 className="text-2xl lg:text-3xl font-bold mb-2">{homeContent.cta.title}</h2>
+              <p className="text-gold-100 max-w-lg">{homeContent.cta.text}</p>
             </div>
             <Link
               href="/legislacao"
