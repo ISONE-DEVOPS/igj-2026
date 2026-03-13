@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Card, CardBody } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { auth } from "@/lib/auth";
 
 async function getDashboardData() {
   const [
@@ -49,6 +50,8 @@ async function getDashboardData() {
 }
 
 export default async function AdminDashboardPage() {
+  const session = await auth();
+  const isAdmin = session?.user?.role === "ADMIN";
   const { counts, published, recentNews, activeSlides, recentUsers } = await getDashboardData();
 
   const cards = [
@@ -123,7 +126,7 @@ export default async function AdminDashboardPage() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
-        {cards.map((card) => (
+        {cards.filter((card) => isAdmin || card.label !== "Utilizadores").map((card) => (
           <Link key={card.label} href={card.href}>
             <Card hover className="h-full">
               <CardBody>
@@ -243,29 +246,31 @@ export default async function AdminDashboardPage() {
             </CardBody>
           </Card>
 
-          {/* Recent Users */}
-          <Card>
-            <CardBody>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900">Utilizadores</h3>
-                <Link href="/admin/utilizadores" className="text-xs text-gold-600 hover:text-gold-700 font-medium">Ver todos</Link>
-              </div>
-              <div className="space-y-2">
-                {recentUsers.map((user) => (
-                  <div key={user.id} className="flex items-center gap-3 py-1.5">
-                    <div className="w-8 h-8 bg-navy-100 text-navy-600 rounded-full flex items-center justify-center font-medium text-xs shrink-0">
-                      {user.name.charAt(0).toUpperCase()}
+          {/* Recent Users - Admin only */}
+          {isAdmin && (
+            <Card>
+              <CardBody>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-gray-900">Utilizadores</h3>
+                  <Link href="/admin/utilizadores" className="text-xs text-gold-600 hover:text-gold-700 font-medium">Ver todos</Link>
+                </div>
+                <div className="space-y-2">
+                  {recentUsers.map((user) => (
+                    <div key={user.id} className="flex items-center gap-3 py-1.5">
+                      <div className="w-8 h-8 bg-navy-100 text-navy-600 rounded-full flex items-center justify-center font-medium text-xs shrink-0">
+                        {user.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-gray-800 truncate">{user.name}</p>
+                        <p className="text-xs text-gray-400">{user.role === "ADMIN" ? "Administrador" : "Editor"}</p>
+                      </div>
+                      <div className={`w-2 h-2 rounded-full shrink-0 ${user.active ? "bg-emerald-400" : "bg-gray-300"}`} />
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-gray-800 truncate">{user.name}</p>
-                      <p className="text-xs text-gray-400">{user.role === "ADMIN" ? "Administrador" : "Editor"}</p>
-                    </div>
-                    <div className={`w-2 h-2 rounded-full shrink-0 ${user.active ? "bg-emerald-400" : "bg-gray-300"}`} />
-                  </div>
-                ))}
-              </div>
-            </CardBody>
-          </Card>
+                  ))}
+                </div>
+              </CardBody>
+            </Card>
+          )}
         </div>
       </div>
     </div>
