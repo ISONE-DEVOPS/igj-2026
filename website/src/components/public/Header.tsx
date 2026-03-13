@@ -70,7 +70,7 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <img src="/igj-logo-dark.png" alt="IGJ - Inspecção-Geral de Jogos" className="h-10 w-auto" />
+            <img src="/logo-igj.png" alt="IGJ - Inspecção Geral de Jogos" className="h-12 w-auto" />
           </Link>
 
           {/* Desktop nav */}
