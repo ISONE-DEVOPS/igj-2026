@@ -9,6 +9,17 @@ export async function requireAuth() {
   return session;
 }
 
+export async function requireAdmin() {
+  const session = await auth();
+  if (!session?.user) return null;
+  if (session.user.role !== "ADMIN") return null;
+  return session;
+}
+
+export function forbidden() {
+  return NextResponse.json({ error: "Sem permissão" }, { status: 403 });
+}
+
 export function unauthorized() {
   return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
 }

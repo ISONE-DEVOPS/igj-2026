@@ -9,9 +9,7 @@ export function Footer() {
           {/* Logo & Info */}
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 bg-gradient-to-br from-gold-500 to-gold-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                IGJ
-              </div>
+              <img src="/igj-logo.png" alt="IGJ" className="h-11 w-auto brightness-0 invert" />
               <div>
                 <p className="font-bold leading-tight">Inspecção-Geral de Jogos</p>
                 <p className="text-sm text-gray-400 leading-tight">República de Cabo Verde</p>

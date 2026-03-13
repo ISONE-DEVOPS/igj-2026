@@ -1,10 +1,10 @@
 import { prisma } from "@/lib/prisma";
-import { requireAuth, unauthorized, success, badRequest } from "@/lib/api-utils";
+import { requireAdmin, unauthorized, forbidden, success, badRequest } from "@/lib/api-utils";
 import bcrypt from "bcryptjs";
 
 export async function GET() {
-  const session = await requireAuth();
-  if (!session) return unauthorized();
+  const session = await requireAdmin();
+  if (!session) return forbidden();
 
   const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },
@@ -15,8 +15,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const session = await requireAuth();
-  if (!session) return unauthorized();
+  const session = await requireAdmin();
+  if (!session) return forbidden();
 
   const body = await req.json();
 

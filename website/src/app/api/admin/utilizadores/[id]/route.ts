@@ -1,10 +1,10 @@
 import { prisma } from "@/lib/prisma";
-import { requireAuth, unauthorized, success, notFound, badRequest } from "@/lib/api-utils";
+import { requireAdmin, forbidden, success, notFound, badRequest } from "@/lib/api-utils";
 import bcrypt from "bcryptjs";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await requireAuth();
-  if (!session) return unauthorized();
+  const session = await requireAdmin();
+  if (!session) return forbidden();
 
   const { id } = await params;
   const user = await prisma.user.findUnique({
@@ -17,8 +17,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 }
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await requireAuth();
-  if (!session) return unauthorized();
+  const session = await requireAdmin();
+  if (!session) return forbidden();
 
   const { id } = await params;
   const body = await req.json();
@@ -56,8 +56,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 }
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await requireAuth();
-  if (!session) return unauthorized();
+  const session = await requireAdmin();
+  if (!session) return forbidden();
 
   const { id } = await params;
   await prisma.user.delete({ where: { id } });
