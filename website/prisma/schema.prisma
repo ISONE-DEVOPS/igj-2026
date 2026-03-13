@@ -203,6 +203,7 @@ model Slide {
   title       String
   subtitle    String?
   image       String
+  videoUrl    String?
   link        String?
   active      Boolean  @default(true)
   order       Int      @default(0)

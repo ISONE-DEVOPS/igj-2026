@@ -14,7 +14,7 @@ export default function SlideFormPage() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
-    title: "", subtitle: "", image: "", link: "", active: true, order: 0,
+    title: "", subtitle: "", image: "", videoUrl: "", link: "", active: true, order: 0,
   });
 
   useEffect(() => {
@@ -56,7 +56,11 @@ export default function SlideFormPage() {
             <Card><CardBody className="space-y-4">
               <Input label="Título" value={form.title} onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))} required />
               <Input label="Subtítulo" value={form.subtitle} onChange={(e) => setForm(f => ({ ...f, subtitle: e.target.value }))} />
-              <FileUpload label="Imagem do Slide" accept="image/*" value={form.image} onChange={(url) => setForm(f => ({ ...f, image: url }))} />
+              <FileUpload label="Imagem do Slide (capa / fallback)" accept="image/*" value={form.image} onChange={(url) => setForm(f => ({ ...f, image: url }))} />
+              <div>
+                <Input label="Vídeo YouTube (opcional)" value={form.videoUrl} onChange={(e) => setForm(f => ({ ...f, videoUrl: e.target.value }))} placeholder="https://www.youtube.com/watch?v=..." />
+                <p className="text-xs text-gray-400 mt-1">Se preenchido, o vídeo será mostrado no hero em vez da imagem. A imagem serve como capa de carregamento.</p>
+              </div>
               <Input label="Link (opcional)" value={form.link} onChange={(e) => setForm(f => ({ ...f, link: e.target.value }))} placeholder="https://..." />
             </CardBody></Card>
           </div>

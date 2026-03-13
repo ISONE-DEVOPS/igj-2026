@@ -8,7 +8,13 @@ interface Slide {
   title: string;
   subtitle: string | null;
   image: string;
+  videoUrl: string | null;
   link: string | null;
+}
+
+function getYouTubeId(url: string): string | null {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?#]+)/);
+  return match ? match[1] : null;
 }
 
 interface HeroSliderProps {
@@ -29,12 +35,13 @@ export function HeroSlider({ slides, zones, legislationCount }: HeroSliderProps)
     if (hasSlides) setCurrent((c) => (c - 1 + slides.length) % slides.length);
   }, [hasSlides, slides.length]);
 
-  // Auto-advance every 6 seconds
+  // Auto-advance every 6 seconds (paused on video slides)
+  const currentSlideHasVideo = hasSlides && slides[current]?.videoUrl ? !!getYouTubeId(slides[current].videoUrl!) : false;
   useEffect(() => {
-    if (slides.length <= 1) return;
+    if (slides.length <= 1 || currentSlideHasVideo) return;
     const timer = setInterval(next, 6000);
     return () => clearInterval(timer);
-  }, [next, slides.length]);
+  }, [next, slides.length, currentSlideHasVideo]);
 
   const stats = [
     { label: "Zonas de Jogo", value: zones > 0 ? String(zones) : "5", icon: "M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" },
@@ -47,20 +54,40 @@ export function HeroSlider({ slides, zones, legislationCount }: HeroSliderProps)
     <div className="relative">
       {/* Hero Section — image fills, content at bottom */}
       <section className="relative h-[75vh] min-h-[500px] max-h-[750px] bg-navy-900 text-white overflow-hidden">
-        {/* Slide background images */}
+        {/* Slide background images / videos */}
         {hasSlides ? (
-          slides.map((slide, i) => (
-            <div
-              key={slide.id}
-              className={`absolute inset-0 transition-opacity duration-1000 ${i === current ? "opacity-100" : "opacity-0"}`}
-            >
-              <img
-                src={slide.image}
-                alt={slide.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ))
+          slides.map((slide, i) => {
+            const ytId = slide.videoUrl ? getYouTubeId(slide.videoUrl) : null;
+            return (
+              <div
+                key={slide.id}
+                className={`absolute inset-0 transition-opacity duration-1000 ${i === current ? "opacity-100" : "opacity-0"}`}
+              >
+                {ytId ? (
+                  <>
+                    {/* Fallback image while video loads */}
+                    <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
+                    {i === current && (
+                      <iframe
+                        src={`https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`}
+                        allow="autoplay; encrypted-media"
+                        allowFullScreen
+                        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                        style={{ border: 0, transform: "scale(1.2)", transformOrigin: "center" }}
+                        title={slide.title}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <img
+                    src={slide.image}
+                    alt={slide.title}
+                    className="w-full h-full object-cover"
+                  />
+                )}
+              </div>
+            );
+          })
         ) : (
           <>
             <div className="absolute inset-0 bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900" />

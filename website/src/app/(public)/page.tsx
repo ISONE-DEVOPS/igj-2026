@@ -27,7 +27,7 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero Section with Slides */}
-      <HeroSlider slides={slides.map(s => ({ id: s.id, title: s.title, subtitle: s.subtitle, image: s.image, link: s.link }))} zones={zones.length} legislationCount={legislationCount} />
+      <HeroSlider slides={slides.map(s => ({ id: s.id, title: s.title, subtitle: s.subtitle, image: s.image, videoUrl: s.videoUrl, link: s.link }))} zones={zones.length} legislationCount={legislationCount} />
 
       {/* Valores / Destaques */}
       <section className="py-20 bg-white">
